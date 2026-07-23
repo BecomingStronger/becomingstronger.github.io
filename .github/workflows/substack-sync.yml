@@ -20,16 +20,26 @@ jobs:
               headers={"User-Agent":"becomingstronger.github.io blog mirror"})
           xml=urllib.request.urlopen(req,timeout=30).read()
           ch=ET.fromstring(xml).find("channel")
+          NS={'content':'http://purl.org/rss/1.0/modules/content/'}
           posts=[]
           for it in ch.findall("item")[:12]:
               title=(it.findtext("title") or "").strip()
               link=(it.findtext("link") or "").strip()
               desc=it.findtext("description") or ""
+              body=it.findtext("content:encoded",namespaces=NS) or ""
+              img=""
+              enc=it.find("enclosure")
+              if enc is not None and (enc.get("type") or "").startswith("image"):
+                  img=enc.get("url") or ""
+              if not img:
+                  m=re.search(r'<img[^>]+src="([^"]+)"', body or desc)
+                  if m: img=html.unescape(m.group(1))
+              img=re.sub(r'w_\d+,c_limit','w_800,c_limit',img)
               desc=html.unescape(re.sub(r"<[^>]+>","",desc)).strip()
               if len(desc)>180: desc=desc[:177].rsplit(" ",1)[0]+"..."
               try: date=parsedate_to_datetime(it.findtext("pubDate") or "").strftime("%Y-%m-%d")
               except Exception: date=""
-              posts.append({"title":title,"link":link,"date":date,"excerpt":desc})
+              posts.append({"title":title,"link":link,"date":date,"excerpt":desc,"image":img})
           json.dump(posts,open("posts.json","w"),indent=1)
           print(len(posts),"posts")
           PY
