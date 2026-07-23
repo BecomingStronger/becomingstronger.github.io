@@ -129,7 +129,7 @@ main{position:relative}
   display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .consult-band strong{font-family:"Fraunces",serif;font-size:1.25rem;font-weight:500}
 .booking{margin-top:40px;border:1px solid var(--line-strong);background:var(--paper);padding:8px}
-#cal-inline{width:100%;height:840px;overflow:auto}
+#cal-inline{width:100%;min-height:860px}
 .booking-note{font-size:.82rem;color:var(--ink-soft);padding:10px 6px 4px}
 
 /* blog */
@@ -206,7 +206,7 @@ footer a{color:var(--gold);cursor:pointer}
 <section class="page" id="home">
   <div class="hero-in">
     <h1>Are you the main character<br>of your life?</h1>
-    <p class="sub">Follow along on my journey, and together let's improve the world through rationality and compassion.</p>
+    <p class="sub">Follow along and let's become stronger together.</p>
     <div class="hero-cta">
       <button class="btn" data-tab="calendar">Schedule time with me</button>
       <button class="btn ghost" data-tab="about">About me</button>
@@ -267,9 +267,12 @@ footer a{color:var(--gold);cursor:pointer}
     <div class="foot-brand">Becoming Stronger</div>
     <div class="foot-links">
       <a data-tab="about">About</a><a data-tab="blog">Blog</a>
-      <a data-tab="dating">Dating Document</a><a data-tab="calendar">Calendar</a><a href="mailto:[you@email.com]">Email</a>
+      <a data-tab="dating">Dating Document</a><a data-tab="calendar">Calendar</a>
     </div>
     <div class="socials">
+      <a href="mailto:alex.hedtke@gmail.com" aria-label="Email">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="2.5" y="4.5" width="19" height="15" stroke="currentColor" stroke-width="1.8"/><path d="m3 5.5 9 7 9-7" stroke="currentColor" stroke-width="1.8"/></svg>
+      </a>
       <a href="https://www.instagram.com/baes.theorem/" target="_blank" rel="noopener" aria-label="Instagram">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>
       </a>
@@ -313,7 +316,7 @@ toggle.addEventListener('click',function(){var o=links.classList.toggle('open');
 function setTheme(t,save){
   document.documentElement.setAttribute('data-theme',t);
   if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
-  try{if(window.Cal&&Cal.ns&&Cal.ns.meeting)Cal.ns.meeting("ui",{theme:t})}catch(e){}
+  try{if(window.Cal&&Cal.ns&&Cal.ns.meeting&&typeof mountCal==='function')mountCal()}catch(e){}
 }
 document.getElementById('theme-toggle').addEventListener('click',function(){
   setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
@@ -334,14 +337,21 @@ showTab(location.hash.slice(1));
 Cal("init", "meeting", {origin:"https://app.cal.com"});
 Cal.config = Cal.config || {};
 Cal.config.forwardQueryParams = true;
-Cal.ns.meeting("inline", {
-  elementOrSelector:"#cal-inline",
-  config:{layout:"column_view",useSlotsViewOnSmallScreen:"true",
-    theme:document.documentElement.getAttribute('data-theme')||'auto'},
-  calLink:"alexhedtke/meeting",
-});
-Cal.ns.meeting("ui", {hideEventTypeDetails:false, layout:"column_view",
-  cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"},dark:{"cal-brand":"#6CB27E"}}});
+/* (re)mount the embed with the site's current theme; called again on toggle
+   because cal.com pins theme at mount time */
+function mountCal(){
+  var el=document.getElementById('cal-inline');
+  if(el)el.innerHTML='';
+  Cal.ns.meeting("inline", {
+    elementOrSelector:"#cal-inline",
+    config:{layout:"column_view",useSlotsViewOnSmallScreen:"true",
+      theme:document.documentElement.getAttribute('data-theme')||'light'},
+    calLink:"alexhedtke/meeting",
+  });
+  Cal.ns.meeting("ui", {hideEventTypeDetails:false, layout:"column_view",
+    cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"},dark:{"cal-brand":"#6CB27E"}}});
+}
+mountCal();
 </script>
 </body>
 </html>
