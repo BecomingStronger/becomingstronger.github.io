@@ -17,6 +17,18 @@
 <meta name="twitter:description" content="Are you the main character of your life? Follow along and let's become stronger together.">
 <meta name="twitter:image" content="https://becomingstronger.github.io/og-card.png">
 <meta name="theme-color" id="meta-theme" content="#FBF8F0">
+<script type="application/ld+json">
+{"@context":"https://schema.org","@type":"Person","name":"Alex Hedtke","url":"https://becomingstronger.github.io/",
+"image":"https://becomingstronger.github.io/images/about.jpg",
+"description":"Improving the world through rationality and compassion, from Kansas City.",
+"address":{"@type":"PostalAddress","addressLocality":"Kansas City","addressRegion":"MO"},
+"sameAs":["https://www.instagram.com/baes.theorem/","https://www.facebook.com/baes.theorem",
+"https://www.linkedin.com/in/alexhedtke/","https://becomingstronger.substack.com/",
+"https://www.goodreads.com/user/show/97736835-alex","https://letterboxd.com/baes_theorem/"]}
+</script>
+<!-- Analytics (GoatCounter): create a free account at goatcounter.com, then uncomment with your code:
+<script data-goatcounter="https://YOURCODE.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+-->
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
 <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -91,7 +103,7 @@ header.nav{position:sticky;top:0;z-index:50;background:rgba(251,248,240,.86);bac
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
 .brand{display:flex;align-items:center;gap:10px;font-family:"Raleway",sans-serif;font-weight:600;font-size:1.15rem;color:var(--ink);cursor:pointer}
 .brand svg{flex:none}
-.nav-links{display:flex;align-items:center;gap:26px;margin-left:auto;margin-right:18px}
+.nav-links{display:flex;align-items:center;gap:19px;margin-left:auto;margin-right:14px}
 .nav-links a{font-size:.92rem;font-weight:500;color:var(--ink-soft);padding:6px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;cursor:pointer}
 .nav-links a:hover{color:var(--leaf-deep);border-color:var(--gold)}
 .nav-links a.active{color:var(--leaf-deep);border-color:var(--gold)}
@@ -130,6 +142,22 @@ main{position:relative}
    cal's booker caps its own internal width, so zoom it up on wide screens */
 #calendar .wrap{max-width:none}
 @media(min-width:1200px){#cal-inline{zoom:1.15}}
+
+/* about extras + projects + guestbook */
+.about-extra{display:grid;grid-template-columns:1fr 1fr;gap:48px;margin-top:60px}
+.about-extra h3{font-size:1.3rem;border-bottom:2px solid var(--gold);display:table;padding-bottom:5px;margin:0 0 10px}
+.now-date{font-size:.76rem;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 10px}
+.about-extra ul{margin:0;padding-left:20px}
+.about-extra li{margin-bottom:8px}
+@media(max-width:760px){.about-extra{grid-template-columns:1fr;gap:32px}}
+.projects-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:24px}
+.pcard{border:1px solid var(--line-strong);background:var(--paper);padding:26px;display:flex;flex-direction:column;gap:10px;transition:border-color .18s}
+.pcard:hover{border-color:var(--leaf)}
+.pcard .kicker{font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;font-weight:600;color:var(--gold)}
+.pcard h3{font-size:1.25rem;margin:0}
+.pcard p{color:var(--ink-soft);font-size:.94rem;margin:0;flex:1}
+.pcard .more{font-weight:600;font-size:.9rem}
+.giscus-wrap{max-width:860px}
 
 /* ---- section heads ---- */
 .sec-head{max-width:640px;margin:0 0 48px}
@@ -235,7 +263,9 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="about">About</a>
       <a data-tab="blog">Blog</a>
       <a data-tab="events">Events</a>
+      <a data-tab="projects">Projects</a>
       <a data-tab="calendar">Book a meeting</a>
+      <a data-tab="guestbook">Guestbook</a>
       <a data-tab="dating">Dating Document</a>
     </nav>
     <div class="nav-right">
@@ -291,6 +321,24 @@ footer a{color:var(--gold);cursor:pointer}
       <p style="font-size:1.08rem;color:var(--ink-soft)">I'm Alex, a 32 year old guy living in Kansas City. My goal is to improve the world through rationality and compassion, and have fun while doing it. This website serves as the one-stop-shop for all-things-Alex; whether you're a colleague who wants to schedule a meeting with me, a friend who wants to keep up with events I host, someone who likes my ideas and wants to read my blog, or someone who might be interested in me romantically and wants to check out my dating document. There's something here for everyone!</p>
     </div>
   </div>
+  <div class="about-extra">
+    <div>
+      <h3>Now</h3>
+      <p class="now-date">Updated July 23, 2026</p>
+      <ul>
+        <li>Pivoting a decade of IT experience toward AI governance and safety.</li>
+        <li>Studying in BlueDot Impact's Technical AI Safety intensive.</li>
+        <li>Organizing the Effective Altruism Kansas City community.</li>
+        <li>Writing about AI policy and rationality on the blog.</li>
+        <li>Polishing this website. You're soaking in it!</li>
+      </ul>
+    </div>
+    <div>
+      <h3>Reading &amp; watching</h3>
+      <p>I'm always mid-book; the full ever-growing shelf lives on <a href="https://www.goodreads.com/user/show/97736835-alex" target="_blank" rel="noopener">Goodreads</a>.</p>
+      <p>Movie taste? My hall of fame is on <a href="https://letterboxd.com/baes_theorem/list/alexs-movie-hall-of-fame/" target="_blank" rel="noopener">Letterboxd</a>.</p>
+    </div>
+  </div>
 </div></div></section>
 
 <!-- ================= CALENDAR ================= -->
@@ -316,6 +364,47 @@ footer a{color:var(--gold);cursor:pointer}
   </div>
 </div></div></section>
 
+<!-- ================= PROJECTS ================= -->
+<section class="page" id="projects"><div class="page-body"><div class="wrap">
+  <div class="sec-head">
+    <h2>Projects</h2>
+    <p>Things I build, organize, and write.</p>
+  </div>
+  <div class="projects-grid">
+    <div class="pcard">
+      <span class="kicker">Community · Organizer</span>
+      <h3>Effective Altruism Kansas City</h3>
+      <p>I've organized KC's EA community for years: reading groups, socials, and figuring out how to do the most good from the middle of the map.</p>
+      <a href="https://www.meetup.com/effective-altruism-kansas-city/" target="_blank" rel="noopener" class="more">Join us on Meetup →</a>
+    </div>
+    <div class="pcard">
+      <span class="kicker">Startup · Co-founder</span>
+      <h3>Guild of the Rose</h3>
+      <p>A community-based self-improvement project: practical rationality, taught and practiced together. My passion project.</p>
+      <a href="https://guildoftherose.org/" target="_blank" rel="noopener" class="more">guildoftherose.org →</a>
+    </div>
+    <div class="pcard">
+      <span class="kicker">AI Safety · Student</span>
+      <h3>BlueDot Technical AI Safety</h3>
+      <p>Accepted into BlueDot Impact's Technical AI Safety intensive in 2026, part of my pivot from enterprise IT into AI safety and governance.</p>
+      <a href="https://becomingstronger.substack.com/p/ive-been-accepted-into-bluedots-ai" target="_blank" rel="noopener" class="more">The announcement →</a>
+    </div>
+    <div class="pcard">
+      <span class="kicker">Writing · Ongoing</span>
+      <h3>AI governance &amp; rationality essays</h3>
+      <p>Analysis of AI policy (like the Artificial Intelligence Risk Evaluation Act) and essays on living rationally, published on my Substack.</p>
+      <a data-tab="blog" class="more" style="cursor:pointer">Read the blog →</a>
+    </div>
+    <div class="pcard">
+      <span class="kicker">Web · Open source</span>
+      <h3>This website</h3>
+      <p>A hand-built static site: no framework, no tracker bloat, one HTML file. Booking, events, a mirrored blog, and a Penrose triangle or two.</p>
+      <a href="https://github.com/BecomingStronger/becomingstronger.github.io" target="_blank" rel="noopener" class="more">Source on GitHub →</a>
+    </div>
+  </div>
+  <p style="margin-top:34px;color:var(--ink-soft)">Want a resume? <a href="mailto:alex.hedtke@gmail.com">Email me</a> and I'll send the current one.</p>
+</div></div></section>
+
 <!-- ================= EVENTS ================= -->
 <section class="page" id="events"><div class="page-body"><div class="wrap">
   <div class="sec-head">
@@ -331,6 +420,32 @@ footer a{color:var(--gold);cursor:pointer}
     tabindex="0"
     title="Event calendar"
   ></iframe>
+</div></div></section>
+
+<!-- ================= GUESTBOOK ================= -->
+<section class="page" id="guestbook"><div class="page-body"><div class="wrap">
+  <div class="sec-head">
+    <h2>Guestbook</h2>
+    <p>You made it to my corner of the internet; leave a note so I know you were here. Sign in with GitHub and say hi.</p>
+  </div>
+  <div class="giscus-wrap">
+    <script src="https://giscus.app/client.js"
+      data-repo="BecomingStronger/becomingstronger.github.io"
+      data-repo-id="R_kgDOTgsjKQ"
+      data-category="General"
+      data-category-id="DIC_kwDOTgsjKc4DBx2m"
+      data-mapping="specific"
+      data-term="Guestbook"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      crossorigin="anonymous"
+      async>
+    </script>
+  </div>
 </div></div></section>
 
 <!-- ================= DATING DOCUMENT ================= -->
@@ -375,8 +490,8 @@ footer a{color:var(--gold);cursor:pointer}
 
 <script>
 /* ---- tab router (hash-based; each page is an independent tab) ---- */
-var PAGES=['home','about','blog','events','dating','calendar'];
-var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',
+var PAGES=['home','about','blog','events','projects','calendar','guestbook','dating'];
+var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',projects:'Projects · Becoming Stronger',guestbook:'Guestbook · Becoming Stronger',
   blog:'Blog · Becoming Stronger',dating:'Dating Document · Becoming Stronger'};
 function showTab(id){
   if(PAGES.indexOf(id)<0)id='home';
@@ -410,6 +525,8 @@ function setTheme(t,save){
   document.documentElement.setAttribute('data-theme',t);
   var m=document.getElementById('meta-theme');
   if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+  try{var g=document.querySelector('iframe.giscus-frame');
+    if(g)g.contentWindow.postMessage({giscus:{setConfig:{theme:t}}},'https://giscus.app');}catch(e){}
   if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
   try{if(window.Cal&&Cal.ns&&Cal.ns.meeting&&typeof mountCal==='function')mountCal()}catch(e){}
 }
@@ -446,6 +563,72 @@ document.getElementById('signup').addEventListener('submit',function(e){
         +'<p>'+esc(p.excerpt)+'</p><span class="more">Read on Substack →</span></div></a>';
     }).join('');
   }).catch(function(){});
+})();
+
+/* ---- easter egg: click the logo 5x for a Penrose tiling ---- */
+(function(){
+  var clicks=[],brand=document.querySelector('.brand');
+  brand.addEventListener('click',function(){
+    var now=Date.now();clicks.push(now);
+    clicks=clicks.filter(function(t){return now-t<4000});
+    if(clicks.length>=5){clicks=[];showTiling();}
+  });
+  function showTiling(){
+    var css=getComputedStyle(document.documentElement);
+    var paper=css.getPropertyValue('--paper').trim(),
+        leaf=css.getPropertyValue('--leaf').trim(),
+        deep=css.getPropertyValue('--leaf-deep').trim(),
+        gold=css.getPropertyValue('--gold').trim(),
+        ink=css.getPropertyValue('--ink').trim();
+    var ov=document.createElement('div');
+    ov.style.cssText='position:fixed;inset:0;z-index:300;background:'+paper+';cursor:pointer';
+    var cv=document.createElement('canvas');
+    var dpr=window.devicePixelRatio||1,W=innerWidth,H=innerHeight;
+    cv.width=W*dpr;cv.height=H*dpr;cv.style.cssText='width:100%;height:100%';
+    ov.appendChild(cv);
+    var cap=document.createElement('div');
+    cap.style.cssText='position:absolute;bottom:26px;left:0;right:0;text-align:center;font-size:.95rem;color:'+ink+';opacity:.85';
+    cap.textContent='Roger Penrose gave us the impossible triangle, and this: a tiling that never repeats. Click to return.';
+    ov.appendChild(cap);
+    document.body.appendChild(ov);
+    ov.addEventListener('click',function(){ov.remove()});
+    /* P3 rhombus tiling via Robinson triangle subdivision */
+    var ctx=cv.getContext('2d');ctx.scale(dpr,dpr);
+    var PHI=(1+Math.sqrt(5))/2;
+    function c(re,im){return {re:re,im:im}}
+    function add(a,b){return c(a.re+b.re,a.im+b.im)}
+    function sub(a,b){return c(a.re-b.re,a.im-b.im)}
+    function mul(a,s){return c(a.re*s,a.im*s)}
+    var tris=[];
+    var R=Math.hypot(W,H)*0.62,cx=W/2,cy=H/2;
+    for(var i=0;i<10;i++){
+      var a1=(2*i-1)*Math.PI/10,a2=(2*i+1)*Math.PI/10;
+      var B=c(cx+R*Math.cos(a1),cy+R*Math.sin(a1)),C2=c(cx+R*Math.cos(a2),cy+R*Math.sin(a2));
+      if(i%2===0){var t=B;B=C2;C2=t;}
+      tris.push([0,c(cx,cy),B,C2]);
+    }
+    for(var d=0;d<7;d++){
+      var nt=[];
+      tris.forEach(function(t){
+        var col=t[0],A=t[1],B=t[2],C3=t[3];
+        if(col===0){
+          var P=add(A,mul(sub(B,A),1/PHI));
+          nt.push([0,C3,P,B],[1,P,C3,A]);
+        }else{
+          var Q=add(B,mul(sub(A,B),1/PHI)),R2=add(B,mul(sub(C3,B),1/PHI));
+          nt.push([1,R2,C3,A],[1,Q,R2,B],[0,R2,Q,A]);
+        }
+      });
+      tris=nt;
+    }
+    tris.forEach(function(t){
+      ctx.beginPath();
+      ctx.moveTo(t[1].re,t[1].im);ctx.lineTo(t[2].re,t[2].im);ctx.lineTo(t[3].re,t[3].im);ctx.closePath();
+      ctx.fillStyle=t[0]===0?leaf:gold;
+      ctx.fill();
+      ctx.strokeStyle=paper;ctx.lineWidth=.8;ctx.stroke();
+    });
+  }
 })();
 
 /* ---- year ---- */
