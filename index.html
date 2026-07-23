@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Becoming Stronger</title>
-<meta name="description" content="Personal site: about, blog, the dating document, and a calendar to grab time with me.">
+<meta name="description" content="Personal site: about, blog, the dating document, and a calendar to schedule time with me.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -120,6 +120,11 @@ footer a{color:var(--gold);cursor:pointer}
 .foot-brand{font-family:"Fraunces",serif;font-size:1.3rem;color:var(--paper)}
 .foot-links{display:flex;gap:22px;font-size:.9rem}
 .foot-links a{color:rgba(251,248,240,.85)}
+.socials{display:flex;gap:12px}
+.socials a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
+  border:1px solid rgba(251,248,240,.35);color:rgba(251,248,240,.85);transition:color .15s,border-color .15s}
+.socials a:hover{color:var(--gold);border-color:var(--gold)}
+.socials svg{display:block}
 
 @media(max-width:860px){
   .nav-links{position:absolute;top:66px;left:0;right:0;flex-direction:column;gap:0;background:var(--paper);border-bottom:1px solid var(--line-strong);display:none}
@@ -136,10 +141,10 @@ footer a{color:var(--gold);cursor:pointer}
 <header class="nav">
   <div class="wrap nav-in">
     <div class="brand" data-tab="home">
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M12 22c0-6 0-9 0-12" stroke="#3C6E47" stroke-width="2" stroke-linecap="round"/>
-        <path d="M12 13c-3 0-5-2-5-5 3 0 5 2 5 5Z" fill="#3C6E47"/>
-        <path d="M12 11c3 0 5-2 5-5-3 0-5 2-5 5Z" fill="#E0A526"/>
+      <svg width="26" height="23" viewBox="0 0 280 243" aria-hidden="true">
+        <path fill="#1C3A25" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
       </svg>
       Becoming Stronger
     </div>
@@ -150,7 +155,7 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="home">Home</a>
       <a data-tab="about">About</a>
       <a data-tab="blog">Blog</a>
-      <a data-tab="dating">✨ Dating Document ✨</a>
+      <a data-tab="dating">Dating Document</a>
       <a data-tab="calendar">Calendar</a>
     </nav>
   </div>
@@ -163,7 +168,7 @@ footer a{color:var(--gold);cursor:pointer}
     <h1>Are you the main character<br>of your life?<br>Would you like to be?</h1>
     <p class="sub">[A sentence or two about you and what this site is.]</p>
     <div class="hero-cta">
-      <button class="btn" data-tab="calendar">Grab time with me</button>
+      <button class="btn" data-tab="calendar">Schedule time with me</button>
       <button class="btn ghost" data-tab="about">About me</button>
     </div>
   </div>
@@ -178,7 +183,7 @@ footer a{color:var(--gold);cursor:pointer}
       <h2>Hi, I'm [Your Name].</h2>
       <p style="font-size:1.08rem;color:var(--ink-soft)">[Your story in 2-3 short paragraphs. Who you are, what you're about, what you're working on becoming. Speak the way you'd speak to one person across a table.]</p>
       <p style="color:var(--ink-soft)">[A line or two of the fun details: interests, projects, the stuff that makes you you.]</p>
-      <button class="btn ghost" data-tab="calendar" style="margin-top:8px">Grab time on my calendar</button>
+      <button class="btn ghost" data-tab="calendar" style="margin-top:8px">Schedule time on my calendar</button>
     </div>
   </div>
 </div></div></section>
@@ -187,7 +192,7 @@ footer a{color:var(--gold);cursor:pointer}
 <section class="page" id="calendar"><div class="page-body"><div class="wrap">
   <div class="sec-head">
     <p class="eyebrow">Calendar</p>
-    <h2>Grab time with me</h2>
+    <h2>Schedule time with me</h2>
     <p>[One line about what people can book here: a call, a walk, a coffee.]</p>
   </div>
   <!-- ===== CAL.COM EMBED: replace calLink in the script below with your real event link. ===== -->
@@ -213,7 +218,7 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= DATING DOCUMENT ================= -->
 <section class="page" id="dating"><div class="page-body"><div class="wrap">
   <div class="dating-card">
-    <p class="eyebrow">✨ Dating Document ✨</p>
+    <p class="eyebrow">Dating Document</p>
     <h2>The Dating Document</h2>
     <p class="lede">[A one-line hook for what this is.]</p>
     <p style="color:var(--ink-soft);font-size:1.06rem">[This is your space, put whatever the Dating Document is here: who you are, what you're looking for, your values, the whole thing. I've left it as a clean full-width canvas so it can be as long or as playful as you want.]</p>
@@ -230,8 +235,19 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="about">About</a><a data-tab="blog">Blog</a>
       <a data-tab="dating">Dating Document</a><a data-tab="calendar">Calendar</a><a href="mailto:[you@email.com]">Email</a>
     </div>
+    <div class="socials">
+      <a href="https://www.instagram.com/baes.theorem/" target="_blank" rel="noopener" aria-label="Instagram">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4.2" stroke="currentColor" stroke-width="1.8"/><circle cx="17.3" cy="6.7" r="1.3" fill="currentColor"/></svg>
+      </a>
+      <a href="https://www.facebook.com/baes.theorem" target="_blank" rel="noopener" aria-label="Facebook">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M13.4 21.5v-7.6h2.55l.38-2.96h-2.93V9.05c0-.86.24-1.44 1.47-1.44h1.57V4.96c-.27-.04-1.2-.12-2.29-.12-2.27 0-3.82 1.38-3.82 3.92v2.19H7.78v2.96h2.55v7.6h3.07z"/></svg>
+      </a>
+      <a href="https://www.linkedin.com/in/alexhedtke/" target="_blank" rel="noopener" aria-label="LinkedIn">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.1 2.1 0 1 1 0 4.2 2.1 2.1 0 0 1 0-4.2zM3.2 9.3h3.6v11.2H3.2zM9.1 9.3h3.45v1.53h.05c.48-.91 1.65-1.87 3.4-1.87 3.63 0 4.3 2.39 4.3 5.5v6.04h-3.6v-5.35c0-1.28-.02-2.92-1.78-2.92-1.78 0-2.05 1.39-2.05 2.83v5.44H9.1z"/></svg>
+      </a>
+    </div>
   </div>
-  <div class="wrap" style="margin-top:26px;font-size:.8rem;color:rgba(251,248,240,.6)">© <span id="yr"></span> Becoming Stronger · Made with sun and roots ☀</div>
+  <div class="wrap" style="margin-top:26px;font-size:.8rem;color:rgba(251,248,240,.6)">© <span id="yr"></span> Becoming Stronger</div>
 </footer>
 
 <script>
