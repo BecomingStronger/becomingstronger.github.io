@@ -158,7 +158,7 @@ a.post{color:inherit}
 
 /* dating document */
 #dating .page-body{background:radial-gradient(90% 120% at 100% 0%, #FCEfd6 0%, var(--paper) 60%)}
-.dating-card{border:1px solid var(--line-strong);background:var(--paper);padding:44px;max-width:760px}
+.dating-card{border:1px solid var(--line-strong);background:var(--paper);padding:52px;max-width:1280px;margin:0 auto}
 .dating-card h2{font-size:clamp(1.8rem,4vw,2.6rem);margin:0 0 8px}
 .dating-card .lede{font-style:italic;font-family:"Raleway",sans-serif;font-size:1.3rem;color:var(--leaf-deep);margin:0 0 20px}
 .dating-doc h1,.dating-doc h2,.dating-doc h3{font-family:"Raleway",sans-serif;font-size:1.6rem;margin:34px 0 10px;line-height:1.15}
@@ -167,6 +167,13 @@ a.post{color:inherit}
 .dating-doc figure{width:80%;margin:26px auto}
 .dating-doc figure.tall{width:58%}
 .dating-doc figure.wide{width:96%}
+@media(min-width:1000px){
+  .dating-doc{columns:2;column-gap:56px}
+  .dating-intro{column-span:all}
+  .dating-doc figure{break-inside:avoid}
+  .dating-doc h1,.dating-doc h2,.dating-doc h3{break-after:avoid}
+  .dating-doc figure.wide{column-span:all;width:78%}
+}
 .dating-doc img{width:100%;height:auto;border:1px solid var(--line-strong)}
 .dating-doc figcaption{font-size:.85rem;color:var(--ink-soft);text-align:center;margin-top:8px}
 .dating-doc ul,.dating-doc ol{margin:0 0 16px;padding-left:22px}
