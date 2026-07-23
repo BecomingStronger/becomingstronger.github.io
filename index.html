@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Becoming Stronger</title>
 <meta name="description" content="Personal site: about, blog, the dating document, and a calendar to schedule time with me.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -107,6 +110,9 @@ main{position:relative}
 .signup input:focus{border-color:var(--gold)}
 @media(max-width:480px){.signup{flex-direction:column;gap:10px}.signup input{border-right:1.5px solid var(--line-strong)}}
 
+/* calendar gets the full viewport width (embed elements need room) */
+#calendar .wrap{max-width:none}
+
 /* ---- section heads ---- */
 .sec-head{max-width:640px;margin:0 0 48px}
 .sec-head h2{font-size:clamp(1.9rem,4vw,2.8rem);margin:0}
@@ -182,9 +188,9 @@ footer a{color:var(--gold);cursor:pointer}
   <div class="wrap nav-in">
     <div class="brand" data-tab="home">
       <svg width="36" height="31" viewBox="0 0 280 243" aria-hidden="true">
-        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="6" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
-        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="6" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
-        <path fill="#437A50" stroke="#437A50" stroke-width="6" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
+        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="9" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="9" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" stroke="#437A50" stroke-width="9" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
       </svg>
       Becoming Stronger
     </div>
@@ -336,11 +342,16 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e)
 });
 
 /* ---- interim blog signup: email Alex until a list provider is wired in ---- */
+var SUBSTACK='';  /* set to your handle (the X in X.substack.com) to route signups to Substack */
 document.getElementById('signup').addEventListener('submit',function(e){
   e.preventDefault();
   var em=this.querySelector('input[name=email]').value;
-  location.href='mailto:alex.hedtke@gmail.com?subject='+encodeURIComponent('Blog subscription')
-    +'&body='+encodeURIComponent('Please subscribe '+em+' to the Becoming Stronger blog.');
+  if(SUBSTACK){
+    location.href='https://'+SUBSTACK+'.substack.com/subscribe?email='+encodeURIComponent(em);
+  }else{
+    location.href='mailto:alex.hedtke@gmail.com?subject='+encodeURIComponent('Blog subscription')
+      +'&body='+encodeURIComponent('Please subscribe '+em+' to the Becoming Stronger blog.');
+  }
 });
 
 /* ---- year ---- */
