@@ -237,10 +237,8 @@ footer a{color:var(--gold);cursor:pointer}
     <h2>Schedule time with me</h2>
     <p>[One line about what people can book here: a call, a walk, a coffee.]</p>
   </div>
-  <!-- ===== CAL.COM EMBED: replace calLink in the script below with your real event link. ===== -->
   <div class="booking" id="book">
     <div id="cal-inline"></div>
-    <p class="booking-note">[ Booking loads from cal.com. Replace <code>becomingstronger/intro</code> in the code with your real event link. ]</p>
   </div>
 </div></div></section>
 
@@ -321,7 +319,7 @@ toggle.addEventListener('click',function(){var o=links.classList.toggle('open');
 function setTheme(t,save){
   document.documentElement.setAttribute('data-theme',t);
   if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
-  try{if(window.Cal&&Cal.ns&&Cal.ns.intro)Cal.ns.intro("ui",{theme:t})}catch(e){}
+  try{if(window.Cal&&Cal.ns&&Cal.ns.meeting)Cal.ns.meeting("ui",{theme:t})}catch(e){}
 }
 document.getElementById('theme-toggle').addEventListener('click',function(){
   setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
@@ -337,12 +335,18 @@ document.getElementById('yr').textContent=new Date().getFullYear();
 /* ---- initial route ---- */
 showTab(location.hash.slice(1));
 
-/* ---- cal.com inline embed (replace calLink with your event) ---- */
+/* ---- cal.com inline embed ---- */
 (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
-Cal("init", "intro", {origin:"https://cal.com"});
-Cal.ns.intro("inline", {elementOrSelector:"#cal-inline",config:{layout:"month_view"},calLink:"becomingstronger/intro"});
-Cal.ns.intro("ui", {hideEventTypeDetails:false, layout:"month_view",
-  theme:document.documentElement.getAttribute('data-theme')||'light',
+Cal("init", "meeting", {origin:"https://app.cal.com"});
+Cal.config = Cal.config || {};
+Cal.config.forwardQueryParams = true;
+Cal.ns.meeting("inline", {
+  elementOrSelector:"#cal-inline",
+  config:{layout:"column_view",useSlotsViewOnSmallScreen:"true",
+    theme:document.documentElement.getAttribute('data-theme')||'auto'},
+  calLink:"alexhedtke/meeting",
+});
+Cal.ns.meeting("ui", {hideEventTypeDetails:false, layout:"column_view",
   cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"},dark:{"cal-brand":"#6CB27E"}}});
 </script>
 </body>
