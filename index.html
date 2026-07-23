@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Becoming Stronger — Life Coaching</title>
-<meta name="description" content="Life coaching to help you become the main character of your life. Book a free consultation.">
+<title>Becoming Stronger</title>
+<meta name="description" content="Personal site: about, blog, the dating document, and a calendar to grab time with me.">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -12,9 +12,9 @@
 
 <style>
 /* ============================================================
-   BECOMING STRONGER — solarpunk / flat-sharp Material
+   BECOMING STRONGER · solarpunk / flat-sharp Material
    Tabbed pages (hash-routed) · impressionist painted vines
-   Placeholders are marked with [SQUARE BRACKETS] — replace them.
+   Placeholders are marked with [SQUARE BRACKETS]; replace them.
    ============================================================ */
 :root{
   --paper:#FBF8F0;--paper-2:#F2EDDE;--ink:#1E2B22;--ink-soft:#4A5A4E;
@@ -149,9 +149,9 @@ footer a{color:var(--gold);cursor:pointer}
     <nav class="nav-links">
       <a data-tab="home">Home</a>
       <a data-tab="about">About</a>
-      <a data-tab="services">Services</a>
       <a data-tab="blog">Blog</a>
       <a data-tab="dating">✨ Dating Document ✨</a>
+      <a data-tab="calendar">Calendar</a>
     </nav>
   </div>
 </header>
@@ -161,10 +161,10 @@ footer a{color:var(--gold);cursor:pointer}
 <section class="page" id="home">
   <div class="hero-in">
     <h1>Are you the main character<br>of your life?<br>Would you like to be?</h1>
-    <p class="sub">[One or two sentences on what you help people do. e.g. "Life coaching for people ready to stop drifting and start authoring the story they actually want to live."]</p>
+    <p class="sub">[A sentence or two about you and what this site is.]</p>
     <div class="hero-cta">
-      <button class="btn" data-tab="services">Book your free consultation</button>
-      <button class="btn ghost" data-tab="about">Meet your coach</button>
+      <button class="btn" data-tab="calendar">Grab time with me</button>
+      <button class="btn ghost" data-tab="about">About me</button>
     </div>
   </div>
 </section>
@@ -172,48 +172,25 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= ABOUT ================= -->
 <section class="page" id="about"><div class="page-body"><div class="wrap">
   <div class="about-grid">
-    <div class="portrait">[ Your photo here<br>— 4:5 portrait ]</div>
+    <div class="portrait">[ Your photo here<br>(4:5 portrait) ]</div>
     <div>
       <p class="eyebrow">About</p>
       <h2>Hi, I'm [Your Name].</h2>
-      <p style="font-size:1.08rem;color:var(--ink-soft)">[Your story in 2-3 short paragraphs. Who you help, how you got here, what you believe about growth. Speak the way you'd speak to one person across a table.]</p>
-      <p style="color:var(--ink-soft)">[A line about your training, certification, or lived experience that earns trust.]</p>
-      <button class="btn ghost" data-tab="services" style="margin-top:8px">See how we'd work together</button>
+      <p style="font-size:1.08rem;color:var(--ink-soft)">[Your story in 2-3 short paragraphs. Who you are, what you're about, what you're working on becoming. Speak the way you'd speak to one person across a table.]</p>
+      <p style="color:var(--ink-soft)">[A line or two of the fun details: interests, projects, the stuff that makes you you.]</p>
+      <button class="btn ghost" data-tab="calendar" style="margin-top:8px">Grab time on my calendar</button>
     </div>
   </div>
 </div></div></section>
 
-<!-- ================= SERVICES ================= -->
-<section class="page" id="services"><div class="page-body"><div class="wrap">
+<!-- ================= CALENDAR ================= -->
+<section class="page" id="calendar"><div class="page-body"><div class="wrap">
   <div class="sec-head">
-    <p class="eyebrow">Services</p>
-    <h2>Ways we can work together</h2>
-    <p>Every journey starts with a free conversation. No pressure, no pitch, just a chance to see if we're a fit. [Edit this intro.]</p>
+    <p class="eyebrow">Calendar</p>
+    <h2>Grab time with me</h2>
+    <p>[One line about what people can book here: a call, a walk, a coffee.]</p>
   </div>
-  <div class="tiers">
-    <div class="tier">
-      <span class="kicker">Try it</span><h3>Single Session</h3>
-      <p class="price">$[95]</p><p class="per">per 60-min session</p>
-      <ul><li>One focused hour</li><li>A concrete next step</li><li>No commitment</li></ul>
-    </div>
-    <div class="tier feature">
-      <span class="kicker">Most popular</span><h3>Transformation</h3>
-      <p class="price">$[1,100]</p><p class="per">12 sessions · ~3 months</p>
-      <ul><li>Weekly or biweekly sessions</li><li>Between-session support</li><li>Real, tracked change</li></ul>
-    </div>
-    <div class="tier">
-      <span class="kicker">Get started</span><h3>Starter Arc</h3>
-      <p class="price">$[400]</p><p class="per">4 sessions · ~1 month</p>
-      <ul><li>Momentum in a month</li><li>Clarify one big goal</li><li>Rolls into Transformation</li></ul>
-    </div>
-  </div>
-  <div class="consult-band">
-    <strong>✨ First, a free 30-minute intro call.</strong>
-    <span style="color:var(--ink-soft);flex:1;min-width:200px">See if coaching is right for you, no cost, no obligation.</span>
-    <button class="btn" id="to-book">Grab a time below ↓</button>
-  </div>
-  <!-- ===== CAL.COM EMBED — replace calLink with your real event, e.g. "becomingstronger/intro".
-       Wire Stripe inside cal.com (paid event types); nothing to change here. ===== -->
+  <!-- ===== CAL.COM EMBED: replace calLink in the script below with your real event link. ===== -->
   <div class="booking" id="book">
     <div id="cal-inline"></div>
     <p class="booking-note">[ Booking loads from cal.com. Replace <code>becomingstronger/intro</code> in the code with your real event link. ]</p>
@@ -250,8 +227,8 @@ footer a{color:var(--gold);cursor:pointer}
   <div class="wrap foot-in">
     <div class="foot-brand">Becoming Stronger</div>
     <div class="foot-links">
-      <a data-tab="about">About</a><a data-tab="services">Services</a><a data-tab="blog">Blog</a>
-      <a data-tab="dating">Dating Document</a><a href="mailto:[you@email.com]">Email</a>
+      <a data-tab="about">About</a><a data-tab="blog">Blog</a>
+      <a data-tab="dating">Dating Document</a><a data-tab="calendar">Calendar</a><a href="mailto:[you@email.com]">Email</a>
     </div>
   </div>
   <div class="wrap" style="margin-top:26px;font-size:.8rem;color:rgba(251,248,240,.6)">© <span id="yr"></span> Becoming Stronger · Made with sun and roots ☀</div>
@@ -259,8 +236,8 @@ footer a{color:var(--gold);cursor:pointer}
 
 <script>
 /* ---- tab router (hash-based; each page is an independent tab) ---- */
-var PAGES=['home','about','services','blog','dating'];
-var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',services:'Services · Becoming Stronger',
+var PAGES=['home','about','blog','dating','calendar'];
+var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Calendar · Becoming Stronger',
   blog:'Blog · Becoming Stronger',dating:'Dating Document · Becoming Stronger'};
 function showTab(id){
   if(PAGES.indexOf(id)<0)id='home';
@@ -279,9 +256,6 @@ window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))}
 /* ---- mobile nav ---- */
 var toggle=document.querySelector('.nav-toggle'),links=document.querySelector('.nav-links');
 toggle.addEventListener('click',function(){var o=links.classList.toggle('open');toggle.setAttribute('aria-expanded',o)});
-
-/* ---- scroll to booking within Services ---- */
-document.getElementById('to-book').addEventListener('click',function(){document.getElementById('book').scrollIntoView({behavior:'smooth',block:'start'})});
 
 /* ---- year ---- */
 document.getElementById('yr').textContent=new Date().getFullYear();
