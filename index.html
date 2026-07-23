@@ -358,7 +358,13 @@ mountCal();
 Cal.ns.meeting("on",{action:"__routeChanged",callback:function(){
   if(Date.now()-(window.__calMountT||0)<2500)return;
   var cal=document.getElementById('calendar'),box=document.querySelector('.booking');
-  if(cal&&box&&cal.classList.contains('active'))box.scrollIntoView({block:'center',behavior:'smooth'});
+  if(!cal||!box||!cal.classList.contains('active'))return;
+  /* center the dialog (~720px tall, drawn mid-iframe), but never let its top
+     slide under the 66px sticky nav on short viewports */
+  var r=box.getBoundingClientRect();
+  var centerTop=window.scrollY+r.top+r.height/2-window.innerHeight/2;
+  var offset=Math.max(0,450-window.innerHeight/2);
+  window.scrollTo({top:Math.max(0,centerTop-offset),behavior:'smooth'});
 }});
 </script>
 </body>
