@@ -359,12 +359,15 @@ Cal.ns.meeting("on",{action:"__routeChanged",callback:function(){
   if(Date.now()-(window.__calMountT||0)<2500)return;
   var cal=document.getElementById('calendar'),box=document.querySelector('.booking');
   if(!cal||!box||!cal.classList.contains('active'))return;
-  /* center the dialog (~720px tall, drawn mid-iframe), but never let its top
-     slide under the 66px sticky nav on short viewports */
-  var r=box.getBoundingClientRect();
-  var centerTop=window.scrollY+r.top+r.height/2-window.innerHeight/2;
-  var offset=Math.max(0,450-window.innerHeight/2);
-  window.scrollTo({top:Math.max(0,centerTop-offset),behavior:'smooth'});
+  /* cal's dialog (716px tall) is centered on the iframe's midpoint. Center it in
+     the viewport when it fits; on short windows keep the bottom (Confirm) visible
+     and let only the card's 37px top padding tuck under the 66px sticky nav. */
+  var r=box.getBoundingClientRect(),vh=window.innerHeight;
+  var mC=window.scrollY+r.top+r.height/2;
+  var t=mC-vh/2;
+  t=Math.max(t,mC+358+8-vh);   /* dialog bottom stays >=8px above the fold */
+  t=Math.min(t,mC-358-47);     /* card top <=47px under viewport top (heading clears nav) */
+  window.scrollTo({top:Math.max(0,t),behavior:'smooth'});
 }});
 </script>
 </body>
