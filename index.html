@@ -157,7 +157,6 @@ main{position:relative}
 .pcard h3{font-size:1.25rem;margin:0}
 .pcard p{color:var(--ink-soft);font-size:.94rem;margin:0;flex:1}
 .pcard .more{font-weight:600;font-size:.9rem}
-.giscus-wrap{max-width:860px}
 .resume-block{margin-top:48px}
 .resume-block h3{font-size:1.3rem;border-bottom:2px solid var(--gold);display:table;padding-bottom:5px;margin:0 0 16px}
 .resume-embed{width:100%;max-width:900px;height:1150px;border:1px solid var(--line-strong);display:block}
@@ -270,7 +269,6 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="events">Events</a>
       <a data-tab="portfolio">Portfolio</a>
       <a data-tab="calendar">Book a meeting</a>
-      <a data-tab="guestbook">Guestbook</a>
       <a data-tab="dating">Dating Document</a>
     </nav>
     <div class="nav-right">
@@ -439,32 +437,6 @@ footer a{color:var(--gold);cursor:pointer}
   ></iframe>
 </div></div></section>
 
-<!-- ================= GUESTBOOK ================= -->
-<section class="page" id="guestbook"><div class="page-body"><div class="wrap">
-  <div class="sec-head">
-    <h2>Guestbook</h2>
-    <p>You made it to my corner of the internet; leave a note so I know you were here. Sign in with GitHub and say hi.</p>
-  </div>
-  <div class="giscus-wrap">
-    <script src="https://giscus.app/client.js"
-      data-repo="BecomingStronger/becomingstronger.github.io"
-      data-repo-id="R_kgDOTgsjKQ"
-      data-category="General"
-      data-category-id="DIC_kwDOTgsjKc4DBx2m"
-      data-mapping="specific"
-      data-term="Guestbook"
-      data-strict="0"
-      data-reactions-enabled="1"
-      data-emit-metadata="0"
-      data-input-position="top"
-      data-theme="preferred_color_scheme"
-      data-lang="en"
-      crossorigin="anonymous"
-      async>
-    </script>
-  </div>
-</div></div></section>
-
 <!-- ================= DATING DOCUMENT ================= -->
 <section class="page" id="dating"><div class="page-body"><div class="wrap">
   <div class="dating-card">
@@ -507,8 +479,8 @@ footer a{color:var(--gold);cursor:pointer}
 
 <script>
 /* ---- tab router (hash-based; each page is an independent tab) ---- */
-var PAGES=['home','about','blog','events','portfolio','calendar','guestbook','dating'];
-var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',portfolio:'Portfolio · Becoming Stronger',guestbook:'Guestbook · Becoming Stronger',
+var PAGES=['home','about','blog','events','portfolio','calendar','dating'];
+var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',portfolio:'Portfolio · Becoming Stronger',
   blog:'Blog · Becoming Stronger',dating:'Dating Document · Becoming Stronger'};
 function showTab(id){
   if(PAGES.indexOf(id)<0)id='home';
@@ -558,8 +530,6 @@ function setTheme(t,save){
   document.documentElement.setAttribute('data-theme',t);
   var m=document.getElementById('meta-theme');
   if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
-  try{var g=document.querySelector('iframe.giscus-frame');
-    if(g)g.contentWindow.postMessage({giscus:{setConfig:{theme:t}}},'https://giscus.app');}catch(e){}
   if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
   try{if(window.Cal&&Cal.ns&&Cal.ns.meeting&&typeof mountCal==='function')mountCal()}catch(e){}
 }
