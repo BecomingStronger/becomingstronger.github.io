@@ -164,7 +164,9 @@ main{position:relative}
 
 /* blog */
 .posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
-.post{border:1px solid var(--line-strong);background:var(--paper);padding:26px;display:flex;flex-direction:column;gap:12px;transition:border-color .18s}
+.post{border:1px solid var(--line-strong);background:var(--paper);padding:0;display:flex;flex-direction:column;transition:border-color .18s}
+.pthumb{width:100%;aspect-ratio:1.91/1;object-fit:cover;border-bottom:1px solid var(--line);display:block}
+.pin{padding:22px 26px;display:flex;flex-direction:column;gap:12px;flex:1}
 .post:hover{border-color:var(--leaf)}
 a.post{color:inherit}
 .post .date{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:600}
@@ -312,9 +314,9 @@ footer a{color:var(--gold);cursor:pointer}
     <p>Fresh essays from my Substack. New posts land here and in your inbox.</p>
   </div>
   <div class="posts">
-    <article class="post"><span class="date">Coming soon</span><h3>[Your first post title]</h3><p>[A one-sentence teaser of what the reader will get.]</p><span class="more">Read more →</span></article>
-    <article class="post"><span class="date">Coming soon</span><h3>[Second post title]</h3><p>[Teaser copy goes here.]</p><span class="more">Read more →</span></article>
-    <article class="post"><span class="date">Coming soon</span><h3>[Third post title]</h3><p>[Teaser copy goes here.]</p><span class="more">Read more →</span></article>
+    <article class="post"><div class="pin"><span class="date">Coming soon</span><h3>[Your first post title]</h3><p>[A one-sentence teaser of what the reader will get.]</p><span class="more">Read more →</span></div></article>
+    <article class="post"><div class="pin"><span class="date">Coming soon</span><h3>[Second post title]</h3><p>[Teaser copy goes here.]</p><span class="more">Read more →</span></div></article>
+    <article class="post"><div class="pin"><span class="date">Coming soon</span><h3>[Third post title]</h3><p>[Teaser copy goes here.]</p><span class="more">Read more →</span></div></article>
   </div>
 </div></div></section>
 
@@ -449,9 +451,10 @@ document.getElementById('signup').addEventListener('submit',function(e){
   fetch('posts.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(posts){
     if(!posts||!posts.length)return;
     document.querySelector('#blog .posts').innerHTML=posts.map(function(p){
-      return '<a class="post" href="'+esc(p.link)+'" target="_blank" rel="noopener">'
-        +'<span class="date">'+esc(p.date)+'</span><h3>'+esc(p.title)+'</h3>'
-        +'<p>'+esc(p.excerpt)+'</p><span class="more">Read on Substack →</span></a>';
+      var img=p.image?'<img class="pthumb" src="'+esc(p.image)+'" alt="" loading="lazy">':'';
+      return '<a class="post" href="'+esc(p.link)+'" target="_blank" rel="noopener">'+img
+        +'<div class="pin"><span class="date">'+esc(p.date)+'</span><h3>'+esc(p.title)+'</h3>'
+        +'<p>'+esc(p.excerpt)+'</p><span class="more">Read on Substack →</span></div></a>';
     }).join('');
   }).catch(function(){});
 })();
