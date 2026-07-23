@@ -45,11 +45,10 @@ html[data-theme="dark"]{color-scheme:dark;
 [data-theme="dark"] .nav-toggle svg path{stroke:var(--ink)}
 [data-theme="dark"] #home{background:radial-gradient(120% 90% at 50% -10%, #1C2A1F 0%, var(--paper) 55%)}
 [data-theme="dark"] #dating .page-body{background:radial-gradient(90% 120% at 100% 0%, #24211461 0%, var(--paper) 60%)}
-[data-theme="dark"] .portrait{background:repeating-linear-gradient(135deg,var(--paper) 0 14px,#20291F 14px 28px)}
 [data-theme="dark"] .post .more,[data-theme="dark"] .dating-card .lede{color:var(--leaf)}
-[data-theme="dark"] .brand svg path:nth-of-type(1){fill:#8FCf9F}
-[data-theme="dark"] .brand svg path:nth-of-type(2){fill:#6CB27E}
-[data-theme="dark"] .brand svg path:nth-of-type(3){fill:#4E8659}
+[data-theme="dark"] .brand svg path:nth-of-type(1){fill:#8FCf9F;stroke:#8FCf9F}
+[data-theme="dark"] .brand svg path:nth-of-type(2){fill:#6CB27E;stroke:#6CB27E}
+[data-theme="dark"] .brand svg path:nth-of-type(3){fill:#4E8659;stroke:#4E8659}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);
@@ -109,8 +108,7 @@ main{position:relative}
 
 /* about */
 .about-grid{display:grid;grid-template-columns:1fr 1.3fr;gap:48px;align-items:center}
-.portrait{aspect-ratio:4/5;background:repeating-linear-gradient(135deg,var(--paper) 0 14px,#EDE6D2 14px 28px);
-  border:1px solid var(--line-strong);display:flex;align-items:center;justify-content:center;color:var(--ink-soft);font-size:.85rem;text-align:center;padding:20px}
+.portrait{width:100%;height:auto;display:block;border:1px solid var(--line-strong)}
 @media(max-width:760px){.about-grid{grid-template-columns:1fr}}
 
 /* services / pricing */
@@ -130,8 +128,8 @@ main{position:relative}
 .consult-band{border:1px solid var(--line-strong);border-top:none;background:var(--paper);padding:26px;
   display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
 .consult-band strong{font-family:"Fraunces",serif;font-size:1.25rem;font-weight:500}
-.booking{margin-top:40px;border:1px solid var(--line-strong);background:var(--paper);padding:8px;min-height:560px}
-#cal-inline{width:100%;height:600px;overflow:auto}
+.booking{margin-top:40px;border:1px solid var(--line-strong);background:var(--paper);padding:8px}
+#cal-inline{width:100%;height:840px;overflow:auto}
 .booking-note{font-size:.82rem;color:var(--ink-soft);padding:10px 6px 4px}
 
 /* blog */
@@ -177,10 +175,10 @@ footer a{color:var(--gold);cursor:pointer}
 <header class="nav">
   <div class="wrap nav-in">
     <div class="brand" data-tab="home">
-      <svg width="26" height="23" viewBox="0 0 280 243" aria-hidden="true">
-        <path fill="#1C3A25" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
-        <path fill="#2E5A3B" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
-        <path fill="#437A50" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
+      <svg width="36" height="31" viewBox="0 0 280 243" aria-hidden="true">
+        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="6" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="6" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" stroke="#437A50" stroke-width="6" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
       </svg>
       Becoming Stronger
     </div>
@@ -207,8 +205,8 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= HOME ================= -->
 <section class="page" id="home">
   <div class="hero-in">
-    <h1>Are you the main character<br>of your life?<br>Would you like to be?</h1>
-    <p class="sub">[A sentence or two about you and what this site is.]</p>
+    <h1>Are you the main character<br>of your life?</h1>
+    <p class="sub">Follow along on my journey, and together let's improve the world through rationality and compassion.</p>
     <div class="hero-cta">
       <button class="btn" data-tab="calendar">Schedule time with me</button>
       <button class="btn ghost" data-tab="about">About me</button>
@@ -219,7 +217,7 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= ABOUT ================= -->
 <section class="page" id="about"><div class="page-body"><div class="wrap">
   <div class="about-grid">
-    <div class="portrait">[ Your photo here<br>(4:5 portrait) ]</div>
+    <img class="portrait" src="images/about.jpg" alt="Alex stepping out of an ornate brownstone doorway">
     <div>
       <p class="eyebrow">About</p>
       <h2>Hi, I'm [Your Name].</h2>
@@ -233,8 +231,6 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= CALENDAR ================= -->
 <section class="page" id="calendar"><div class="page-body"><div class="wrap">
   <div class="sec-head">
-    <p class="eyebrow">Calendar</p>
-    <h2>Schedule time with me</h2>
     <p>[One line about what people can book here: a call, a walk, a coffee.]</p>
   </div>
   <div class="booking" id="book">
@@ -245,7 +241,7 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= BLOG ================= -->
 <section class="page" id="blog"><div class="page-body"><div class="wrap">
   <div class="sec-head">
-    <p class="eyebrow">Blog</p><h2>Field notes on becoming</h2>
+    <h2>Field notes on becoming</h2>
     <p>[Short line about what you write about. Delete these placeholder posts as you publish real ones.]</p>
   </div>
   <div class="posts">
@@ -258,8 +254,6 @@ footer a{color:var(--gold);cursor:pointer}
 <!-- ================= DATING DOCUMENT ================= -->
 <section class="page" id="dating"><div class="page-body"><div class="wrap">
   <div class="dating-card">
-    <p class="eyebrow">Dating Document</p>
-    <h2>The Dating Document</h2>
     <p class="lede">[A one-line hook for what this is.]</p>
     <p style="color:var(--ink-soft);font-size:1.06rem">[This is your space, put whatever the Dating Document is here: who you are, what you're looking for, your values, the whole thing. I've left it as a clean full-width canvas so it can be as long or as playful as you want.]</p>
     <a class="btn ghost" href="#" style="margin-top:10px">[Optional: link to full document]</a>
