@@ -158,6 +158,11 @@ main{position:relative}
 .pcard p{color:var(--ink-soft);font-size:.94rem;margin:0;flex:1}
 .pcard .more{font-weight:600;font-size:.9rem}
 .giscus-wrap{max-width:860px}
+.resume-block{margin-top:48px}
+.resume-block h3{font-size:1.3rem;border-bottom:2px solid var(--gold);display:table;padding-bottom:5px;margin:0 0 16px}
+.resume-embed{width:100%;max-width:900px;height:1150px;border:1px solid var(--line-strong);display:block}
+.resume-note{margin-top:10px;font-size:.9rem;color:var(--ink-soft)}
+@media(max-width:700px){.resume-embed{height:70vh}}
 
 /* ---- section heads ---- */
 .sec-head{max-width:640px;margin:0 0 48px}
@@ -263,7 +268,7 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="about">About</a>
       <a data-tab="blog">Blog</a>
       <a data-tab="events">Events</a>
-      <a data-tab="projects">Projects</a>
+      <a data-tab="portfolio">Portfolio</a>
       <a data-tab="calendar">Book a meeting</a>
       <a data-tab="guestbook">Guestbook</a>
       <a data-tab="dating">Dating Document</a>
@@ -365,9 +370,9 @@ footer a{color:var(--gold);cursor:pointer}
 </div></div></section>
 
 <!-- ================= PROJECTS ================= -->
-<section class="page" id="projects"><div class="page-body"><div class="wrap">
+<section class="page" id="portfolio"><div class="page-body"><div class="wrap">
   <div class="sec-head">
-    <h2>Projects</h2>
+    <h2>Portfolio</h2>
     <p>Things I build, organize, and write.</p>
   </div>
   <div class="projects-grid">
@@ -402,7 +407,13 @@ footer a{color:var(--gold);cursor:pointer}
       <a href="https://github.com/BecomingStronger/becomingstronger.github.io" target="_blank" rel="noopener" class="more">Source on GitHub →</a>
     </div>
   </div>
-  <p style="margin-top:34px;color:var(--ink-soft)">Want a resume? <a href="mailto:alex.hedtke@gmail.com">Email me</a> and I'll send the current one.</p>
+  <div class="resume-block">
+    <h3>Resume</h3>
+    <object data="resume.pdf#view=FitH" type="application/pdf" class="resume-embed" aria-label="Alex Hedtke's resume">
+      <p style="padding:20px">Your browser doesn't display PDFs inline. <a href="resume.pdf">Download the resume (PDF)</a> instead.</p>
+    </object>
+    <p class="resume-note"><a href="resume.pdf" download>Download the PDF</a>, or <a href="mailto:alex.hedtke@gmail.com">email me</a> for the latest version.</p>
+  </div>
 </div></div></section>
 
 <!-- ================= EVENTS ================= -->
@@ -490,8 +501,8 @@ footer a{color:var(--gold);cursor:pointer}
 
 <script>
 /* ---- tab router (hash-based; each page is an independent tab) ---- */
-var PAGES=['home','about','blog','events','projects','calendar','guestbook','dating'];
-var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',projects:'Projects · Becoming Stronger',guestbook:'Guestbook · Becoming Stronger',
+var PAGES=['home','about','blog','events','portfolio','calendar','guestbook','dating'];
+var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',portfolio:'Portfolio · Becoming Stronger',guestbook:'Guestbook · Becoming Stronger',
   blog:'Blog · Becoming Stronger',dating:'Dating Document · Becoming Stronger'};
 function showTab(id){
   if(PAGES.indexOf(id)<0)id='home';
