@@ -10,6 +10,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Inter:wght@400;450;500;600&display=swap" rel="stylesheet">
 
+<script>
+/* apply saved/system theme before first paint (no flash) */
+(function(){var t=null;try{t=localStorage.getItem('bs-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+
 <style>
 /* ============================================================
    BECOMING STRONGER · solarpunk / flat-sharp Material
@@ -21,6 +28,28 @@
   --leaf:#3C6E47;--leaf-deep:#24492F;--gold:#E0A526;--terra:#C4623C;--bloom:#E98BA6;
   --line:rgba(30,43,34,.16);--line-strong:rgba(30,43,34,.28);--maxw:1120px;
 }
+html{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;
+  --paper:#131A15;--paper-2:#1A231C;--ink:#EFE9DB;--ink-soft:#A9B4A6;
+  --leaf:#6CB27E;--leaf-deep:#2E5A3B;--gold:#E4B04A;--terra:#D97B52;
+  --line:rgba(239,233,219,.14);--line-strong:rgba(239,233,219,.26);
+}
+/* dark-mode fixups for hardcoded light values */
+[data-theme="dark"] a{color:var(--leaf)}
+[data-theme="dark"] .btn{color:var(--ink)}
+[data-theme="dark"] .btn:hover{background:var(--leaf);color:#131A15}
+[data-theme="dark"] .btn.ghost{color:var(--leaf)}
+[data-theme="dark"] .btn.ghost:hover{background:var(--leaf-deep);color:var(--ink)}
+[data-theme="dark"] header.nav{background:rgba(19,26,21,.86)}
+[data-theme="dark"] .nav-links a:hover,[data-theme="dark"] .nav-links a.active{color:var(--leaf)}
+[data-theme="dark"] .nav-toggle svg path{stroke:var(--ink)}
+[data-theme="dark"] #home{background:radial-gradient(120% 90% at 50% -10%, #1C2A1F 0%, var(--paper) 55%)}
+[data-theme="dark"] #dating .page-body{background:radial-gradient(90% 120% at 100% 0%, #24211461 0%, var(--paper) 60%)}
+[data-theme="dark"] .portrait{background:repeating-linear-gradient(135deg,var(--paper) 0 14px,#20291F 14px 28px)}
+[data-theme="dark"] .post .more,[data-theme="dark"] .dating-card .lede{color:var(--leaf)}
+[data-theme="dark"] .brand svg path:nth-of-type(1){fill:#8FCf9F}
+[data-theme="dark"] .brand svg path:nth-of-type(2){fill:#6CB27E}
+[data-theme="dark"] .brand svg path:nth-of-type(3){fill:#4E8659}
 *{box-sizing:border-box}
 html{scroll-behavior:smooth}
 body{margin:0;background:var(--paper);color:var(--ink);
@@ -44,11 +73,18 @@ header.nav{position:sticky;top:0;z-index:50;background:rgba(251,248,240,.86);bac
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:66px}
 .brand{display:flex;align-items:center;gap:10px;font-family:"Fraunces",serif;font-weight:600;font-size:1.15rem;color:var(--ink);cursor:pointer}
 .brand svg{flex:none}
-.nav-links{display:flex;align-items:center;gap:26px}
+.nav-links{display:flex;align-items:center;gap:26px;margin-left:auto;margin-right:18px}
 .nav-links a{font-size:.92rem;font-weight:500;color:var(--ink-soft);padding:6px 0;border-bottom:2px solid transparent;transition:color .15s,border-color .15s;cursor:pointer}
 .nav-links a:hover{color:var(--leaf-deep);border-color:var(--gold)}
 .nav-links a.active{color:var(--leaf-deep);border-color:var(--gold)}
 .nav-toggle{display:none;background:none;border:1px solid var(--line-strong);padding:8px;cursor:pointer}
+.nav-right{display:flex;align-items:center;gap:16px}
+.theme-toggle{background:none;border:1px solid var(--line-strong);width:38px;height:38px;padding:0;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft);transition:color .15s,border-color .15s}
+.theme-toggle:hover{color:var(--gold);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
 
 /* ---- tabbed pages ---- */
 main{position:relative}
@@ -148,9 +184,6 @@ footer a{color:var(--gold);cursor:pointer}
       </svg>
       Becoming Stronger
     </div>
-    <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
-      <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="#1E2B22" stroke-width="2" stroke-linecap="round"/></svg>
-    </button>
     <nav class="nav-links">
       <a data-tab="home">Home</a>
       <a data-tab="about">About</a>
@@ -158,6 +191,15 @@ footer a{color:var(--gold);cursor:pointer}
       <a data-tab="dating">Dating Document</a>
       <a data-tab="calendar">Calendar</a>
     </nav>
+    <div class="nav-right">
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" width="17" height="17" viewBox="0 0 24 24" fill="none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg class="icon-sun" width="17" height="17" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+      <button class="nav-toggle" aria-label="Menu" aria-expanded="false">
+        <svg width="22" height="22" viewBox="0 0 24 24"><path d="M3 6h18M3 12h18M3 18h18" stroke="#1E2B22" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
   </div>
 </header>
 
@@ -273,6 +315,22 @@ window.addEventListener('hashchange',function(){showTab(location.hash.slice(1))}
 var toggle=document.querySelector('.nav-toggle'),links=document.querySelector('.nav-links');
 toggle.addEventListener('click',function(){var o=links.classList.toggle('open');toggle.setAttribute('aria-expanded',o)});
 
+/* ---- dark/light toggle ----
+   Default follows the system (set pre-paint in <head>); clicking the toggle
+   saves an explicit override. While no override exists, live-track OS changes. */
+function setTheme(t,save){
+  document.documentElement.setAttribute('data-theme',t);
+  if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
+  try{if(window.Cal&&Cal.ns&&Cal.ns.intro)Cal.ns.intro("ui",{theme:t})}catch(e){}
+}
+document.getElementById('theme-toggle').addEventListener('click',function(){
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+  var saved=null;try{saved=localStorage.getItem('bs-theme')}catch(err){}
+  if(saved!=='dark'&&saved!=='light')setTheme(e.matches?'dark':'light',false);
+});
+
 /* ---- year ---- */
 document.getElementById('yr').textContent=new Date().getFullYear();
 
@@ -283,7 +341,9 @@ showTab(location.hash.slice(1));
 (function (C, A, L) { let p = function (a, ar) { a.q.push(ar); }; let d = C.document; C.Cal = C.Cal || function () { let cal = C.Cal; let ar = arguments; if (!cal.loaded) { cal.ns = {}; cal.q = cal.q || []; d.head.appendChild(d.createElement("script")).src = A; cal.loaded = true; } if (ar[0] === L) { const api = function () { p(api, arguments); }; const namespace = ar[1]; api.q = api.q || []; if (typeof namespace === "string") { cal.ns[namespace] = cal.ns[namespace] || api; p(cal.ns[namespace], ar); p(cal, ["initNamespace", namespace]); } else p(cal, ar); return; } p(cal, ar); }; })(window, "https://app.cal.com/embed/embed.js", "init");
 Cal("init", "intro", {origin:"https://cal.com"});
 Cal.ns.intro("inline", {elementOrSelector:"#cal-inline",config:{layout:"month_view"},calLink:"becomingstronger/intro"});
-Cal.ns.intro("ui", {hideEventTypeDetails:false, layout:"month_view", cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"}}});
+Cal.ns.intro("ui", {hideEventTypeDetails:false, layout:"month_view",
+  theme:document.documentElement.getAttribute('data-theme')||'light',
+  cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"},dark:{"cal-brand":"#6CB27E"}}});
 </script>
 </body>
 </html>
