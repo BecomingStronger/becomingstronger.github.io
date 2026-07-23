@@ -106,7 +106,7 @@ header.nav{position:sticky;top:0;z-index:50;background:rgba(251,248,240,.86);bac
 
 /* ---- tabbed pages ---- */
 main{position:relative}
-.page{display:none;min-height:calc(100vh - 67px)}
+.page{display:none;min-height:calc(100vh - 67px - 50px)}
 .page.active{display:block;animation:fade .4s ease both}
 @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
 .page-body{padding:84px 0 96px}
@@ -200,10 +200,8 @@ a.post{color:inherit}
   padding:18px 22px;margin:0 0 32px;font-size:1.08rem}
 
 /* footer */
-footer{background:var(--leaf-deep);color:rgba(251,248,240,.9);padding:34px 0}
+footer{background:var(--leaf-deep);padding:15px 0}
 footer a{color:var(--gold);cursor:pointer}
-.foot-in{display:flex;justify-content:space-between;gap:24px;flex-wrap:wrap;align-items:center}
-.foot-brand{font-family:"Raleway",sans-serif;font-size:1.3rem;color:var(--paper)}
 .socials{display:flex;gap:12px;justify-content:center;margin-top:18px}
 .socials a{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;
   border:1px solid var(--line-strong);color:var(--ink-soft);transition:color .15s,border-color .15s}
@@ -372,10 +370,7 @@ footer a{color:var(--gold);cursor:pointer}
 
 <!-- ================= FOOTER ================= -->
 <footer>
-  <div class="wrap foot-in">
-    <div class="foot-brand">Becoming Stronger</div>
-    <div style="font-size:.8rem;color:rgba(251,248,240,.6)">© <span id="yr"></span> Becoming Stronger</div>
-  </div>
+  <div class="wrap" style="text-align:center;font-size:.8rem;color:rgba(251,248,240,.6)">© <span id="yr"></span> Becoming Stronger</div>
 </footer>
 
 <script>
