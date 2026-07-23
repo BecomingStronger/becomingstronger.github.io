@@ -1,0 +1,42 @@
+<!-- ARCHIVED 2026-07-22: Services page (life coaching on back burner).
+     To revive: paste the <section> back into index.html before the BLOG section,
+     re-add 'services' to PAGES + titles in the JS, re-add the nav/footer links,
+     and restore the #to-book scroll listener. Pricing research: vault note
+     "Life Coaching Website Design Principles". -->
+<!-- ================= SERVICES ================= -->
+<section class="page" id="services"><div class="page-body"><div class="wrap">
+  <div class="sec-head">
+    <p class="eyebrow">Services</p>
+    <h2>Ways we can work together</h2>
+    <p>Every journey starts with a free conversation. No pressure, no pitch, just a chance to see if we're a fit. [Edit this intro.]</p>
+  </div>
+  <div class="tiers">
+    <div class="tier">
+      <span class="kicker">Try it</span><h3>Single Session</h3>
+      <p class="price">$[95]</p><p class="per">per 60-min session</p>
+      <ul><li>One focused hour</li><li>A concrete next step</li><li>No commitment</li></ul>
+    </div>
+    <div class="tier feature">
+      <span class="kicker">Most popular</span><h3>Transformation</h3>
+      <p class="price">$[1,100]</p><p class="per">12 sessions · ~3 months</p>
+      <ul><li>Weekly or biweekly sessions</li><li>Between-session support</li><li>Real, tracked change</li></ul>
+    </div>
+    <div class="tier">
+      <span class="kicker">Get started</span><h3>Starter Arc</h3>
+      <p class="price">$[400]</p><p class="per">4 sessions · ~1 month</p>
+      <ul><li>Momentum in a month</li><li>Clarify one big goal</li><li>Rolls into Transformation</li></ul>
+    </div>
+  </div>
+  <div class="consult-band">
+    <strong>✨ First, a free 30-minute intro call.</strong>
+    <span style="color:var(--ink-soft);flex:1;min-width:200px">See if coaching is right for you, no cost, no obligation.</span>
+    <button class="btn" id="to-book">Grab a time below ↓</button>
+  </div>
+  <!-- ===== CAL.COM EMBED: replace calLink with your real event, e.g. "becomingstronger/intro".
+       Wire Stripe inside cal.com (paid event types); nothing to change here. ===== -->
+  <div class="booking" id="book">
+    <div id="cal-inline"></div>
+    <p class="booking-note">[ Booking loads from cal.com. Replace <code>becomingstronger/intro</code> in the code with your real event link. ]</p>
+  </div>
+</div></div></section>
+
