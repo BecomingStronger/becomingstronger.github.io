@@ -1,0 +1,42 @@
+name: substack-sync
+# Mirrors becomingstronger.substack.com posts into posts.json for the Blog tab.
+on:
+  schedule:
+    - cron: '23 */6 * * *'
+  workflow_dispatch: {}
+permissions:
+  contents: write
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Fetch feed and rebuild posts.json
+        run: |
+          python3 - <<'PY'
+          import urllib.request, xml.etree.ElementTree as ET, json, re, html
+          from email.utils import parsedate_to_datetime
+          req=urllib.request.Request("https://becomingstronger.substack.com/feed",
+              headers={"User-Agent":"becomingstronger.github.io blog mirror"})
+          xml=urllib.request.urlopen(req,timeout=30).read()
+          ch=ET.fromstring(xml).find("channel")
+          posts=[]
+          for it in ch.findall("item")[:12]:
+              title=(it.findtext("title") or "").strip()
+              link=(it.findtext("link") or "").strip()
+              desc=it.findtext("description") or ""
+              desc=html.unescape(re.sub(r"<[^>]+>","",desc)).strip()
+              if len(desc)>180: desc=desc[:177].rsplit(" ",1)[0]+"..."
+              try: date=parsedate_to_datetime(it.findtext("pubDate") or "").strftime("%Y-%m-%d")
+              except Exception: date=""
+              posts.append({"title":title,"link":link,"date":date,"excerpt":desc})
+          json.dump(posts,open("posts.json","w"),indent=1)
+          print(len(posts),"posts")
+          PY
+      - name: Commit if changed
+        run: |
+          git config user.name "substack-sync"
+          git config user.email "actions@users.noreply.github.com"
+          git add posts.json
+          git diff --cached --quiet || git commit -m "Sync Substack posts"
+          git push

@@ -110,8 +110,10 @@ main{position:relative}
 .signup input:focus{border-color:var(--gold)}
 @media(max-width:480px){.signup{flex-direction:column;gap:10px}.signup input{border-right:1.5px solid var(--line-strong)}}
 
-/* calendar gets the full viewport width (embed elements need room) */
+/* calendar gets the full viewport width (embed elements need room);
+   cal's booker caps its own internal width, so zoom it up on wide screens */
 #calendar .wrap{max-width:none}
+@media(min-width:1200px){#cal-inline{zoom:1.15}}
 
 /* ---- section heads ---- */
 .sec-head{max-width:640px;margin:0 0 48px}
@@ -148,6 +150,7 @@ main{position:relative}
 .posts{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:24px}
 .post{border:1px solid var(--line-strong);background:var(--paper);padding:26px;display:flex;flex-direction:column;gap:12px;transition:border-color .18s}
 .post:hover{border-color:var(--leaf)}
+a.post{color:inherit}
 .post .date{font-size:.76rem;letter-spacing:.08em;text-transform:uppercase;color:var(--terra);font-weight:600}
 .post h3{font-size:1.25rem;margin:0}
 .post p{color:var(--ink-soft);font-size:.94rem;margin:0}
@@ -257,7 +260,7 @@ footer a{color:var(--gold);cursor:pointer}
 <section class="page" id="blog"><div class="page-body"><div class="wrap">
   <div class="sec-head">
     <h2>Field notes on becoming</h2>
-    <p>[Short line about what you write about. Delete these placeholder posts as you publish real ones.]</p>
+    <p>Fresh essays from my Substack. New posts land here and in your inbox.</p>
   </div>
   <div class="posts">
     <article class="post"><span class="date">Coming soon</span><h3>[Your first post title]</h3><p>[A one-sentence teaser of what the reader will get.]</p><span class="more">Read more →</span></article>
@@ -342,7 +345,7 @@ matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e)
 });
 
 /* ---- interim blog signup: email Alex until a list provider is wired in ---- */
-var SUBSTACK='';  /* set to your handle (the X in X.substack.com) to route signups to Substack */
+var SUBSTACK='becomingstronger';
 document.getElementById('signup').addEventListener('submit',function(e){
   e.preventDefault();
   var em=this.querySelector('input[name=email]').value;
@@ -353,6 +356,19 @@ document.getElementById('signup').addEventListener('submit',function(e){
       +'&body='+encodeURIComponent('Please subscribe '+em+' to the Becoming Stronger blog.');
   }
 });
+
+/* ---- blog: render mirrored Substack posts (posts.json, synced by GitHub Action) ---- */
+(function(){
+  function esc(t){var d=document.createElement('div');d.textContent=t;return d.innerHTML}
+  fetch('posts.json',{cache:'no-store'}).then(function(r){return r.ok?r.json():null}).then(function(posts){
+    if(!posts||!posts.length)return;
+    document.querySelector('#blog .posts').innerHTML=posts.map(function(p){
+      return '<a class="post" href="'+esc(p.link)+'" target="_blank" rel="noopener">'
+        +'<span class="date">'+esc(p.date)+'</span><h3>'+esc(p.title)+'</h3>'
+        +'<p>'+esc(p.excerpt)+'</p><span class="more">Read on Substack →</span></a>';
+    }).join('');
+  }).catch(function(){});
+})();
 
 /* ---- year ---- */
 document.getElementById('yr').textContent=new Date().getFullYear();
