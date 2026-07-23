@@ -26,6 +26,7 @@
 "https://www.linkedin.com/in/alexhedtke/","https://becomingstronger.substack.com/",
 "https://www.goodreads.com/user/show/97736835-alex","https://letterboxd.com/baes_theorem/"]}
 </script>
+<script>window.goatcounter={no_onload:true};</script>
 <script data-goatcounter="https://baes-theorem.goatcounter.com/count"
         async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -329,7 +330,7 @@ footer a{color:var(--gold);cursor:pointer}
         <li>Studying in BlueDot Impact's Technical AI Safety intensive.</li>
         <li>Organizing the Effective Altruism Kansas City community.</li>
         <li>Writing about AI policy and rationality on the blog.</li>
-        <li>Polishing this website. You're soaking in it!</li>
+        <li>Polishing this website.</li>
       </ul>
     </div>
     <div>
@@ -498,7 +499,23 @@ function showTab(id){
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.toggle('active',a.dataset.tab===id)});
   document.title=titles[id]||titles.home;
   window.scrollTo(0,0);
+  gcSend(id);
 }
+/* per-tab pageviews: each tab counts as its own path */
+window.__gcLast=null;window.__gcPend=null;
+function gcSend(id){
+  var path=(!id||id==='home')?'/':'/'+id;
+  if(window.__gcLast===path)return;
+  if(window.goatcounter&&goatcounter.count){window.__gcLast=path;goatcounter.count({path:path,title:document.title});}
+  else window.__gcPend=path;
+}
+function gcFlush(){
+  if(window.__gcPend&&window.goatcounter&&goatcounter.count){
+    var p=window.__gcPend;window.__gcPend=null;
+    if(window.__gcLast!==p){window.__gcLast=p;goatcounter.count({path:p,title:document.title});}
+  }
+}
+window.addEventListener('load',gcFlush);setTimeout(gcFlush,2500);setTimeout(gcFlush,6000);
 document.addEventListener('click',function(e){
   var t=e.target.closest('[data-tab]');
   if(!t)return;
