@@ -342,6 +342,7 @@ Cal.config.forwardQueryParams = true;
 function mountCal(){
   var el=document.getElementById('cal-inline');
   if(el)el.innerHTML='';
+  window.__calMountT=Date.now();
   Cal.ns.meeting("inline", {
     elementOrSelector:"#cal-inline",
     config:{layout:"column_view",useSlotsViewOnSmallScreen:"true",
@@ -352,6 +353,13 @@ function mountCal(){
     cssVarsPerTheme:{light:{"cal-brand":"#3C6E47"},dark:{"cal-brand":"#6CB27E"}}});
 }
 mountCal();
+/* cal's booking dialog renders near the middle of the (tall) iframe; when the
+   embed navigates to it, bring that spot to the middle of the user's viewport */
+Cal.ns.meeting("on",{action:"__routeChanged",callback:function(){
+  if(Date.now()-(window.__calMountT||0)<2500)return;
+  var cal=document.getElementById('calendar'),box=document.querySelector('.booking');
+  if(cal&&box&&cal.classList.contains('active'))box.scrollIntoView({block:'center',behavior:'smooth'});
+}});
 </script>
 </body>
 </html>
