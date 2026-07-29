@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Frontier AI Governance Map · Becoming Stronger</title>
+<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 47 actors and mechanisms across six views.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://becomingstronger.github.io/ai-governance-map.html">
+<meta property="og:title" content="Frontier AI Governance Map">
+<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 47 actors and mechanisms, six views, one uncomfortable empty cell.">
+<meta name="theme-color" id="meta-theme" content="#FBF8F0">
+<script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+(function(){var t=null;try{t=localStorage.getItem('bs-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);
+document.addEventListener('DOMContentLoaded',function(){
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+});})();
+</script>
+<style>
+:root{
+  --paper:#FBF8F0;--paper-2:#F2EDDE;--ink:#1E2B22;--ink-soft:#4A5A4E;
+  --leaf:#3C6E47;--leaf-deep:#24492F;--gold:#E0A526;--terra:#C4623C;
+  --line:rgba(30,43,34,.16);--line-strong:rgba(30,43,34,.28);--maxw:1180px;
+  /* ordinal power-tier ramp, validated light mode vs #FBF8F0 */
+  --t1:#1C3A25;--t2:#2F5A3A;--t3:#437A50;--t4:#63936C;--t5:#86AF8D;
+  --edge:rgba(30,43,34,.22);--edge-hot:#E0A526;
+}
+html{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;
+  --paper:#000000;--paper-2:#0E0E0E;--ink:#EFE9DB;--ink-soft:#A9B4A6;
+  --leaf:#6CB27E;--leaf-deep:#2E5A3B;--gold:#E4B04A;--terra:#D97B52;
+  --line:rgba(239,233,219,.14);--line-strong:rgba(239,233,219,.26);
+  /* ordinal ramp re-stepped for the dark surface (#0E0E0E), tier 1 brightest */
+  --t1:#9ED8AC;--t2:#79BC8A;--t3:#579D68;--t4:#3D7C4C;--t5:#2B5C38;
+  --edge:rgba(239,233,219,.20);--edge-hot:#E4B04A;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Raleway",sans-serif;font-weight:600;line-height:1.1;letter-spacing:-.01em}
+a{color:var(--leaf-deep);text-decoration:none}
+[data-theme="dark"] a{color:var(--leaf)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+
+header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Raleway",sans-serif;font-weight:600;font-size:1.05rem;color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.backlink{font-size:.9rem;font-weight:500;color:var(--ink-soft)}
+.backlink:hover{color:var(--leaf-deep)}
+.theme-toggle{border:1px solid var(--line-strong);width:36px;height:36px;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft)}
+.theme-toggle:hover{color:var(--gold);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+.head{padding:56px 0 8px}
+.eyebrow{font-size:.76rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);margin:0 0 12px}
+.head h1{font-size:clamp(1.9rem,4.5vw,3rem);margin:0 0 16px;max-width:840px}
+.head .sub{font-size:1.08rem;color:var(--ink-soft);max-width:760px;margin:0 0 12px}
+.head .method{font-size:.88rem;color:var(--ink-soft);max-width:760px;margin:0}
+.head .method .plus{border:1px dashed var(--terra);color:var(--terra);padding:0 5px;font-size:.78rem;font-weight:600}
+
+/* tier legend */
+.legend{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-strong);margin:28px 0 0}
+.lg{flex:1 1 180px;padding:12px 14px;border-right:1px solid var(--line);min-width:170px}
+.lg:last-child{border-right:none}
+.lg .sw{display:inline-block;width:11px;height:11px;margin-right:7px;vertical-align:baseline;transform:translateY(1px)}
+.lg b{font-size:.85rem;font-weight:600}
+.lg p{margin:3px 0 0;font-size:.78rem;color:var(--ink-soft)}
+
+/* filters */
+.filters{position:sticky;top:62px;z-index:40;background:var(--paper);border-bottom:1px solid var(--line);padding:12px 0}
+.filters-in{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters input[type=search]{flex:1 1 170px;min-width:150px;padding:8px 10px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);font:inherit;font-size:.88rem;outline:none;border-radius:0;-webkit-appearance:none}
+.filters input[type=search]:focus{border-color:var(--gold)}
+.filters select{padding:8px 6px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);font:inherit;font-size:.85rem;outline:none;border-radius:0}
+.filters select:focus{border-color:var(--gold)}
+.chip-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);padding:8px 12px;font-size:.85rem;color:var(--ink-soft)}
+.chip-toggle .box{width:12px;height:12px;border:1px solid var(--line-strong);display:inline-block;position:relative}
+.chip-toggle[aria-pressed=true]{border-color:var(--terra);color:var(--ink)}
+.chip-toggle[aria-pressed=true] .box{border-color:var(--terra);background:var(--terra)}
+.reset-btn{font-size:.85rem;color:var(--ink-soft);border:1px solid transparent;padding:8px 10px}
+.reset-btn:hover{color:var(--terra)}
+.count-note{font-size:.8rem;color:var(--ink-soft);margin-left:auto;font-variant-numeric:tabular-nums}
+
+/* view tabs */
+.viewtabs{display:flex;flex-wrap:wrap;border:1px solid var(--line-strong);margin:26px 0 0}
+.viewtabs button{flex:1 1 auto;padding:11px 14px;font-size:.9rem;font-weight:500;color:var(--ink-soft);border-right:1px solid var(--line);background:var(--paper)}
+.viewtabs button:last-child{border-right:none}
+.viewtabs button:hover{color:var(--leaf-deep)}
+[data-theme="dark"] .viewtabs button:hover{color:var(--leaf)}
+.viewtabs button[aria-selected=true]{background:var(--leaf-deep);color:#FBF8F0;font-weight:600}
+
+.view{display:none;padding:30px 0 10px}
+.view.active{display:block}
+.view-note{font-size:.9rem;color:var(--ink-soft);max-width:820px;margin:0 0 22px}
+
+/* entity card (shared by tiers / horizon / matrix drawer lists) */
+.ecard{border:1px solid var(--line-strong);border-left-width:4px;background:var(--paper);padding:10px 12px;cursor:pointer;text-align:left;width:100%;transition:border-color .15s}
+.ecard:hover,.ecard:focus-visible{border-color:var(--gold);outline:none}
+.ecard .nm{font-weight:600;font-size:.92rem;display:flex;align-items:baseline;gap:7px}
+.ecard .mech{font-size:.8rem;color:var(--ink-soft);margin-top:2px}
+.badge{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line-strong);padding:1px 6px;color:var(--ink-soft);white-space:nowrap}
+.badge.enf-binding{border-color:var(--leaf);color:var(--leaf)}
+.badge.enf-voluntary{border-color:var(--gold);color:var(--gold)}
+.badge.sug{border-style:dashed;border-color:var(--terra);color:var(--terra)}
+.badge.proposed{border-style:dashed}
+
+/* tiers view */
+.tierband{border:1px solid var(--line-strong);margin-bottom:18px}
+.tierband>header{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;padding:13px 16px;border-bottom:1px solid var(--line);border-left:4px solid var(--line)}
+.tierband>header h3{margin:0;font-size:1.06rem}
+.tierband>header .def{font-size:.85rem;color:var(--ink-soft)}
+.tierband>header .n{margin-left:auto;font-size:.8rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.tiergrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;padding:14px 16px}
+
+/* matrix view */
+.matrix-scroll{overflow-x:auto;border:1px solid var(--line-strong)}
+table.matrix{border-collapse:collapse;width:100%;min-width:880px}
+.matrix th,.matrix td{border:1px solid var(--line);padding:9px 10px;vertical-align:top;text-align:left}
+.matrix thead th{font-family:"Raleway",sans-serif;font-size:.85rem;background:var(--paper-2);position:sticky;top:0}
+.matrix tbody th{font-size:.82rem;font-weight:600;white-space:nowrap;background:var(--paper-2);width:150px}
+.matrix td.empty{background:repeating-linear-gradient(45deg,transparent,transparent 7px,var(--line) 7px,var(--line) 8px)}
+.mchip{display:inline-block;border:1px solid var(--line-strong);border-left-width:4px;padding:3px 8px;margin:2px 3px 2px 0;font-size:.8rem;cursor:pointer;background:var(--paper)}
+.mchip:hover,.mchip:focus-visible{border-color:var(--gold);outline:none}
+.mchip.sug{border-style:dashed;border-left-style:solid}
+
+/* power view */
+.powergrid-scroll{overflow-x:auto;border:1px solid var(--line-strong)}
+table.powergrid{border-collapse:collapse;width:100%;min-width:840px}
+.powergrid th,.powergrid td{border:1px solid var(--line);padding:10px;vertical-align:top;text-align:left}
+.powergrid thead th{font-family:"Raleway",sans-serif;font-size:.88rem;background:var(--paper-2)}
+.powergrid tbody th{font-size:.82rem;font-weight:600;background:var(--paper-2);white-space:nowrap;width:120px}
+.powergrid td.hot{outline:2px solid var(--gold);outline-offset:-2px}
+.gap-note{border:1px solid var(--line-strong);border-left:4px solid var(--gold);background:var(--paper-2);padding:14px 18px;margin:18px 0 0;font-size:.92rem;max-width:860px}
+
+/* horizon view */
+.horizon{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--line-strong)}
+.hcol{border-right:1px solid var(--line);min-width:0}
+.hcol:last-child{border-right:none}
+.hcol>header{padding:12px 14px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.hcol>header h3{margin:0;font-size:.95rem}
+.hcol>header p{margin:2px 0 0;font-size:.76rem;color:var(--ink-soft)}
+.hcol .cards{display:flex;flex-direction:column;gap:8px;padding:12px}
+@media(max-width:900px){.horizon{grid-template-columns:1fr 1fr}.hcol:nth-child(2){border-right:none}}
+@media(max-width:540px){.horizon{grid-template-columns:1fr}.hcol{border-right:none;border-bottom:1px solid var(--line)}}
+
+/* graph view */
+.graph-scroll{overflow-x:auto;border:1px solid var(--line-strong);background:var(--paper)}
+#graphsvg{display:block}
+#graphsvg .gnode{cursor:pointer}
+#graphsvg .gnode rect{fill:var(--paper);stroke:var(--line-strong)}
+#graphsvg .gnode:hover rect,#graphsvg .gnode:focus rect{stroke:var(--gold)}
+#graphsvg .gnode text{font-size:11.5px;fill:var(--ink);font-family:inherit}
+#graphsvg .gnode .sub{font-size:9px;fill:var(--ink-soft)}
+#graphsvg .tierlabel{font-family:"Raleway",sans-serif;font-size:12px;font-weight:600;fill:var(--ink-soft)}
+#graphsvg .tierdef{font-size:9.5px;fill:var(--ink-soft)}
+#graphsvg path.edge{fill:none;stroke:var(--edge);stroke-width:1.1}
+#graphsvg path.edge.dashed{stroke-dasharray:4 4}
+#graphsvg.focused .gnode,#graphsvg.focused path.edge{opacity:.13}
+#graphsvg.focused .gnode.lit,#graphsvg.focused path.edge.lit{opacity:1}
+#graphsvg.focused path.edge.lit{stroke:var(--edge-hot);stroke-width:1.6}
+#graphsvg .gnode.dim,#graphsvg path.edge.dim{opacity:.13}
+.edge-tip{position:fixed;z-index:80;pointer-events:none;background:var(--ink);color:var(--paper);font-size:.78rem;padding:5px 9px;max-width:280px;display:none}
+[data-theme="dark"] .edge-tip{background:#EFE9DB;color:#0E0E0E}
+
+/* table view */
+.table-scroll{overflow-x:auto;border:1px solid var(--line-strong)}
+table.data{border-collapse:collapse;width:100%;min-width:980px;font-size:.86rem}
+.data th,.data td{border-bottom:1px solid var(--line);padding:9px 10px;text-align:left;vertical-align:top}
+.data thead th{font-family:"Raleway",sans-serif;font-size:.8rem;background:var(--paper-2);cursor:pointer;white-space:nowrap;user-select:none;position:sticky;top:0}
+.data thead th .arr{color:var(--gold)}
+.data tbody tr{cursor:pointer}
+.data tbody tr:hover{background:var(--paper-2)}
+.data td.tiercell{font-variant-numeric:tabular-nums;white-space:nowrap}
+.data td .sw{display:inline-block;width:10px;height:10px;margin-right:6px}
+.data td.notecell{max-width:340px;color:var(--ink-soft);font-size:.82rem}
+
+/* drawer */
+.drawer-veil{position:fixed;inset:0;background:rgba(0,0,0,.35);z-index:90;display:none}
+.drawer{position:fixed;top:0;right:0;bottom:0;width:min(430px,94vw);background:var(--paper);border-left:1px solid var(--line-strong);z-index:95;display:none;flex-direction:column}
+.drawer.open,.drawer-veil.open{display:flex}
+.drawer-veil.open{display:block}
+.drawer>header{display:flex;align-items:flex-start;gap:10px;padding:18px 20px 12px;border-bottom:1px solid var(--line)}
+.drawer>header h3{margin:0;font-size:1.2rem;flex:1}
+.drawer .close{border:1px solid var(--line-strong);width:32px;height:32px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft);flex:none}
+.drawer .close:hover{color:var(--terra);border-color:var(--terra)}
+.drawer .body{padding:16px 20px 26px;overflow-y:auto}
+.drawer .tierline{display:flex;align-items:center;gap:8px;font-size:.86rem;font-weight:600;margin:0 0 12px}
+.drawer .tierline .sw{width:11px;height:11px;display:inline-block}
+.drawer dl{display:grid;grid-template-columns:auto 1fr;gap:6px 14px;margin:0 0 16px;font-size:.86rem}
+.drawer dt{color:var(--ink-soft);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
+.drawer dd{margin:0}
+.drawer .note{border-left:3px solid var(--gold);padding:6px 0 6px 12px;color:var(--ink-soft);font-size:.88rem;margin:0 0 16px}
+.drawer .note.sugnote{border-left-color:var(--terra)}
+.drawer h4{font-family:"Raleway",sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:0 0 8px}
+.drawer .conn{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
+.drawer .conn button{text-align:left;border:1px solid var(--line);padding:7px 10px;font-size:.83rem}
+.drawer .conn button:hover{border-color:var(--gold)}
+.drawer .conn .rel{color:var(--ink-soft);display:block;font-size:.76rem}
+.drawer .src{font-size:.86rem;font-weight:600}
+
+footer{border-top:1px solid var(--line);margin-top:56px;padding:22px 0 30px;font-size:.82rem;color:var(--ink-soft)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between}
+
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:640px){
+  .filters-in{gap:6px}
+  .filters select{font-size:.78rem;padding:7px 4px}
+  .count-note{flex-basis:100%;margin-left:0}
+  .viewtabs button{font-size:.8rem;padding:9px 8px}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">
+      <svg width="30" height="26" viewBox="0 0 280 243" aria-hidden="true">
+        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="9" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="9" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" stroke="#437A50" stroke-width="9" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
+      </svg>
+      Becoming Stronger
+    </a>
+    <div class="nav-right">
+      <a class="backlink" href="index.html#portfolio">← Portfolio</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap head">
+  <p class="eyebrow">AI Governance · Interactive</p>
+  <h1>Who can actually stop a frontier AI deployment?</h1>
+  <p class="sub">A map of frontier AI governance, organized around one blunt question: how much power does each actor or mechanism really have? Five tiers, from a genuine off-switch down to hopeful communiqués. Click anything for details and connections.</p>
+  <p class="method">Compiled during BlueDot Impact's Frontier AI Governance course, audited July 2026. Entries marked <span class="plus">+ suggested</span> were added in the audit; dashed borders mean proposed, not enacted.</p>
+  <div class="legend" id="legend"></div>
+</div>
+
+<div class="filters">
+  <div class="wrap filters-in">
+    <input type="search" id="q" placeholder="Search actors, mechanisms, notes" aria-label="Search">
+    <select id="f-layer" aria-label="Filter by governance layer"><option value="">All layers</option></select>
+    <select id="f-type" aria-label="Filter by actor type"><option value="">All actor types</option></select>
+    <select id="f-enf" aria-label="Filter by enforcement"><option value="">All enforcement</option></select>
+    <select id="f-jur" aria-label="Filter by jurisdiction"><option value="">All jurisdictions</option></select>
+    <select id="f-hor" aria-label="Filter by time horizon"><option value="">All horizons</option></select>
+    <button class="chip-toggle" id="f-sug" aria-pressed="true"><span class="box"></span>Audit additions</button>
+    <button class="reset-btn" id="f-reset">Reset</button>
+    <span class="count-note" id="countnote"></span>
+  </div>
+</div>
+
+<main class="wrap">
+  <div class="viewtabs" role="tablist" aria-label="Views">
+    <button role="tab" data-view="graph" aria-selected="true">Graph</button>
+    <button role="tab" data-view="tiers" aria-selected="false">Power tiers</button>
+    <button role="tab" data-view="matrix" aria-selected="false">Layer × type</button>
+    <button role="tab" data-view="power" aria-selected="false">The gap</button>
+    <button role="tab" data-view="horizon" aria-selected="false">Time horizon</button>
+    <button role="tab" data-view="table" aria-selected="false">Table</button>
+  </div>
+
+  <section class="view active" id="view-graph" role="tabpanel">
+    <p class="view-note">Actors arranged by power tier, most powerful on the left. Threads show who funds, supplies, regulates, evaluates, or pressures whom. Hover a thread for the relationship; click a node for its full record. Dashed threads are proposed mechanisms.</p>
+    <div class="graph-scroll"><svg id="graphsvg" role="img" aria-label="Network graph of frontier AI governance actors and their relationships. The same data is available in the Table view."></svg></div>
+    <div class="edge-tip" id="edgetip"></div>
+  </section>
+
+  <section class="view" id="view-tiers" role="tabpanel">
+    <p class="view-note">The core ranking. Tier labels describe the strongest lever each actor holds, not how reliably it gets used: most of Tier 1 is self-enforced.</p>
+    <div id="tierbands"></div>
+  </section>
+
+  <section class="view" id="view-matrix" role="tabpanel">
+    <p class="view-note">Every entry bucketed by governance layer (columns) and actor type (rows). Hatched cells are empty, and some gaps are load-bearing: no evaluator on this map has binding authority.</p>
+    <div class="matrix-scroll"><table class="matrix" id="matrixtable"></table></div>
+  </section>
+
+  <section class="view" id="view-power" role="tabpanel">
+    <p class="view-note">Claimed power crossed with enforcement. The uncomfortable read: nearly everything that can stop a deployment is voluntary and self-certified, and nearly everything binding sits well below stop-power.</p>
+    <div class="powergrid-scroll"><table class="powergrid" id="powertable"></table></div>
+    <div class="gap-note"><strong>The governance gap.</strong> The one binding, currently exercised pre-deployment gate on this map belongs to the Cyberspace Administration of China, and it screens for political control rather than catastrophic risk. In the US, stop-power is either voluntary (lab safety frameworks) or latent (emergency executive authority that has never been used for AI). Closing that highlighted cell is the central project of frontier AI governance.</div>
+  </section>
+
+  <section class="view" id="view-horizon" role="tabpanel">
+    <p class="view-note">When each mechanism bites. "Current" means operating today; the further right, the more the mechanism is a bet on future institution-building.</p>
+    <div class="horizon" id="horizoncols"></div>
+  </section>
+
+  <section class="view" id="view-table" role="tabpanel">
+    <p class="view-note">The full dataset. Click a column header to sort, a row for details.</p>
+    <div class="table-scroll"><table class="data" id="datatable"></table></div>
+  </section>
+</main>
+
+<div class="drawer-veil" id="veil"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="d-name">
+  <header>
+    <h3 id="d-name"></h3>
+    <button class="close" id="d-close" aria-label="Close details">
+      <svg width="14" height="14" viewBox="0 0 24 24"><path d="M5 5l14 14M19 5 5 19" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </header>
+  <div class="body" id="d-body"></div>
+</aside>
+
+<footer>
+  <div class="wrap">
+    <span>Compiled and audited by Alex Hedtke · July 2026</span>
+    <span><a href="index.html#portfolio">More projects</a> · <a href="mailto:alex.hedtke@gmail.com">Corrections welcome</a></span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+/* ============ data ============ */
+var TIERS={
+  1:{name:'Tier 1 · Can stop deployment',short:'Can stop',def:'Holds a direct decision over whether a frontier model ships.'},
+  2:{name:'Tier 2 · Can block inputs',short:'Inputs',def:'Controls an upstream chokepoint: chips, compute, or capital.'},
+  3:{name:'Tier 3 · Legal obligations',short:'Legal',def:'Binding law that conditions, penalizes, or could halt deployment.'},
+  4:{name:'Tier 4 · Norm shapers',short:'Norms',def:'Moves lab and government behavior through evals, standards, and pressure.'},
+  5:{name:'Tier 5 · Aspirational',short:'Aspirational',def:'International coordination without enforcement, so far.'}
+};
+var LAYERS={corporate:'Corporate',legal:'Legal',market:'Market',institutional:'Institutional',voluntary:'Voluntary'};
+var TYPES={lab:'AI lab',government_body:'Government body',government_agency:'Government agency',infrastructure_provider:'Infrastructure',legislation:'Legislation',treaty:'Treaty',courts:'Courts',commitment:'Commitment',civil_society:'Civil society',evaluation_org:'Evaluator',industry_consortium:'Industry consortium',standards_body:'Standards body',international_body:'International body',think_tank:'Think tank'};
+var ENF={binding:'Binding',voluntary:'Voluntary',advisory:'Advisory',none:'None'};
+var HOR={current:'Current',near_term:'Near term',medium_term:'Medium term',long_term:'Long term'};
+var HORDEF={current:'Operating now',near_term:'1 to 2 years',medium_term:'2 to 5 years',long_term:'5+ years'};
+
+/* fields: id, name, tier, type, layer, power, hor, jur, enf, mech, note, url, sug (audit addition), prop (proposed, not enacted) */
+var DATA=[
+ {id:'anthropic',name:'Anthropic',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Responsible Scaling Policy (v3.4, July 2026)',note:'Voluntary and self-certified. The v3.0 rewrite (February 2026) replaced binding if-then threshold commitments with nonbinding, publicly graded targets; pausing is now explicitly discretionary.',url:'https://www.anthropic.com/rsp'},
+ {id:'chinagov',name:'Chinese Government (CAC)',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'China',enf:'binding',mech:'Generative AI measures: registration, security assessment, content rules',note:'The CAC pre-deployment gate is real Tier 1 power, exercised for political control rather than safety evaluation. The only binding, currently used deployment gate on this map.',url:'https://www.cac.gov.cn'},
+ {id:'deepseek',name:'DeepSeek',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'China',enf:'voluntary',mech:'Internal processes, Chinese regulatory compliance',note:'Subject to the CAC gate domestically; open-weight international releases bypass every Western governance mechanism on this map.',url:'https://www.deepseek.com'},
+ {id:'eop',name:'Executive Office of the President',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'US',enf:'binding',mech:'Executive orders, OSTP direction, emergency economic powers',note:'Latent power: IEEPA, the Defense Production Act, and CFIUS could stop a deployment without new legislation, but no President has used them for AI and courts would likely be asked to weigh in.',url:'https://www.whitehouse.gov/ostp/'},
+ {id:'labs',name:'Frontier AI Labs (collective)',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'global',enf:'voluntary',mech:'Voluntary safety frameworks',note:'Race dynamics make collective restraint a prisoner’s dilemma; any lab can defect. This node stands in for the industry when a mechanism applies to all frontier developers.'},
+ {id:'gdm',name:'Google DeepMind',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Frontier Safety Framework (v3.1, April 2026)',note:'Nested inside Alphabet, so safety decisions sit next to commercial pressure from Google product teams. FSF v3.1 added Tracked Capability Levels in April 2026.',url:'https://deepmind.google'},
+ {id:'meta',name:'Meta AI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Advanced AI Scaling Framework (v2, April 2026), open-weight release decisions',note:'Replaced its 2025 Frontier AI Framework with the Advanced AI Scaling Framework in April 2026. Open-weight releases remain irreversible: once weights are public, Tier 1 stop-power is spent.',url:'https://ai.meta.com'},
+ {id:'openai',name:'OpenAI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Preparedness Framework (v2, April 2025)',note:'Internal and self-enforced. The Superalignment team was disbanded in May 2024; oversight now sits with a board Safety and Security Committee, restructured in September 2024 after Altman stepped off it.',url:'https://www.openai.com'},
+ {id:'xai',name:'xAI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Frontier Artificial Intelligence Framework (June 2026)',note:'Went from no framework to a draft RMF (February 2025) to the FAIF (effective June 2026). Grok has still repeatedly shipped with minimal guardrails, and leadership is publicly hostile to safety regulation.',url:'https://x.ai'},
+ {id:'aws',name:'AWS',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Cloud compute access, acceptable use policies',note:'Anthropic’s primary cloud and a major investor; could in principle refuse compute to a reckless customer.',url:'https://aws.amazon.com'},
+ {id:'bis',name:'Bureau of Industry and Security',tier:2,type:'government_agency',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Export controls, Entity List',note:'The compute chokepoint has an expiration date, roughly 2 to 4 years, as non-US fabs and domestic Chinese accelerators come online.',url:'https://www.bis.gov'},
+ {id:'gcloud',name:'Google Cloud',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Cloud compute access, acceptable use policies',note:'Compute provider to Anthropic among others; Alphabet is also an investor.',url:'https://cloud.google.com'},
+ {id:'azure',name:'Microsoft Azure',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Cloud compute access, acceptable use policies',note:'Hosts OpenAI training and serving; the acceptable-use lever has never been pulled on a frontier lab.',url:'https://azure.microsoft.com'},
+ {id:'nvidia',name:'NVIDIA',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Chip design near-monopoly, export compliance',note:'Designs the accelerators nearly every frontier training run depends on; implements BIS licensing in practice.',url:'https://www.nvidia.com'},
+ {id:'tsmc',name:'TSMC',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'Taiwan',enf:'voluntary',mech:'Advanced chip fabrication near-monopoly',note:'Fabricates nearly all leading-edge AI accelerators; a single point of failure for the entire compute supply chain.',url:'https://www.tsmc.com'},
+ {id:'sb53',name:'California SB 53',tier:3,type:'legislation',layer:'legal',power:'can_embarrass',hor:'current',jur:'US',enf:'binding',mech:'Transparency in Frontier AI Act: published frameworks, incident reporting, whistleblower protection',note:'Signed September 2025. Binding transparency with civil penalties up to $1M per violation, enforceable only by the Attorney General. It compels disclosure rather than safe behavior: a lab can comply while shipping anything.',url:'https://leginfo.legislature.ca.gov/faces/billNavClient.xhtml?bill_id=202520260SB53'},
+ {id:'euaiact',name:'EU AI Act',tier:3,type:'legislation',layer:'legal',power:'can_slow',hor:'current',jur:'EU',enf:'binding',mech:'Market access conditions, GPAI obligations, fines',note:'Prohibitions applied February 2025, GPAI duties August 2025, general application August 2026. But the digital omnibus (in force July 2026) deferred high-risk obligations to late 2027 and 2028: Brussels is deregulating its own act mid-rollout.',url:'https://artificialintelligenceact.eu/'},
+ {id:'s2938',name:'S.2938 · AI Risk Evaluation Act',tier:3,type:'legislation',layer:'legal',power:'can_slow',hor:'near_term',jur:'US',enf:'binding',prop:true,mech:'Mandatory pre-deployment evaluation by the Department of Energy',note:'Proposed, not enacted: introduced by Senator Hawley with Senator Blumenthal in September 2025, still in committee. I am personally lobbying for this bill. It would create a DOE evaluation program and bar unevaluated frontier deployment, at $1M+ per day in penalties: the first binding US federal pre-deployment gate.',url:'https://www.congress.gov/bill/119th-congress/senate-bill/2938'},
+ {id:'sencom',name:'Senate Commerce Committee',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'near_term',jur:'US',enf:'binding',mech:'Legislative jurisdiction, hearings, markup',note:'The committee most frontier AI legislation must pass through; a chokepoint for bills rather than models.',url:'https://www.commerce.senate.gov'},
+ {id:'stategov',name:'US State Governments',tier:3,type:'government_body',layer:'legal',power:'can_embarrass',hor:'current',jur:'US',enf:'binding',mech:'State legislation, attorney general enforcement',note:'California and New York moved first on frontier-specific law while Congress stalled; a federal preemption fight is the live threat to this entire lane.'},
+ {id:'cais',name:'Center for AI Safety',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'none',mech:'Expert consensus statements, risk framing, research',note:'Organized the 2023 one-sentence extinction-risk statement signed by the heads of the major labs.',url:'https://www.safe.ai'},
+ {id:'epoch',name:'Epoch AI',tier:4,type:'evaluation_org',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'advisory',mech:'Compute trend tracking, training run data',note:'The de facto reference dataset for compute thresholds; when regulators pick a FLOP number, it traces here.',url:'https://epoch.ai'},
+ {id:'fli',name:'Future of Life Institute',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'none',mech:'AI Safety Index, public campaigns, grants',note:'Its Safety Index grades the labs on safety practice; labs visibly respond to bad grades.',url:'https://futureoflife.org'},
+ {id:'fmf',name:'Frontier Model Forum',tier:4,type:'industry_consortium',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'voluntary',mech:'Shared safety research, voluntary norms, policymaker engagement',note:'Founded by Anthropic, Google, Microsoft, and OpenAI; industry coordinating with itself.',url:'https://www.frontiermodelforum.org'},
+ {id:'iso42001',name:'ISO/IEC 42001',tier:4,type:'standards_body',layer:'voluntary',power:'can_embarrass',hor:'near_term',jur:'international',enf:'voluntary',mech:'AI management system standard, certification',note:'Management-system certification, not a capability bar: it audits process, not model risk.',url:'https://www.iso.org/standard/42001'},
+ {id:'metr',name:'METR',tier:4,type:'evaluation_org',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'advisory',mech:'Frontier capability evaluations, autonomy benchmarks',note:'Runs pre-deployment evaluations for OpenAI and Anthropic under access agreements the labs can revoke.',url:'https://metr.org'},
+ {id:'miri',name:'MIRI',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'none',mech:'Technical research, policy advocacy',note:'Has shifted from alignment research toward advocating an international halt on frontier development.',url:'https://intelligence.org'},
+ {id:'mlcommons',name:'MLCommons',tier:4,type:'standards_body',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'voluntary',mech:'AILuminate safety benchmark',note:'Industry benchmark consortium; its safety scores are comparable across labs and public.',url:'https://mlcommons.org'},
+ {id:'nist',name:'NIST',tier:4,type:'standards_body',layer:'institutional',power:'can_embarrass',hor:'near_term',jur:'US',enf:'voluntary',mech:'AI Risk Management Framework',note:'The RMF is voluntary but propagates through procurement: agencies and contractors adopt it as a de facto floor.',url:'https://www.nist.gov/artificial-intelligence'},
+ {id:'oecd',name:'OECD',tier:4,type:'international_body',layer:'institutional',power:'can_embarrass',hor:'current',jur:'international',enf:'advisory',mech:'AI Principles, AI Incidents Monitor, policy coordination',note:'Hosts the G7 Hiroshima reporting framework and absorbed the Global Partnership on AI in 2024.',url:'https://oecd.ai'},
+ {id:'pauseai',name:'PauseAI',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'none',mech:'Protest, congressional lobbying, public awareness',note:'The visible edge of public pressure; small, but shifts the Overton window the larger orgs operate inside.',url:'https://pauseai.info'},
+ {id:'rand',name:'RAND',tier:4,type:'think_tank',layer:'institutional',power:'can_embarrass',hor:'current',jur:'US',enf:'advisory',mech:'Policy research, compute governance analysis',note:'Staffed much of the early US executive-branch AI policy work; the pipeline between research and the EOP runs through here.',url:'https://www.rand.org'},
+ {id:'ukaisi',name:'UK AI Security Institute',tier:4,type:'government_agency',layer:'institutional',power:'can_embarrass',hor:'current',jur:'UK',enf:'advisory',mech:'Pre-deployment model evaluations, safety research',note:'Renamed from AI Safety Institute in February 2025. Deepest government evaluation capacity in the West, with no power to act on what it finds.',url:'https://www.aisi.gov.uk'},
+ {id:'caisi',name:'US CAISI',tier:4,type:'government_agency',layer:'institutional',power:'can_embarrass',hor:'current',jur:'US',enf:'advisory',mech:'Standards development, voluntary model testing',note:'The former US AI Safety Institute, renamed Center for AI Standards and Innovation in June 2025 with a mandate tilted toward competitiveness.',url:'https://www.nist.gov/caisi'},
+ {id:'summits',name:'AI Summit Series (Bletchley → Delhi)',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Declarations, voluntary commitments, norm-setting',note:'Produced the Bletchley Declaration and the Seoul lab commitments; Paris and Delhi drifted from safety toward investment and inclusion. The New Delhi Declaration (February 2026) was endorsed by 88 countries; Geneva hosts 2027, the UAE 2028.'},
+ {id:'g7',name:'G7 Hiroshima AI Process',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Voluntary code of conduct for advanced AI developers',note:'First cross-government code aimed at frontier developers; participation and reporting are voluntary.',url:'https://www.soumu.go.jp/hiroshimaaiprocess/en/'},
+ {id:'gpai',name:'Global Partnership on AI',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Research, recommendations, technical advice',note:'Integrated into the OECD in July 2024; continues as an OECD-hosted partnership under the GPAI brand rather than an independent body.',url:'https://gpai.ai'},
+ {id:'un',name:'UN AI Governance Track',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'long_term',jur:'international',enf:'none',mech:'Independent International Scientific Panel, Global Dialogue on AI Governance',note:'The Advisory Body’s 2024 report led to a 40-member scientific panel (2026 to 2029 term) and the Global Dialogue, which first convened in Geneva in July 2026. The only governance venue that includes both Washington and Beijing.',url:'https://www.un.org/global-digital-compact'},
+ /* ============ audit additions ============ */
+ {id:'aioffice',name:'EU AI Office',tier:3,type:'government_agency',layer:'legal',power:'can_slow',hor:'current',jur:'EU',enf:'binding',sug:true,mech:'GPAI enforcement: model access, mandated evaluations, fines up to 3% of global turnover or €15M',note:'Audit addition. The AI Act without its enforcer is half a map: the AI Office is the only Western body that can compel access to a frontier model. Its fining powers activate August 2026.',url:'https://digital-strategy.ec.europa.eu/en/policies/ai-office'},
+ {id:'microsoft',name:'Microsoft',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',sug:true,mech:'OpenAI capital, compute, and IP partnership; own frontier effort',note:'Audit addition. The single largest private lever over a frontier lab: capital, exclusive IP rights, and (via Azure) the compute OpenAI runs on.',url:'https://www.microsoft.com'},
+ {id:'asml',name:'ASML',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'Netherlands',enf:'voluntary',sug:true,mech:'EUV lithography monopoly, Dutch export licensing',note:'Audit addition. One step upstream of TSMC and a true monopoly: no EUV machines, no leading-edge fabs anywhere. Dutch export controls make it a state lever too.',url:'https://www.asml.com'},
+ {id:'raise',name:'New York RAISE Act',tier:3,type:'legislation',layer:'legal',power:'can_embarrass',hor:'near_term',jur:'US',enf:'binding',sug:true,mech:'Safety protocols, 72-hour incident disclosure, DFS oversight, AG penalties up to $1M/$3M',note:'Audit addition. The second state frontier law: signed December 2025, amended March 2026, effective January 2027. Together with SB 53 it sets up the federal preemption fight.',url:'https://www.nysenate.gov/legislation/bills/2025/S6953'},
+ {id:'seoul',name:'Seoul Frontier AI Safety Commitments',tier:4,type:'commitment',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'international',enf:'voluntary',sug:true,mech:'16+ companies pledged risk thresholds and safety frameworks',note:'Audit addition. The reason nearly every lab now publishes a safety framework: a summit deliverable that actually changed behavior, with no enforcement at all.',url:'https://www.gov.uk/government/publications/frontier-ai-safety-commitments-ai-seoul-summit-2024'},
+ {id:'coe',name:'Council of Europe AI Convention',tier:5,type:'treaty',layer:'legal',power:'aspirational',hor:'medium_term',jur:'international',enf:'binding',sug:true,mech:'First binding international AI treaty (human rights, democracy, rule of law)',note:'Audit addition. Signed by 46 parties including the US (signed, not ratified); reported in force since late 2025. Binding on paper, broad on substance: obligations are principles-level with no frontier-specific duties, which is why it sits in Tier 5 despite treaty status.',url:'https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence'},
+ {id:'aisinet',name:'International Network of AISIs',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',sug:true,mech:'Joint evaluations, shared methods across national institutes',note:'Audit addition. Ten-plus national institutes coordinating evaluation methodology; the seed of an international inspection regime, if it survives politics.'},
+ {id:'ags',name:'State Attorneys General (DE & CA)',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',sug:true,mech:'Charitable-trust oversight of OpenAI’s nonprofit; safety commitments as restructuring conditions',note:'Audit addition. The overlooked lever that actually worked: both AGs extracted enforceable safety commitments as the price of blessing OpenAI’s 2025 restructuring.'},
+ {id:'courts',name:'US Courts (liability)',tier:3,type:'courts',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',sug:true,mech:'Product liability, copyright, consumer protection, wrongful death suits',note:'Audit addition. Nobody designed the tort system as AI governance, but discovery, damages, and injunctions are binding in a way most of this map is not.'}
+];
+
+/* edges: [source, target, relationship, dashed] */
+var EDGES=[
+ ['labs','anthropic','Anthropic is one of the frontier developers this collective node stands for'],
+ ['labs','openai','OpenAI is one of the frontier developers this collective node stands for'],
+ ['labs','gdm','Google DeepMind is one of the frontier developers this collective node stands for'],
+ ['labs','meta','Meta is one of the frontier developers this collective node stands for'],
+ ['labs','xai','xAI is one of the frontier developers this collective node stands for'],
+ ['labs','deepseek','DeepSeek is one of the frontier developers this collective node stands for'],
+ ['eop','bis','Sets export-control policy direction; BIS implements it'],
+ ['eop','labs','2023 White House voluntary commitments; latent IEEPA and DPA authority'],
+ ['bis','nvidia','Export licenses gate which chips can be sold where'],
+ ['bis','tsmc','Foreign direct product rule reaches Taiwan-fabricated chips'],
+ ['bis','deepseek','Chip embargo constrains Chinese frontier training compute'],
+ ['asml','tsmc','EUV lithography monopoly: the machines every leading-edge fab needs',false],
+ ['tsmc','nvidia','Fabricates nearly all advanced AI accelerators'],
+ ['nvidia','aws','Supplies the accelerators the cloud fleets run on'],
+ ['nvidia','azure','Supplies the accelerators the cloud fleets run on'],
+ ['nvidia','gcloud','Supplies the accelerators the cloud fleets run on'],
+ ['aws','anthropic','Primary cloud partner and multi-billion dollar investor'],
+ ['gcloud','anthropic','Compute provider; Alphabet is also an investor'],
+ ['azure','openai','Hosts OpenAI training and serving workloads'],
+ ['microsoft','openai','Capital, exclusive IP rights, and compute partnership',false],
+ ['chinagov','deepseek','CAC pre-deployment registration and security assessment'],
+ ['euaiact','labs','GPAI obligations as a condition of EU market access'],
+ ['aioffice','euaiact','Enforces the Act’s GPAI chapter: fines up to 3% of turnover',false],
+ ['aioffice','labs','Can compel model access and mandate evaluations',false],
+ ['sb53','labs','Transparency and incident-reporting duties for large California developers'],
+ ['raise','labs','Safety protocol and disclosure duties for frontier developers in New York',false],
+ ['stategov','sb53','California enacted SB 53 (September 2025)'],
+ ['stategov','raise','New York enacted the RAISE Act (2025)',false],
+ ['sencom','s2938','Committee of jurisdiction for the bill'],
+ ['s2938','labs','Would require DOE evaluation before frontier deployment',true],
+ ['ags','openai','Charitable-trust leverage: safety commitments as restructuring conditions',false],
+ ['courts','labs','Liability, copyright, and consumer-protection suits shape release behavior',false],
+ ['ukaisi','anthropic','Pre-deployment evaluation access agreement'],
+ ['ukaisi','openai','Pre-deployment evaluation access agreement'],
+ ['ukaisi','gdm','Pre-deployment evaluation access agreement'],
+ ['nist','caisi','Houses CAISI within the Department of Commerce'],
+ ['nist','labs','AI Risk Management Framework as a voluntary floor'],
+ ['caisi','openai','Voluntary model testing agreement'],
+ ['caisi','anthropic','Voluntary model testing agreement'],
+ ['metr','openai','Third-party capability and autonomy evaluations'],
+ ['metr','anthropic','Third-party capability and autonomy evaluations'],
+ ['epoch','euaiact','Compute-threshold data informs where the FLOP lines get drawn'],
+ ['fmf','anthropic','Founding member'],
+ ['fmf','gdm','Founding member (as Google)'],
+ ['fmf','openai','Founding member'],
+ ['fmf','microsoft','Founding member',false],
+ ['cais','labs','Extinction-risk statement signed by the heads of the major labs'],
+ ['fli','labs','AI Safety Index publicly grades lab safety practice'],
+ ['pauseai','labs','Protest and public pressure campaigns'],
+ ['miri','labs','Advocates halting frontier development entirely'],
+ ['mlcommons','labs','AILuminate safety benchmark, comparable across labs'],
+ ['iso42001','anthropic','Among the first frontier labs certified'],
+ ['iso42001','azure','Cloud providers certify their AI management systems'],
+ ['oecd','gpai','Absorbed the partnership in 2024'],
+ ['oecd','g7','Hosts the Hiroshima Process reporting framework'],
+ ['summits','seoul','The Seoul summit produced the frontier safety commitments',false],
+ ['seoul','labs','16+ companies pledged to publish risk thresholds and frameworks',false],
+ ['summits','aisinet','The institute network launched from the summit track',false],
+ ['aisinet','ukaisi','Member institute',false],
+ ['aisinet','caisi','Member institute',false],
+ ['g7','labs','Voluntary code of conduct for advanced developers'],
+ ['un','chinagov','The only governance venue including Beijing'],
+ ['un','eop','The only governance venue including Washington and Beijing together'],
+ ['rand','eop','Compute-governance research; staffed early executive AI policy work'],
+ ['coe','euaiact','The EU signed the convention; the AI Act is its implementation vehicle']
+];
+
+/* ============ state & helpers ============ */
+var byId={};DATA.forEach(function(d){byId[d.id]=d});
+var state={q:'',layer:'',type:'',enf:'',jur:'',hor:'',sug:true,view:'graph'};
+var $=function(s){return document.querySelector(s)};
+function esc(t){var d=document.createElement('div');d.textContent=t==null?'':t;return d.innerHTML}
+function tcol(t){return getComputedStyle(document.documentElement).getPropertyValue('--t'+t).trim()}
+
+function visible(){
+  var q=state.q.toLowerCase();
+  return DATA.filter(function(d){
+    if(!state.sug&&d.sug)return false;
+    if(state.layer&&d.layer!==state.layer)return false;
+    if(state.type&&d.type!==state.type)return false;
+    if(state.enf&&d.enf!==state.enf)return false;
+    if(state.jur&&d.jur!==state.jur)return false;
+    if(state.hor&&d.hor!==state.hor)return false;
+    if(q&&(d.name+' '+d.mech+' '+(d.note||'')).toLowerCase().indexOf(q)<0)return false;
+    return true;
+  });
+}
+function visSet(){var s={};visible().forEach(function(d){s[d.id]=1});return s}
+
+/* ============ filters ============ */
+function fillSelect(sel,map){
+  Object.keys(map).forEach(function(k){
+    var o=document.createElement('option');o.value=k;o.textContent=map[k];sel.appendChild(o);
+  });
+}
+fillSelect($('#f-layer'),LAYERS);fillSelect($('#f-type'),TYPES);fillSelect($('#f-enf'),ENF);fillSelect($('#f-hor'),HOR);
+(function(){
+  var jurs={};DATA.forEach(function(d){jurs[d.jur]=1});
+  Object.keys(jurs).sort().forEach(function(j){
+    var o=document.createElement('option');o.value=j;o.textContent=j;$('#f-jur').appendChild(o);
+  });
+})();
+['layer','type','enf','jur','hor'].forEach(function(k){
+  $('#f-'+k).addEventListener('change',function(){state[k]=this.value;render()});
+});
+$('#q').addEventListener('input',function(){state.q=this.value;render()});
+$('#f-sug').addEventListener('click',function(){
+  state.sug=!state.sug;this.setAttribute('aria-pressed',state.sug);render();
+});
+$('#f-reset').addEventListener('click',function(){
+  state.q='';state.layer='';state.type='';state.enf='';state.jur='';state.hor='';state.sug=true;
+  $('#q').value='';['layer','type','enf','jur','hor'].forEach(function(k){$('#f-'+k).value=''});
+  $('#f-sug').setAttribute('aria-pressed','true');render();
+});
+
+/* ============ legend ============ */
+(function(){
+  var h='';
+  for(var t=1;t<=5;t++){
+    h+='<div class="lg"><b><span class="sw" style="background:'+tcol(t)+'"></span>'+esc(TIERS[t].name)+'</b><p>'+esc(TIERS[t].def)+'</p></div>';
+  }
+  $('#legend').innerHTML=h;
+})();
+
+/* ============ view tabs ============ */
+document.querySelectorAll('.viewtabs button').forEach(function(b){
+  b.addEventListener('click',function(){
+    state.view=this.dataset.view;
+    document.querySelectorAll('.viewtabs button').forEach(function(x){x.setAttribute('aria-selected',x===b)});
+    document.querySelectorAll('.view').forEach(function(v){v.classList.toggle('active',v.id==='view-'+state.view)});
+    render();
+  });
+});
+
+/* ============ shared card ============ */
+function cardHTML(d){
+  var badges='<span class="badge enf-'+d.enf+'">'+ENF[d.enf]+'</span>';
+  if(d.sug)badges+=' <span class="badge sug">+ suggested</span>';
+  if(d.prop)badges+=' <span class="badge proposed">proposed</span>';
+  return '<button class="ecard" data-id="'+d.id+'" style="border-left-color:'+tcol(d.tier)+'">'+
+    '<span class="nm">'+esc(d.name)+'</span>'+
+    '<span class="mech">'+esc(d.mech)+'</span>'+
+    '<span class="mech" style="margin-top:5px">'+badges+' <span class="badge">'+esc(TYPES[d.type])+'</span></span>'+
+  '</button>';
+}
+
+/* ============ tiers view ============ */
+function renderTiers(){
+  var vis=visible(),h='';
+  for(var t=1;t<=5;t++){
+    var rows=vis.filter(function(d){return d.tier===t});
+    h+='<div class="tierband"><header style="border-left-color:'+tcol(t)+'"><h3>'+esc(TIERS[t].name)+'</h3><span class="def">'+esc(TIERS[t].def)+'</span><span class="n">'+rows.length+'</span></header>';
+    h+=rows.length?'<div class="tiergrid">'+rows.map(cardHTML).join('')+'</div>':'<div class="tiergrid" style="color:var(--ink-soft);font-size:.85rem">Nothing matches the current filters.</div>';
+    h+='</div>';
+  }
+  $('#tierbands').innerHTML=h;
+}
+
+/* ============ matrix view ============ */
+function chipHTML(d){
+  return '<button class="mchip'+(d.sug?' sug':'')+'" data-id="'+d.id+'" style="border-left-color:'+tcol(d.tier)+'">'+esc(d.name)+'</button>';
+}
+function renderMatrix(){
+  var vis=visible();
+  var layers=Object.keys(LAYERS),types=Object.keys(TYPES).filter(function(ty){
+    return DATA.some(function(d){return d.type===ty});
+  });
+  var h='<thead><tr><th></th>'+layers.map(function(l){return '<th>'+LAYERS[l]+'</th>'}).join('')+'</tr></thead><tbody>';
+  types.forEach(function(ty){
+    h+='<tr><th>'+TYPES[ty]+'</th>';
+    layers.forEach(function(l){
+      var cell=vis.filter(function(d){return d.type===ty&&d.layer===l});
+      h+=cell.length?'<td>'+cell.map(chipHTML).join('')+'</td>':'<td class="empty" aria-label="empty"></td>';
+    });
+    h+='</tr>';
+  });
+  $('#matrixtable').innerHTML=h+'</tbody>';
+}
+
+/* ============ power view ============ */
+var POWERS={can_stop:'Can stop deployment',can_slow:'Can slow or block inputs',can_embarrass:'Can embarrass',aspirational:'Aspirational'};
+function renderPower(){
+  var vis=visible();
+  var pks=Object.keys(POWERS),eks=Object.keys(ENF);
+  var h='<thead><tr><th>Enforcement ↓</th>'+pks.map(function(p){return '<th>'+POWERS[p]+'</th>'}).join('')+'</tr></thead><tbody>';
+  eks.forEach(function(e){
+    h+='<tr><th>'+ENF[e]+'</th>';
+    pks.forEach(function(p){
+      var cell=vis.filter(function(d){return d.power===p&&d.enf===e});
+      var hot=(e==='binding'&&p==='can_stop')?' class="hot"':'';
+      h+='<td'+hot+'>'+(cell.length?cell.map(chipHTML).join(''):'')+'</td>';
+    });
+    h+='</tr>';
+  });
+  $('#powertable').innerHTML=h+'</tbody>';
+}
+
+/* ============ horizon view ============ */
+function renderHorizon(){
+  var vis=visible(),h='';
+  Object.keys(HOR).forEach(function(k){
+    var rows=vis.filter(function(d){return d.hor===k});
+    h+='<div class="hcol"><header><h3>'+HOR[k]+'</h3><p>'+HORDEF[k]+' · '+rows.length+'</p></header><div class="cards">'+rows.map(cardHTML).join('')+'</div></div>';
+  });
+  $('#horizoncols').innerHTML=h;
+}
+
+/* ============ table view ============ */
+var sortKey='tier',sortDir=1;
+var COLS=[['name','Actor / Mechanism'],['tier','Tier'],['type','Type'],['layer','Layer'],['enf','Enforcement'],['jur','Jurisdiction'],['hor','Horizon'],['mech','Mechanism'],['note','Notes']];
+function renderTable(){
+  var vis=visible().slice();
+  vis.sort(function(a,b){
+    var x=a[sortKey],y=b[sortKey];
+    if(sortKey!=='tier'){x=String(x==null?'':x).toLowerCase();y=String(y==null?'':y).toLowerCase()}
+    return (x<y?-1:x>y?1:0)*sortDir;
+  });
+  var h='<thead><tr>'+COLS.map(function(c){
+    var arr=sortKey===c[0]?' <span class="arr">'+(sortDir>0?'↑':'↓')+'</span>':'';
+    return '<th data-k="'+c[0]+'">'+c[1]+arr+'</th>';
+  }).join('')+'</tr></thead><tbody>';
+  vis.forEach(function(d){
+    h+='<tr data-id="'+d.id+'">'+
+      '<td><strong>'+esc(d.name)+'</strong>'+(d.sug?' <span class="badge sug">+</span>':'')+(d.prop?' <span class="badge proposed">proposed</span>':'')+'</td>'+
+      '<td class="tiercell"><span class="sw" style="background:'+tcol(d.tier)+'"></span>'+d.tier+'</td>'+
+      '<td>'+TYPES[d.type]+'</td><td>'+LAYERS[d.layer]+'</td>'+
+      '<td><span class="badge enf-'+d.enf+'">'+ENF[d.enf]+'</span></td>'+
+      '<td>'+esc(d.jur)+'</td><td>'+HOR[d.hor]+'</td>'+
+      '<td style="max-width:220px">'+esc(d.mech)+'</td>'+
+      '<td class="notecell">'+esc(d.note||'')+'</td></tr>';
+  });
+  $('#datatable').innerHTML=h+'</tbody>';
+  document.querySelectorAll('#datatable thead th').forEach(function(th){
+    th.addEventListener('click',function(){
+      var k=this.dataset.k;
+      if(sortKey===k)sortDir*=-1;else{sortKey=k;sortDir=1}
+      renderTable();
+    });
+  });
+}
+
+/* ============ graph view ============ */
+var NODE_W=168,NODE_H=30,COL_GAP=68,ROW_GAP=8,TOP=52,LEFT=16;
+function renderGraph(){
+  var svg=$('#graphsvg');
+  var vis=visSet();
+  var cols={};DATA.forEach(function(d){(cols[d.tier]=cols[d.tier]||[]).push(d)});
+  /* stable order within a tier: layer, then name */
+  var layerOrder=['corporate','legal','market','institutional','voluntary'];
+  Object.keys(cols).forEach(function(t){
+    cols[t].sort(function(a,b){
+      var la=layerOrder.indexOf(a.layer)-layerOrder.indexOf(b.layer);
+      return la||a.name.localeCompare(b.name);
+    });
+  });
+  var pos={},maxRows=0;
+  for(var t=1;t<=5;t++){
+    var list=cols[t]||[];maxRows=Math.max(maxRows,list.length);
+    list.forEach(function(d,i){
+      pos[d.id]={x:LEFT+(t-1)*(NODE_W+COL_GAP),y:TOP+i*(NODE_H+ROW_GAP)};
+    });
+  }
+  var W=LEFT*2+5*NODE_W+4*COL_GAP,H=TOP+maxRows*(NODE_H+ROW_GAP)+20;
+  svg.setAttribute('viewBox','0 0 '+W+' '+H);
+  svg.setAttribute('width',W);svg.setAttribute('height',H);
+  var h='';
+  /* tier headers */
+  for(t=1;t<=5;t++){
+    var x=LEFT+(t-1)*(NODE_W+COL_GAP);
+    h+='<text class="tierlabel" x="'+x+'" y="24">'+esc(TIERS[t].name)+'</text>';
+    h+='<rect x="'+x+'" y="33" width="'+NODE_W+'" height="2" fill="'+tcol(t)+'"/>';
+  }
+  /* edges under nodes */
+  EDGES.forEach(function(e,i){
+    var a=pos[e[0]],b=pos[e[1]];if(!a||!b)return;
+    var dim=(!vis[e[0]]||!vis[e[1]])?' dim':'';
+    var x1,y1,x2,y2;
+    if(Math.abs(a.x-b.x)<1){ /* same column: arc out the right side */
+      x1=a.x+NODE_W;y1=a.y+NODE_H/2;x2=b.x+NODE_W;y2=b.y+NODE_H/2;
+      var bulge=28+Math.abs(y2-y1)*.12;
+      h+='<path class="edge'+(e[3]?' dashed':'')+dim+'" data-i="'+i+'" d="M'+x1+' '+y1+' C'+(x1+bulge)+' '+y1+' '+(x2+bulge)+' '+y2+' '+x2+' '+y2+'"/>';
+    }else{
+      var s=a.x<b.x?a:b,d2=a.x<b.x?b:a;
+      x1=s.x+NODE_W;y1=s.y+NODE_H/2;x2=d2.x;y2=d2.y+NODE_H/2;
+      var mx=(x1+x2)/2;
+      h+='<path class="edge'+(e[3]?' dashed':'')+dim+'" data-i="'+i+'" d="M'+x1+' '+y1+' C'+mx+' '+y1+' '+mx+' '+y2+' '+x2+' '+y2+'"/>';
+    }
+  });
+  /* nodes */
+  DATA.forEach(function(d){
+    var p=pos[d.id],dim=vis[d.id]?'':' dim';
+    var nm=d.name.length>26?d.name.slice(0,25)+'…':d.name;
+    h+='<g class="gnode'+dim+'" data-id="'+d.id+'" tabindex="0" role="button" aria-label="'+esc(d.name)+'">'+
+      '<rect x="'+p.x+'" y="'+p.y+'" width="'+NODE_W+'" height="'+NODE_H+'"'+(d.prop||d.sug?' stroke-dasharray="'+(d.prop?'4 3':'0')+'"':'')+'/>'+
+      '<rect x="'+p.x+'" y="'+p.y+'" width="4" height="'+NODE_H+'" fill="'+tcol(d.tier)+'" stroke="none"/>'+
+      '<text x="'+(p.x+11)+'" y="'+(p.y+13)+'">'+esc(nm)+'</text>'+
+      '<text class="sub" x="'+(p.x+11)+'" y="'+(p.y+24)+'">'+esc(TYPES[d.type])+(d.sug?' · suggested':'')+(d.prop?' · proposed':'')+'</text>'+
+    '</g>';
+  });
+  svg.innerHTML=h;
+  /* interactions */
+  var tip=$('#edgetip');
+  svg.querySelectorAll('path.edge').forEach(function(p){
+    p.addEventListener('mousemove',function(ev){
+      var e=EDGES[+this.dataset.i];
+      tip.textContent=byId[e[0]].name+' → '+byId[e[1]].name+': '+e[2];
+      tip.style.display='block';
+      tip.style.left=Math.min(ev.clientX+14,window.innerWidth-290)+'px';
+      tip.style.top=(ev.clientY+14)+'px';
+    });
+    p.addEventListener('mouseleave',function(){tip.style.display='none'});
+  });
+  function focusNode(id,on){
+    if(!on){svg.classList.remove('focused');
+      svg.querySelectorAll('.lit').forEach(function(x){x.classList.remove('lit')});return}
+    svg.classList.add('focused');
+    var lit={};lit[id]=1;
+    svg.querySelectorAll('path.edge').forEach(function(p){
+      var e=EDGES[+p.dataset.i];
+      if(e[0]===id||e[1]===id){p.classList.add('lit');lit[e[0]]=1;lit[e[1]]=1}
+    });
+    svg.querySelectorAll('.gnode').forEach(function(g){if(lit[g.dataset.id])g.classList.add('lit')});
+  }
+  svg.querySelectorAll('.gnode').forEach(function(g){
+    g.addEventListener('mouseenter',function(){focusNode(this.dataset.id,true)});
+    g.addEventListener('mouseleave',function(){focusNode(null,false)});
+    g.addEventListener('focus',function(){focusNode(this.dataset.id,true)});
+    g.addEventListener('blur',function(){focusNode(null,false)});
+    g.addEventListener('click',function(){openDrawer(this.dataset.id)});
+    g.addEventListener('keydown',function(ev){if(ev.key==='Enter'||ev.key===' '){ev.preventDefault();openDrawer(this.dataset.id)}});
+  });
+}
+
+/* ============ drawer ============ */
+function openDrawer(id){
+  var d=byId[id];if(!d)return;
+  $('#d-name').textContent=d.name;
+  var h='<p class="tierline"><span class="sw" style="background:'+tcol(d.tier)+'"></span>'+esc(TIERS[d.tier].name)+'</p>';
+  h+='<dl>'+
+    '<dt>Type</dt><dd>'+TYPES[d.type]+'</dd>'+
+    '<dt>Layer</dt><dd>'+LAYERS[d.layer]+'</dd>'+
+    '<dt>Enforcement</dt><dd><span class="badge enf-'+d.enf+'">'+ENF[d.enf]+'</span></dd>'+
+    '<dt>Horizon</dt><dd>'+HOR[d.hor]+'</dd>'+
+    '<dt>Jurisdiction</dt><dd>'+esc(d.jur)+'</dd>'+
+    '<dt>Mechanism</dt><dd>'+esc(d.mech)+'</dd>'+
+  '</dl>';
+  if(d.note)h+='<p class="note'+(d.sug?' sugnote':'')+'">'+esc(d.note)+'</p>';
+  var conns=[];
+  EDGES.forEach(function(e){
+    if(e[0]===id)conns.push({other:e[1],rel:e[2],dir:'→'});
+    else if(e[1]===id)conns.push({other:e[0],rel:e[2],dir:'←'});
+  });
+  if(conns.length){
+    h+='<h4>Connections ('+conns.length+')</h4><div class="conn">';
+    conns.forEach(function(c){
+      h+='<button data-id="'+c.other+'"><strong>'+c.dir+' '+esc(byId[c.other].name)+'</strong><span class="rel">'+esc(c.rel)+'</span></button>';
+    });
+    h+='</div>';
+  }
+  if(d.url)h+='<p class="src"><a href="'+esc(d.url)+'" target="_blank" rel="noopener">Source ↗</a></p>';
+  $('#d-body').innerHTML=h;
+  $('#drawer').classList.add('open');$('#veil').classList.add('open');
+  $('#d-close').focus();
+}
+function closeDrawer(){$('#drawer').classList.remove('open');$('#veil').classList.remove('open')}
+$('#d-close').addEventListener('click',closeDrawer);
+$('#veil').addEventListener('click',closeDrawer);
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeDrawer()});
+document.addEventListener('click',function(e){
+  var t=e.target.closest('[data-id]');
+  if(!t)return;
+  if(t.classList.contains('ecard')||t.classList.contains('mchip')||t.closest('#d-body')||t.closest('#datatable'))openDrawer(t.dataset.id);
+});
+
+/* ============ theme toggle ============ */
+function setTheme(t,save){
+  document.documentElement.setAttribute('data-theme',t);
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+  if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
+  render();
+}
+$('#theme-toggle').addEventListener('click',function(){
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+  var saved=null;try{saved=localStorage.getItem('bs-theme')}catch(err){}
+  if(saved!=='dark'&&saved!=='light')setTheme(e.matches?'dark':'light',false);
+});
+
+/* ============ render ============ */
+function render(){
+  var n=visible().length;
+  $('#countnote').textContent=n+' of '+DATA.length+' shown';
+  ({graph:renderGraph,tiers:renderTiers,matrix:renderMatrix,power:renderPower,horizon:renderHorizon,table:renderTable})[state.view]();
+}
+render();
+</script>
+</body>
+</html>
