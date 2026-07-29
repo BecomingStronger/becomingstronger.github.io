@@ -69,7 +69,6 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .head h1{font-size:clamp(1.9rem,4.5vw,3rem);margin:0 0 16px;max-width:840px}
 .head .sub{font-size:1.08rem;color:var(--ink-soft);max-width:760px;margin:0 0 12px}
 .head .method{font-size:.88rem;color:var(--ink-soft);max-width:760px;margin:0}
-.head .method .plus{border:1px dashed var(--terra);color:var(--terra);padding:0 5px;font-size:.78rem;font-weight:600}
 
 /* tier legend */
 .legend{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-strong);margin:28px 0 0}
@@ -86,10 +85,6 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .filters input[type=search]:focus{border-color:var(--gold)}
 .filters select{padding:8px 6px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);font:inherit;font-size:.85rem;outline:none;border-radius:0}
 .filters select:focus{border-color:var(--gold)}
-.chip-toggle{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line-strong);padding:8px 12px;font-size:.85rem;color:var(--ink-soft)}
-.chip-toggle .box{width:12px;height:12px;border:1px solid var(--line-strong);display:inline-block;position:relative}
-.chip-toggle[aria-pressed=true]{border-color:var(--terra);color:var(--ink)}
-.chip-toggle[aria-pressed=true] .box{border-color:var(--terra);background:var(--terra)}
 .reset-btn{font-size:.85rem;color:var(--ink-soft);border:1px solid transparent;padding:8px 10px}
 .reset-btn:hover{color:var(--terra)}
 .count-note{font-size:.8rem;color:var(--ink-soft);margin-left:auto;font-variant-numeric:tabular-nums}
@@ -114,7 +109,6 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .badge{display:inline-block;font-size:.68rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line-strong);padding:1px 6px;color:var(--ink-soft);white-space:nowrap}
 .badge.enf-binding{border-color:var(--leaf);color:var(--leaf)}
 .badge.enf-voluntary{border-color:var(--gold);color:var(--gold)}
-.badge.sug{border-style:dashed;border-color:var(--terra);color:var(--terra)}
 .badge.proposed{border-style:dashed}
 
 /* tiers view */
@@ -134,7 +128,6 @@ table.matrix{border-collapse:collapse;width:100%;min-width:880px}
 .matrix td.empty{background:repeating-linear-gradient(45deg,transparent,transparent 7px,var(--line) 7px,var(--line) 8px)}
 .mchip{display:inline-block;border:1px solid var(--line-strong);border-left-width:4px;padding:3px 8px;margin:2px 3px 2px 0;font-size:.8rem;cursor:pointer;background:var(--paper)}
 .mchip:hover,.mchip:focus-visible{border-color:var(--gold);outline:none}
-.mchip.sug{border-style:dashed;border-left-style:solid}
 
 /* power view */
 .powergrid-scroll{overflow-x:auto;border:1px solid var(--line-strong)}
@@ -203,7 +196,6 @@ table.data{border-collapse:collapse;width:100%;min-width:980px;font-size:.86rem}
 .drawer dt{color:var(--ink-soft);font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;padding-top:2px}
 .drawer dd{margin:0}
 .drawer .note{border-left:3px solid var(--gold);padding:6px 0 6px 12px;color:var(--ink-soft);font-size:.88rem;margin:0 0 16px}
-.drawer .note.sugnote{border-left-color:var(--terra)}
 .drawer h4{font-family:"Raleway",sans-serif;font-size:.82rem;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-soft);margin:0 0 8px}
 .drawer .conn{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
 .drawer .conn button{text-align:left;border:1px solid var(--line);padding:7px 10px;font-size:.83rem}
@@ -249,7 +241,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <p class="eyebrow">AI Governance · Interactive</p>
   <h1>Who can actually stop a frontier AI deployment?</h1>
   <p class="sub">A map of frontier AI governance, organized around one blunt question: how much power does each actor or mechanism really have? Five tiers, from a genuine off-switch down to hopeful communiqués. Click anything for details and connections.</p>
-  <p class="method">Compiled during BlueDot Impact's Frontier AI Governance course, audited July 2026. Entries marked <span class="plus">+ suggested</span> were added in the audit; dashed borders mean proposed, not enacted.</p>
+  <p class="method">Compiled during BlueDot Impact's Frontier AI Governance course; facts verified against primary sources July 2026. Dashed borders mean proposed, not enacted.</p>
   <div class="legend" id="legend"></div>
 </div>
 
@@ -261,7 +253,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
     <select id="f-enf" aria-label="Filter by enforcement"><option value="">All enforcement</option></select>
     <select id="f-jur" aria-label="Filter by jurisdiction"><option value="">All jurisdictions</option></select>
     <select id="f-hor" aria-label="Filter by time horizon"><option value="">All horizons</option></select>
-    <button class="chip-toggle" id="f-sug" aria-pressed="true"><span class="box"></span>Audit additions</button>
     <button class="reset-btn" id="f-reset">Reset</button>
     <span class="count-note" id="countnote"></span>
   </div>
@@ -344,7 +335,7 @@ var ENF={binding:'Binding',voluntary:'Voluntary',advisory:'Advisory',none:'None'
 var HOR={current:'Current',near_term:'Near term',medium_term:'Medium term',long_term:'Long term'};
 var HORDEF={current:'Operating now',near_term:'1 to 2 years',medium_term:'2 to 5 years',long_term:'5+ years'};
 
-/* fields: id, name, tier, type, layer, power, hor, jur, enf, mech, note, url, sug (audit addition), prop (proposed, not enacted) */
+/* fields: id, name, tier, type, layer, power, hor, jur, enf, mech, note, url, prop (proposed, not enacted) */
 var DATA=[
  {id:'anthropic',name:'Anthropic',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Responsible Scaling Policy (v3.4, July 2026)',note:'Voluntary and self-certified. The v3.0 rewrite (February 2026) replaced binding if-then threshold commitments with nonbinding, publicly graded targets; pausing is now explicitly discretionary.',url:'https://www.anthropic.com/rsp'},
  {id:'chinagov',name:'Chinese Government (CAC)',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'China',enf:'binding',mech:'Generative AI measures: registration, security assessment, content rules',note:'The CAC pre-deployment gate is real Tier 1 power, exercised for political control rather than safety evaluation. The only binding, currently used deployment gate on this map.',url:'https://www.cac.gov.cn'},
@@ -385,15 +376,15 @@ var DATA=[
  {id:'gpai',name:'Global Partnership on AI',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Research, recommendations, technical advice',note:'Integrated into the OECD in July 2024; continues as an OECD-hosted partnership under the GPAI brand rather than an independent body.',url:'https://gpai.ai'},
  {id:'un',name:'UN AI Governance Track',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'long_term',jur:'international',enf:'none',mech:'Independent International Scientific Panel, Global Dialogue on AI Governance',note:'The Advisory Body’s 2024 report led to a 40-member scientific panel (2026 to 2029 term) and the Global Dialogue, which first convened in Geneva in July 2026. The only governance venue that includes both Washington and Beijing.',url:'https://www.un.org/global-digital-compact'},
  /* ============ audit additions ============ */
- {id:'aioffice',name:'EU AI Office',tier:3,type:'government_agency',layer:'legal',power:'can_slow',hor:'current',jur:'EU',enf:'binding',sug:true,mech:'GPAI enforcement: model access, mandated evaluations, fines up to 3% of global turnover or €15M',note:'Audit addition. The AI Act without its enforcer is half a map: the AI Office is the only Western body that can compel access to a frontier model. Its fining powers activate August 2026.',url:'https://digital-strategy.ec.europa.eu/en/policies/ai-office'},
- {id:'microsoft',name:'Microsoft',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',sug:true,mech:'OpenAI capital, compute, and IP partnership; own frontier effort',note:'Audit addition. The single largest private lever over a frontier lab: capital, exclusive IP rights, and (via Azure) the compute OpenAI runs on.',url:'https://www.microsoft.com'},
- {id:'asml',name:'ASML',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'Netherlands',enf:'voluntary',sug:true,mech:'EUV lithography monopoly, Dutch export licensing',note:'Audit addition. One step upstream of TSMC and a true monopoly: no EUV machines, no leading-edge fabs anywhere. Dutch export controls make it a state lever too.',url:'https://www.asml.com'},
- {id:'raise',name:'New York RAISE Act',tier:3,type:'legislation',layer:'legal',power:'can_embarrass',hor:'near_term',jur:'US',enf:'binding',sug:true,mech:'Safety protocols, 72-hour incident disclosure, DFS oversight, AG penalties up to $1M/$3M',note:'Audit addition. The second state frontier law: signed December 2025, amended March 2026, effective January 2027. Together with SB 53 it sets up the federal preemption fight.',url:'https://www.nysenate.gov/legislation/bills/2025/S6953'},
- {id:'seoul',name:'Seoul Frontier AI Safety Commitments',tier:4,type:'commitment',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'international',enf:'voluntary',sug:true,mech:'16+ companies pledged risk thresholds and safety frameworks',note:'Audit addition. The reason nearly every lab now publishes a safety framework: a summit deliverable that actually changed behavior, with no enforcement at all.',url:'https://www.gov.uk/government/publications/frontier-ai-safety-commitments-ai-seoul-summit-2024'},
- {id:'coe',name:'Council of Europe AI Convention',tier:5,type:'treaty',layer:'legal',power:'aspirational',hor:'medium_term',jur:'international',enf:'binding',sug:true,mech:'First binding international AI treaty (human rights, democracy, rule of law)',note:'Audit addition. Signed by 46 parties including the US (signed, not ratified); reported in force since late 2025. Binding on paper, broad on substance: obligations are principles-level with no frontier-specific duties, which is why it sits in Tier 5 despite treaty status.',url:'https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence'},
- {id:'aisinet',name:'International Network of AISIs',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',sug:true,mech:'Joint evaluations, shared methods across national institutes',note:'Audit addition. Ten-plus national institutes coordinating evaluation methodology; the seed of an international inspection regime, if it survives politics.'},
- {id:'ags',name:'State Attorneys General (DE & CA)',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',sug:true,mech:'Charitable-trust oversight of OpenAI’s nonprofit; safety commitments as restructuring conditions',note:'Audit addition. The overlooked lever that actually worked: both AGs extracted enforceable safety commitments as the price of blessing OpenAI’s 2025 restructuring.'},
- {id:'courts',name:'US Courts (liability)',tier:3,type:'courts',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',sug:true,mech:'Product liability, copyright, consumer protection, wrongful death suits',note:'Audit addition. Nobody designed the tort system as AI governance, but discovery, damages, and injunctions are binding in a way most of this map is not.'}
+ {id:'aioffice',name:'EU AI Office',tier:3,type:'government_agency',layer:'legal',power:'can_slow',hor:'current',jur:'EU',enf:'binding',mech:'GPAI enforcement: model access, mandated evaluations, fines up to 3% of global turnover or €15M',note:'The AI Act without its enforcer is half a map: the AI Office is the only Western body that can compel access to a frontier model. Its fining powers activate August 2026.',url:'https://digital-strategy.ec.europa.eu/en/policies/ai-office'},
+ {id:'microsoft',name:'Microsoft',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'OpenAI capital, compute, and IP partnership; own frontier effort',note:'The single largest private lever over a frontier lab: capital, exclusive IP rights, and (via Azure) the compute OpenAI runs on.',url:'https://www.microsoft.com'},
+ {id:'asml',name:'ASML',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'Netherlands',enf:'voluntary',mech:'EUV lithography monopoly, Dutch export licensing',note:'One step upstream of TSMC and a true monopoly: no EUV machines, no leading-edge fabs anywhere. Dutch export controls make it a state lever too.',url:'https://www.asml.com'},
+ {id:'raise',name:'New York RAISE Act',tier:3,type:'legislation',layer:'legal',power:'can_embarrass',hor:'near_term',jur:'US',enf:'binding',mech:'Safety protocols, 72-hour incident disclosure, DFS oversight, AG penalties up to $1M/$3M',note:'The second state frontier law: signed December 2025, amended March 2026, effective January 2027. Together with SB 53 it sets up the federal preemption fight.',url:'https://www.nysenate.gov/legislation/bills/2025/S6953'},
+ {id:'seoul',name:'Seoul Frontier AI Safety Commitments',tier:4,type:'commitment',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'international',enf:'voluntary',mech:'16+ companies pledged risk thresholds and safety frameworks',note:'The reason nearly every lab now publishes a safety framework: a summit deliverable that actually changed behavior, with no enforcement at all.',url:'https://www.gov.uk/government/publications/frontier-ai-safety-commitments-ai-seoul-summit-2024'},
+ {id:'coe',name:'Council of Europe AI Convention',tier:5,type:'treaty',layer:'legal',power:'aspirational',hor:'medium_term',jur:'international',enf:'binding',mech:'First binding international AI treaty (human rights, democracy, rule of law)',note:'Signed by 46 parties including the US (signed, not ratified); reported in force since late 2025. Binding on paper, broad on substance: obligations are principles-level with no frontier-specific duties, which is why it sits in Tier 5 despite treaty status.',url:'https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence'},
+ {id:'aisinet',name:'International Network of AISIs',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Joint evaluations, shared methods across national institutes',note:'Ten-plus national institutes coordinating evaluation methodology; the seed of an international inspection regime, if it survives politics.'},
+ {id:'ags',name:'State Attorneys General (DE & CA)',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Charitable-trust oversight of OpenAI’s nonprofit; safety commitments as restructuring conditions',note:'The overlooked lever that actually worked: both AGs extracted enforceable safety commitments as the price of blessing OpenAI’s 2025 restructuring.'},
+ {id:'courts',name:'US Courts (liability)',tier:3,type:'courts',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Product liability, copyright, consumer protection, wrongful death suits',note:'Nobody designed the tort system as AI governance, but discovery, damages, and injunctions are binding in a way most of this map is not.'}
 ];
 
 /* edges: [source, target, relationship, dashed] */
@@ -467,7 +458,7 @@ var EDGES=[
 
 /* ============ state & helpers ============ */
 var byId={};DATA.forEach(function(d){byId[d.id]=d});
-var state={q:'',layer:'',type:'',enf:'',jur:'',hor:'',sug:true,view:'graph'};
+var state={q:'',layer:'',type:'',enf:'',jur:'',hor:'',view:'graph'};
 var $=function(s){return document.querySelector(s)};
 function esc(t){var d=document.createElement('div');d.textContent=t==null?'':t;return d.innerHTML}
 function tcol(t){return getComputedStyle(document.documentElement).getPropertyValue('--t'+t).trim()}
@@ -475,7 +466,6 @@ function tcol(t){return getComputedStyle(document.documentElement).getPropertyVa
 function visible(){
   var q=state.q.toLowerCase();
   return DATA.filter(function(d){
-    if(!state.sug&&d.sug)return false;
     if(state.layer&&d.layer!==state.layer)return false;
     if(state.type&&d.type!==state.type)return false;
     if(state.enf&&d.enf!==state.enf)return false;
@@ -504,13 +494,10 @@ fillSelect($('#f-layer'),LAYERS);fillSelect($('#f-type'),TYPES);fillSelect($('#f
   $('#f-'+k).addEventListener('change',function(){state[k]=this.value;render()});
 });
 $('#q').addEventListener('input',function(){state.q=this.value;render()});
-$('#f-sug').addEventListener('click',function(){
-  state.sug=!state.sug;this.setAttribute('aria-pressed',state.sug);render();
-});
 $('#f-reset').addEventListener('click',function(){
-  state.q='';state.layer='';state.type='';state.enf='';state.jur='';state.hor='';state.sug=true;
+  state.q='';state.layer='';state.type='';state.enf='';state.jur='';state.hor='';
   $('#q').value='';['layer','type','enf','jur','hor'].forEach(function(k){$('#f-'+k).value=''});
-  $('#f-sug').setAttribute('aria-pressed','true');render();
+  render();
 });
 
 /* ============ legend ============ */
@@ -535,7 +522,6 @@ document.querySelectorAll('.viewtabs button').forEach(function(b){
 /* ============ shared card ============ */
 function cardHTML(d){
   var badges='<span class="badge enf-'+d.enf+'">'+ENF[d.enf]+'</span>';
-  if(d.sug)badges+=' <span class="badge sug">+ suggested</span>';
   if(d.prop)badges+=' <span class="badge proposed">proposed</span>';
   return '<button class="ecard" data-id="'+d.id+'" style="border-left-color:'+tcol(d.tier)+'">'+
     '<span class="nm">'+esc(d.name)+'</span>'+
@@ -558,7 +544,7 @@ function renderTiers(){
 
 /* ============ matrix view ============ */
 function chipHTML(d){
-  return '<button class="mchip'+(d.sug?' sug':'')+'" data-id="'+d.id+'" style="border-left-color:'+tcol(d.tier)+'">'+esc(d.name)+'</button>';
+  return '<button class="mchip" data-id="'+d.id+'" style="border-left-color:'+tcol(d.tier)+'">'+esc(d.name)+'</button>';
 }
 function renderMatrix(){
   var vis=visible();
@@ -621,7 +607,7 @@ function renderTable(){
   }).join('')+'</tr></thead><tbody>';
   vis.forEach(function(d){
     h+='<tr data-id="'+d.id+'">'+
-      '<td><strong>'+esc(d.name)+'</strong>'+(d.sug?' <span class="badge sug">+</span>':'')+(d.prop?' <span class="badge proposed">proposed</span>':'')+'</td>'+
+      '<td><strong>'+esc(d.name)+'</strong>'+(d.prop?' <span class="badge proposed">proposed</span>':'')+'</td>'+
       '<td class="tiercell"><span class="sw" style="background:'+tcol(d.tier)+'"></span>'+d.tier+'</td>'+
       '<td>'+TYPES[d.type]+'</td><td>'+LAYERS[d.layer]+'</td>'+
       '<td><span class="badge enf-'+d.enf+'">'+ENF[d.enf]+'</span></td>'+
@@ -691,10 +677,10 @@ function renderGraph(){
     var p=pos[d.id],dim=vis[d.id]?'':' dim';
     var nm=d.name.length>26?d.name.slice(0,25)+'…':d.name;
     h+='<g class="gnode'+dim+'" data-id="'+d.id+'" tabindex="0" role="button" aria-label="'+esc(d.name)+'">'+
-      '<rect x="'+p.x+'" y="'+p.y+'" width="'+NODE_W+'" height="'+NODE_H+'"'+(d.prop||d.sug?' stroke-dasharray="'+(d.prop?'4 3':'0')+'"':'')+'/>'+
+      '<rect x="'+p.x+'" y="'+p.y+'" width="'+NODE_W+'" height="'+NODE_H+'"'+(d.prop?' stroke-dasharray="4 3"':'')+'/>'+
       '<rect x="'+p.x+'" y="'+p.y+'" width="4" height="'+NODE_H+'" fill="'+tcol(d.tier)+'" stroke="none"/>'+
       '<text x="'+(p.x+11)+'" y="'+(p.y+13)+'">'+esc(nm)+'</text>'+
-      '<text class="sub" x="'+(p.x+11)+'" y="'+(p.y+24)+'">'+esc(TYPES[d.type])+(d.sug?' · suggested':'')+(d.prop?' · proposed':'')+'</text>'+
+      '<text class="sub" x="'+(p.x+11)+'" y="'+(p.y+24)+'">'+esc(TYPES[d.type])+(d.prop?' · proposed':'')+'</text>'+
     '</g>';
   });
   svg.innerHTML=h;
@@ -744,7 +730,7 @@ function openDrawer(id){
     '<dt>Jurisdiction</dt><dd>'+esc(d.jur)+'</dd>'+
     '<dt>Mechanism</dt><dd>'+esc(d.mech)+'</dd>'+
   '</dl>';
-  if(d.note)h+='<p class="note'+(d.sug?' sugnote':'')+'">'+esc(d.note)+'</p>';
+  if(d.note)h+='<p class="note">'+esc(d.note)+'</p>';
   var conns=[];
   EDGES.forEach(function(e){
     if(e[0]===id)conns.push({other:e[1],rel:e[2],dir:'→'});
