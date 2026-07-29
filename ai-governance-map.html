@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frontier AI Governance Map · Becoming Stronger</title>
-<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 48 actors and mechanisms across six views.">
+<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 49 actors and mechanisms across six views.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://becomingstronger.github.io/ai-governance-map.html">
 <meta property="og:title" content="Frontier AI Governance Map">
-<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 48 actors and mechanisms, six views, and the enforcement gap at the center.">
+<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 49 actors and mechanisms, six views, and the enforcement gap at the center.">
 <meta name="theme-color" id="meta-theme" content="#FBF8F0">
 <script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -382,6 +382,7 @@ var DATA=[
  {id:'asml',name:'ASML',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'Netherlands',enf:'voluntary',mech:'EUV lithography monopoly, Dutch export licensing',note:'One step upstream of TSMC and a true monopoly: no EUV machines, no leading-edge fabs anywhere. Dutch export controls make it a state lever too.',url:'https://www.asml.com'},
  {id:'raise',name:'New York RAISE Act',tier:3,type:'legislation',layer:'legal',power:'can_embarrass',hor:'near_term',jur:'US',enf:'binding',mech:'Safety protocols, 72-hour incident disclosure, DFS oversight, AG penalties up to $1M/$3M',note:'The second state frontier law: signed December 2025, amended March 2026, effective January 2027. Together with SB 53 it sets up the federal preemption fight.',url:'https://www.nysenate.gov/legislation/bills/2025/S6953'},
  {id:'seoul',name:'Seoul Frontier AI Safety Commitments',tier:4,type:'commitment',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'international',enf:'voluntary',mech:'16+ companies pledged risk thresholds and safety frameworks',note:'The reason nearly every lab now publishes a safety framework: a summit deliverable that actually changed behavior, with no enforcement at all.',url:'https://www.gov.uk/government/publications/frontier-ai-safety-commitments-ai-seoul-summit-2024'},
+ {id:'slowdown',name:'Lab Slowdown Statements',tier:4,type:'commitment',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'voluntary',mech:'The on-the-record conditional willingness to slow down, from the 2018 OpenAI Charter to Pacing the Frontier (2026)',note:'Every US frontier lab is on record, in some form, wanting a coordinated slowdown it will not attempt alone. OpenAI’s 2018 charter promises to "stop competing with and start assisting" a safer project that nears AGI first, and Altman wrote in 2023 that "coordination among AGI efforts to slow down at critical junctures will likely be important." Hassabis, asked at Davos in January 2026 whether he would advocate a pause if every company and country paused: "I think so... but that would require some coordination." Amodei, the same week: "Why can’t we slow down to Demis’ timeline?" The pattern reached institutional form in the Pacing the Frontier statement (July 28, 2026), signed by leaders from Anthropic, OpenAI, Google, and Meta. The counterweights are real too: Musk signed the 2023 pause letter "knowing it was futile" and founded xAI four months later, and Meta deleted its own stop-development threshold in April 2026.',url:'https://www.pacingthefrontier.com/'},
  {id:'coe',name:'Council of Europe AI Convention',tier:5,type:'treaty',layer:'legal',power:'aspirational',hor:'medium_term',jur:'international',enf:'binding',mech:'First binding international AI treaty (human rights, democracy, rule of law)',note:'Signed by 46 parties including the US (signed, not ratified); reported in force since late 2025. Binding on paper, broad on substance: obligations are principles-level with no frontier-specific duties, which is why it sits in Tier 5 despite treaty status.',url:'https://www.coe.int/en/web/artificial-intelligence/the-framework-convention-on-artificial-intelligence'},
  {id:'aisinet',name:'International Network of AISIs',tier:5,type:'international_body',layer:'institutional',power:'aspirational',hor:'medium_term',jur:'international',enf:'none',mech:'Joint evaluations, shared methods across national institutes',note:'Ten-plus national institutes coordinating evaluation methodology; the seed of an international inspection regime, if it survives politics.'},
  {id:'ags',name:'State Attorneys General (DE & CA)',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Charitable-trust oversight of OpenAI’s nonprofit; safety commitments as restructuring conditions',note:'The overlooked lever that actually worked: both AGs extracted enforceable safety commitments as the price of blessing OpenAI’s 2025 restructuring.'},
@@ -451,6 +452,13 @@ var EDGES=[
  ['oecd','gpai','Absorbed the partnership in 2024'],
  ['oecd','g7','Hosts the Hiroshima Process reporting framework'],
  ['summits','seoul','The Seoul summit produced the frontier safety commitments',false],
+ ['slowdown','openai','The 2018 Charter commits to "stop competing with and start assisting" a safer project that nears AGI first; OpenAI endorsed Pacing the Frontier as a company (2026)'],
+ ['slowdown','anthropic','Amodei, Clark, and Kaplan signed Pacing the Frontier (2026), asking for tools to "deliberately pace" frontier development; Anthropic endorsed as a company'],
+ ['slowdown','gdm','Hassabis at Davos 2026, asked if he would advocate a pause if every company and country paused: "I think so"'],
+ ['slowdown','meta','Chief scientist Shengjia Zhao signed Pacing the Frontier (2026); the company had deleted its own stop-development threshold three months earlier'],
+ ['slowdown','xai','Musk on the 2023 pause letter: "I signed that letter knowing it was futile. I just wanted to be on the record as recommending a pause"'],
+ ['slowdown','seoul','The Seoul halt clause is the only version of the pattern all five frontier labs actually signed'],
+ ['slowdown','labs','Pacing the Frontier names the trap: "each company, and country, is under intense competitive pressure not to unilaterally slow"'],
  ['seoul','labs','16+ companies pledged to publish risk thresholds and frameworks',false],
  ['summits','aisinet','The institute network launched from the summit track',false],
  ['aisinet','ukaisi','Member institute',false],
