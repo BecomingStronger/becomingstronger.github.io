@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frontier AI Governance Map · Becoming Stronger</title>
-<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 49 actors and mechanisms across six views.">
+<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 51 actors and mechanisms across six views.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://becomingstronger.github.io/ai-governance-map.html">
 <meta property="og:title" content="Frontier AI Governance Map">
-<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 49 actors and mechanisms, six views, and the enforcement gap at the center.">
+<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 51 actors and mechanisms, six views, and the enforcement gap at the center.">
 <meta name="theme-color" id="meta-theme" content="#FBF8F0">
 <script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -90,6 +90,12 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .count-note{font-size:.8rem;color:var(--ink-soft);margin-left:auto;font-variant-numeric:tabular-nums}
 
 /* view tabs */
+.viewbar{display:flex;align-items:stretch;margin:26px 0 0}
+.viewbar .viewtabs{flex:1;margin:0;border-right:none}
+.export-btn{border:1px solid var(--line-strong);padding:11px 16px;font-size:.9rem;font-weight:500;color:var(--ink-soft);display:inline-flex;align-items:center;gap:8px;white-space:nowrap;background:var(--paper)}
+.export-btn:hover{color:var(--gold);border-color:var(--gold)}
+.export-btn:disabled{opacity:.55;cursor:default}
+@media(max-width:640px){.viewbar{flex-wrap:wrap}.viewbar .viewtabs{border-right:1px solid var(--line-strong)}.export-btn{flex:1;justify-content:center;border-top:none}}
 .viewtabs{display:flex;flex-wrap:wrap;border:1px solid var(--line-strong);margin:26px 0 0}
 .viewtabs button{flex:1 1 auto;padding:11px 14px;font-size:.9rem;font-weight:500;color:var(--ink-soft);border-right:1px solid var(--line);background:var(--paper)}
 .viewtabs button:last-child{border-right:none}
@@ -259,13 +265,19 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 </div>
 
 <main class="wrap">
-  <div class="viewtabs" role="tablist" aria-label="Views">
-    <button role="tab" data-view="graph" aria-selected="true">Graph</button>
-    <button role="tab" data-view="tiers" aria-selected="false">Power tiers</button>
-    <button role="tab" data-view="matrix" aria-selected="false">Layer × type</button>
-    <button role="tab" data-view="power" aria-selected="false">The gap</button>
-    <button role="tab" data-view="horizon" aria-selected="false">Time horizon</button>
-    <button role="tab" data-view="table" aria-selected="false">Table</button>
+  <div class="viewbar">
+    <div class="viewtabs" role="tablist" aria-label="Views">
+      <button role="tab" data-view="graph" aria-selected="true">Graph</button>
+      <button role="tab" data-view="tiers" aria-selected="false">Power tiers</button>
+      <button role="tab" data-view="matrix" aria-selected="false">Layer × type</button>
+      <button role="tab" data-view="power" aria-selected="false">The gap</button>
+      <button role="tab" data-view="horizon" aria-selected="false">Time horizon</button>
+      <button role="tab" data-view="table" aria-selected="false">Table</button>
+    </div>
+    <button class="export-btn" id="exportbtn" title="Download the current view as a PNG">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M4 19h16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span>Export PNG</span>
+    </button>
   </div>
 
   <section class="view active" id="view-graph" role="tabpanel">
@@ -287,7 +299,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <section class="view" id="view-power" role="tabpanel">
     <p class="view-note">Claimed power crossed with enforcement. The uncomfortable read: nearly everything that can stop a deployment is voluntary and self-certified, and nearly everything binding sits well below stop-power.</p>
     <div class="powergrid-scroll"><table class="powergrid" id="powertable"></table></div>
-    <div class="gap-note"><strong>The governance gap.</strong> The one binding, currently exercised pre-deployment gate on this map belongs to the Cyberspace Administration of China, and it screens for political control rather than catastrophic risk. In the US, stop-power is either voluntary (lab safety frameworks) or latent (Congress holds the constitutional authority but has never passed a binding rule on frontier development or deployment). Closing that highlighted cell is the central project of frontier AI governance.</div>
+    <div class="gap-note"><strong>The governance gap.</strong> The one binding, currently exercised pre-deployment gate on this map belongs to the Cyberspace Administration of China, and it screens for political control rather than catastrophic risk. In the US, stop-power is either voluntary (lab safety frameworks) or latent (Congress holds the constitutional authority but has never passed a binding rule on frontier development or deployment). And the far column is the escape hatch: once weights are published, nothing in any other column applies. Closing the highlighted cell, before the escape hatch swallows it, is the central project of frontier AI governance.</div>
   </section>
 
   <section class="view" id="view-horizon" role="tabpanel">
@@ -330,7 +342,7 @@ var TIERS={
   5:{name:'Tier 5 · Aspirational',short:'Aspirational',def:'International coordination without enforcement, so far.'}
 };
 var LAYERS={corporate:'Corporate',legal:'Legal',market:'Market',institutional:'Institutional',voluntary:'Voluntary'};
-var TYPES={lab:'AI lab',government_body:'Government body',government_agency:'Government agency',infrastructure_provider:'Infrastructure',legislation:'Legislation',treaty:'Treaty',courts:'Courts',commitment:'Commitment',civil_society:'Civil society',evaluation_org:'Evaluator',industry_consortium:'Industry consortium',standards_body:'Standards body',international_body:'International body',think_tank:'Think tank'};
+var TYPES={lab:'AI lab',open_weights:'Open weights',government_body:'Government body',government_agency:'Government agency',infrastructure_provider:'Infrastructure',legislation:'Legislation',treaty:'Treaty',courts:'Courts',commitment:'Commitment',civil_society:'Civil society',evaluation_org:'Evaluator',industry_consortium:'Industry consortium',standards_body:'Standards body',international_body:'International body',think_tank:'Think tank'};
 var ENF={binding:'Binding',voluntary:'Voluntary',advisory:'Advisory',none:'None'};
 var HOR={current:'Current',near_term:'Near term',medium_term:'Medium term',long_term:'Long term'};
 var HORDEF={current:'Operating now',near_term:'1 to 2 years',medium_term:'2 to 5 years',long_term:'5+ years'};
@@ -341,7 +353,9 @@ var DATA=[
  {id:'chinagov',name:'Chinese Government (CAC)',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'China',enf:'binding',mech:'Generative AI measures: registration, security assessment, content rules',note:'The CAC pre-deployment gate is real Tier 1 power, exercised for political control rather than safety evaluation. The only binding, currently used deployment gate on this map.',url:'https://www.cac.gov.cn'},
  {id:'deepseek',name:'DeepSeek',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'China',enf:'voluntary',mech:'Internal processes, Chinese regulatory compliance',note:'Subject to the CAC gate domestically; open-weight international releases bypass every Western governance mechanism on this map.',url:'https://www.deepseek.com'},
  {id:'congress',name:'US Congress',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'US',enf:'binding',mech:'Commerce and spending power, export-control statutes (ECRA, DPA), hearings, preemption',note:'The only US institution with unquestioned constitutional authority to halt a frontier deployment, and the source of the statutes everyone else’s leverage borrows from. It has funded and delegated (ECRA, the National AI Initiative Act, CHIPS) and criminalized narrow harms (TAKE IT DOWN Act), but has never passed a binding rule on frontier development or deployment.',url:'https://www.congress.gov'},
- {id:'labs',name:'Frontier AI Labs (collective)',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'global',enf:'voluntary',mech:'Voluntary safety frameworks',note:'Race dynamics make collective restraint a prisoner’s dilemma; any lab can defect. This node stands in for the industry when a mechanism applies to all frontier developers.'},
+ {id:'qwen',name:'Alibaba (Qwen)',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'China',enf:'voluntary',mech:'Qwen open-weight releases, internal processes, CAC compliance',note:'The most-adopted open-weight model family in the world. Subject to the CAC gate domestically; its international releases answer to no Western mechanism on this map.',url:'https://qwen.ai'},
+ {id:'mistral',name:'Mistral AI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'EU',enf:'voluntary',mech:'Open-weight releases; Seoul commitments signatory',note:'Europe’s flagship frontier lab, and the test of whether the EU will enforce its AI Act against its own champion. Like Meta, its open-weight stop-power is spent at the moment of publication.',url:'https://mistral.ai'},
+ {id:'owd',name:'Open-Weight Diffusion',tier:1,type:'open_weights',layer:'market',power:'ungovernable',hor:'current',jur:'global',enf:'none',mech:'Published weights: mirrors, torrents, fine-tunes, local inference',note:'The exit door from this entire map. It sits in Tier 1 because a weight release is Tier 1 power exercised once and irrevocably: after publication there is no deployment gate, no acceptable-use lever, no recall, and safety training can be stripped with a cheap fine-tune. Every mechanism here governs the moment before release; nothing governs the moment after.'},
  {id:'gdm',name:'Google DeepMind',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Frontier Safety Framework (v3.1, April 2026)',note:'Nested inside Alphabet, so safety decisions sit next to commercial pressure from Google product teams. FSF v3.1 added Tracked Capability Levels in April 2026.',url:'https://deepmind.google'},
  {id:'meta',name:'Meta AI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Advanced AI Scaling Framework (v2, April 2026), open-weight release decisions',note:'Replaced its 2025 Frontier AI Framework with the Advanced AI Scaling Framework in April 2026. Open-weight releases remain irreversible: once weights are public, Tier 1 stop-power is spent.',url:'https://ai.meta.com'},
  {id:'openai',name:'OpenAI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Preparedness Framework (v2, April 2025)',note:'Internal and self-enforced. The Superalignment team was disbanded in May 2024; oversight now sits with a board Safety and Security Committee, restructured in September 2024 after Altman stepped off it.',url:'https://www.openai.com'},
@@ -358,12 +372,12 @@ var DATA=[
  {id:'s2938',name:'S.2938 · AI Risk Evaluation Act',tier:3,type:'legislation',layer:'legal',power:'can_slow',hor:'near_term',jur:'US',enf:'binding',prop:true,mech:'Mandatory pre-deployment evaluation by the Department of Energy',note:'Proposed, not enacted: introduced by Senator Hawley with Senator Blumenthal in September 2025, still in committee. I am personally lobbying for this bill. It would create a DOE evaluation program and bar unevaluated frontier deployment, at $1M+ per day in penalties: the first binding US federal pre-deployment gate.',url:'https://www.congress.gov/bill/119th-congress/senate-bill/2938'},
  {id:'sencom',name:'Senate Commerce Committee',tier:3,type:'government_body',layer:'legal',power:'can_slow',hor:'near_term',jur:'US',enf:'binding',mech:'Legislative jurisdiction, hearings, markup',note:'The committee most frontier AI legislation must pass through; a chokepoint for bills rather than models.',url:'https://www.commerce.senate.gov'},
  {id:'stategov',name:'US State Governments',tier:3,type:'government_body',layer:'legal',power:'can_embarrass',hor:'current',jur:'US',enf:'binding',mech:'State legislation, attorney general enforcement',note:'California and New York moved first on frontier-specific law while Congress stalled; a federal preemption fight is the live threat to this entire lane.'},
- {id:'cais',name:'Center for AI Safety',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'none',mech:'Expert consensus statements, risk framing, research',note:'Organized the 2023 one-sentence extinction-risk statement signed by the heads of the major labs.',url:'https://www.safe.ai'},
+ {id:'cais',name:'Center for AI Safety',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'none',mech:'Expert consensus statements, risk framing, research',note:'Organized the 2023 one-sentence extinction-risk statement signed by the heads of the major labs.',url:'https://www.safe.ai'},
  {id:'epoch',name:'Epoch AI',tier:4,type:'evaluation_org',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'advisory',mech:'Compute trend tracking, training run data',note:'The de facto reference dataset for compute thresholds; when regulators pick a FLOP number, it traces here.',url:'https://epoch.ai'},
  {id:'fli',name:'Future of Life Institute',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'none',mech:'AI Safety Index, public campaigns, grants',note:'Its Safety Index grades the labs on safety practice; labs visibly respond to bad grades.',url:'https://futureoflife.org'},
- {id:'fmf',name:'Frontier Model Forum',tier:4,type:'industry_consortium',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'voluntary',mech:'Shared safety research, voluntary norms, policymaker engagement',note:'Founded by Anthropic, Google, Microsoft, and OpenAI; industry coordinating with itself.',url:'https://www.frontiermodelforum.org'},
+ {id:'fmf',name:'Frontier Model Forum',tier:4,type:'industry_consortium',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'voluntary',mech:'Shared safety research, voluntary norms, policymaker engagement',note:'Founded by Anthropic, Google, Microsoft, and OpenAI; industry coordinating with itself.',url:'https://www.frontiermodelforum.org'},
  {id:'iso42001',name:'ISO/IEC 42001',tier:4,type:'standards_body',layer:'voluntary',power:'can_embarrass',hor:'near_term',jur:'international',enf:'voluntary',mech:'AI management system standard, certification',note:'Management-system certification, not a capability bar: it audits process, not model risk.',url:'https://www.iso.org/standard/42001'},
- {id:'metr',name:'METR',tier:4,type:'evaluation_org',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'advisory',mech:'Frontier capability evaluations, autonomy benchmarks',note:'Runs pre-deployment evaluations for OpenAI and Anthropic under access agreements the labs can revoke.',url:'https://metr.org'},
+ {id:'metr',name:'METR',tier:4,type:'evaluation_org',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'advisory',mech:'Frontier capability evaluations, autonomy benchmarks',note:'Runs pre-deployment evaluations for OpenAI and Anthropic under access agreements the labs can revoke.',url:'https://metr.org'},
  {id:'miri',name:'MIRI',tier:4,type:'civil_society',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'US',enf:'none',mech:'Technical research, policy advocacy',note:'Has shifted from alignment research toward advocating an international halt on frontier development.',url:'https://intelligence.org'},
  {id:'mlcommons',name:'MLCommons',tier:4,type:'standards_body',layer:'voluntary',power:'can_embarrass',hor:'current',jur:'global',enf:'voluntary',mech:'AILuminate safety benchmark',note:'Industry benchmark consortium; its safety scores are comparable across labs and public.',url:'https://mlcommons.org'},
  {id:'nist',name:'NIST',tier:4,type:'standards_body',layer:'institutional',power:'can_embarrass',hor:'near_term',jur:'US',enf:'voluntary',mech:'AI Risk Management Framework',note:'The RMF is voluntary but propagates through procurement: agencies and contractors adopt it as a de facto floor.',url:'https://www.nist.gov/artificial-intelligence'},
@@ -391,22 +405,24 @@ var DATA=[
 
 /* edges: [source, target, relationship, dashed] */
 var EDGES=[
- ['labs','anthropic','Anthropic is one of the frontier developers this collective node stands for'],
- ['labs','openai','OpenAI is one of the frontier developers this collective node stands for'],
- ['labs','gdm','Google DeepMind is one of the frontier developers this collective node stands for'],
- ['labs','meta','Meta is one of the frontier developers this collective node stands for'],
- ['labs','xai','xAI is one of the frontier developers this collective node stands for'],
- ['labs','deepseek','DeepSeek is one of the frontier developers this collective node stands for'],
  ['congress','eop','Delegates, and can revoke, the emergency economic powers the presidency leans on (IEEPA, DPA)'],
  ['congress','bis','The Export Control Reform Act of 2018 is the statutory basis for its controls'],
  ['congress','sencom','Its committee of jurisdiction for frontier AI legislation'],
- ['congress','labs','Hearing and subpoena power today; could legislate a deployment gate'],
+ ['congress','anthropic','Hearing and subpoena power; could legislate a deployment gate'],
+ ['congress','openai','Hearing and subpoena power; could legislate a deployment gate'],
+ ['congress','gdm','Hearing and subpoena power; could legislate a deployment gate'],
+ ['congress','meta','Hearing and subpoena power; could legislate a deployment gate'],
+ ['congress','xai','Hearing and subpoena power; could legislate a deployment gate'],
  ['congress','stategov','A federal preemption bill would erase the state-law lane; the 2025 moratorium attempt died 99-1 in the Senate'],
  ['eop','bis','Sets export-control policy direction; BIS implements it'],
- ['eop','labs','2023 White House voluntary commitments; procurement and executive-order pressure'],
+ ['eop','anthropic','Signed the 2023 White House voluntary commitments'],
+ ['eop','openai','Signed the 2023 White House voluntary commitments'],
+ ['eop','gdm','Signed the 2023 White House voluntary commitments (as Google)'],
+ ['eop','meta','Signed the 2023 White House voluntary commitments'],
  ['bis','nvidia','Export licenses gate which chips can be sold where'],
  ['bis','tsmc','Foreign direct product rule reaches Taiwan-fabricated chips'],
  ['bis','deepseek','Chip embargo constrains Chinese frontier training compute'],
+ ['bis','qwen','Chip embargo constrains Chinese frontier training compute'],
  ['asml','tsmc','EUV lithography monopoly: the machines every leading-edge fab needs',false],
  ['tsmc','nvidia','Fabricates nearly all advanced AI accelerators'],
  ['nvidia','aws','Supplies the accelerators the cloud fleets run on'],
@@ -417,36 +433,68 @@ var EDGES=[
  ['azure','openai','Hosts OpenAI training and serving workloads'],
  ['microsoft','openai','Capital, exclusive IP rights, and compute partnership',false],
  ['chinagov','deepseek','CAC pre-deployment registration and security assessment'],
- ['euaiact','labs','GPAI obligations as a condition of EU market access'],
- ['aioffice','euaiact','Enforces the Act’s GPAI chapter: fines up to 3% of turnover',false],
- ['aioffice','labs','Can compel model access and mandate evaluations',false],
- ['sb53','labs','Transparency and incident-reporting duties for large California developers'],
- ['raise','labs','Safety protocol and disclosure duties for frontier developers in New York',false],
+ ['chinagov','qwen','CAC pre-deployment registration and security assessment'],
+ ['euaiact','mistral','GPAI obligations at home: the EU flagship lab answers to the Act first'],
+ ['euaiact','anthropic','GPAI obligations as a condition of EU market access'],
+ ['euaiact','openai','GPAI obligations as a condition of EU market access'],
+ ['euaiact','gdm','GPAI obligations as a condition of EU market access'],
+ ['euaiact','meta','GPAI obligations as a condition of EU market access'],
+ ['euaiact','xai','GPAI obligations as a condition of EU market access'],
+ ['euaiact','deepseek','EU market access requires GPAI compliance regardless of origin'],
+ ['aioffice','euaiact','Enforces the Act’s GPAI chapter: fines up to 3% of turnover; can compel model access',false],
+ ['sb53','anthropic','Transparency and incident-reporting duties for large California developers'],
+ ['sb53','openai','Transparency and incident-reporting duties for large California developers'],
+ ['sb53','gdm','Transparency and incident-reporting duties for large California developers'],
+ ['sb53','meta','Transparency and incident-reporting duties for large California developers'],
+ ['sb53','xai','Transparency and incident-reporting duties for large California developers'],
+ ['raise','anthropic','Safety protocol and disclosure duties for frontier developers doing business in New York',false],
+ ['raise','openai','Safety protocol and disclosure duties for frontier developers doing business in New York',false],
+ ['raise','gdm','Safety protocol and disclosure duties for frontier developers doing business in New York',false],
+ ['raise','meta','Safety protocol and disclosure duties for frontier developers doing business in New York',false],
+ ['raise','xai','Safety protocol and disclosure duties for frontier developers doing business in New York',false],
  ['stategov','sb53','California enacted SB 53 (September 2025)'],
  ['stategov','raise','New York enacted the RAISE Act (2025)',false],
  ['sencom','s2938','Committee of jurisdiction for the bill'],
- ['s2938','labs','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','anthropic','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','openai','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','gdm','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','meta','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','xai','Would require DOE evaluation before frontier deployment',true],
+ ['s2938','deepseek','Would cover foreign models deployed in US interstate commerce',true],
  ['ags','openai','Charitable-trust leverage: safety commitments as restructuring conditions',false],
- ['courts','labs','Liability, copyright, and consumer-protection suits shape release behavior',false],
+ ['courts','anthropic','Bartz v. Anthropic: the $1.5B copyright settlement',false],
+ ['courts','openai','NYT copyright suit; Raine wrongful-death suit',false],
+ ['courts','meta','Kadrey v. Meta copyright litigation',false],
  ['ukaisi','anthropic','Pre-deployment evaluation access agreement'],
  ['ukaisi','openai','Pre-deployment evaluation access agreement'],
  ['ukaisi','gdm','Pre-deployment evaluation access agreement'],
  ['nist','caisi','Houses CAISI within the Department of Commerce'],
- ['nist','labs','AI Risk Management Framework as a voluntary floor'],
  ['caisi','openai','Voluntary model testing agreement'],
  ['caisi','anthropic','Voluntary model testing agreement'],
  ['metr','openai','Third-party capability and autonomy evaluations'],
  ['metr','anthropic','Third-party capability and autonomy evaluations'],
  ['epoch','euaiact','Compute-threshold data informs where the FLOP lines get drawn'],
+ ['epoch','deepseek','Tracks Chinese frontier training runs in its compute database'],
  ['fmf','anthropic','Founding member'],
  ['fmf','gdm','Founding member (as Google)'],
  ['fmf','openai','Founding member'],
  ['fmf','microsoft','Founding member',false],
- ['cais','labs','Extinction-risk statement signed by the heads of the major labs'],
- ['fli','labs','AI Safety Index publicly grades lab safety practice'],
- ['pauseai','labs','Protest and public pressure campaigns'],
- ['miri','labs','Advocates halting frontier development entirely'],
- ['mlcommons','labs','AILuminate safety benchmark, comparable across labs'],
+ ['cais','anthropic','Amodei signed the 2023 extinction-risk statement'],
+ ['cais','openai','Altman signed the 2023 extinction-risk statement'],
+ ['cais','gdm','Hassabis signed the 2023 extinction-risk statement'],
+ ['fli','anthropic','AI Safety Index publicly grades its safety practice'],
+ ['fli','openai','AI Safety Index publicly grades its safety practice'],
+ ['fli','gdm','AI Safety Index publicly grades its safety practice'],
+ ['fli','meta','AI Safety Index publicly grades its safety practice'],
+ ['fli','xai','AI Safety Index publicly grades its safety practice'],
+ ['fli','deepseek','The Safety Index grades Chinese labs alongside Western ones'],
+ ['pauseai','openai','Regular protest target'],
+ ['pauseai','anthropic','Protest and public pressure campaigns'],
+ ['pauseai','gdm','Protests at DeepMind in London'],
+ ['mlcommons','openai','AILuminate safety benchmark scores its models'],
+ ['mlcommons','anthropic','AILuminate safety benchmark scores its models'],
+ ['mlcommons','gdm','AILuminate safety benchmark scores its models'],
+ ['mlcommons','meta','AILuminate benchmarks open-weight Llama'],
  ['iso42001','anthropic','Among the first frontier labs certified'],
  ['iso42001','azure','Cloud providers certify their AI management systems'],
  ['oecd','gpai','Absorbed the partnership in 2024'],
@@ -457,13 +505,23 @@ var EDGES=[
  ['slowdown','gdm','Hassabis at Davos 2026, asked if he would advocate a pause if every company and country paused: "I think so"'],
  ['slowdown','meta','Chief scientist Shengjia Zhao signed Pacing the Frontier (2026); the company had deleted its own stop-development threshold three months earlier'],
  ['slowdown','xai','Musk on the 2023 pause letter: "I signed that letter knowing it was futile. I just wanted to be on the record as recommending a pause"'],
- ['slowdown','seoul','The Seoul halt clause is the only version of the pattern all five frontier labs actually signed'],
- ['slowdown','labs','Pacing the Frontier names the trap: "each company, and country, is under intense competitive pressure not to unilaterally slow"'],
- ['seoul','labs','16+ companies pledged to publish risk thresholds and frameworks',false],
+ ['slowdown','seoul','The Seoul halt clause is the only version of the pattern all five US frontier labs actually signed'],
+ ['seoul','anthropic','Pledged risk thresholds and a published safety framework'],
+ ['seoul','openai','Pledged risk thresholds and a published safety framework'],
+ ['seoul','gdm','Pledged risk thresholds and a published safety framework (as Google)'],
+ ['seoul','meta','Pledged risk thresholds and a published safety framework'],
+ ['seoul','xai','Pledged risk thresholds and a published safety framework'],
+ ['seoul','mistral','Pledged risk thresholds and a published safety framework'],
  ['summits','aisinet','The institute network launched from the summit track',false],
  ['aisinet','ukaisi','Member institute',false],
  ['aisinet','caisi','Member institute',false],
- ['g7','labs','Voluntary code of conduct for advanced developers'],
+ ['g7','anthropic','Reports under the Hiroshima Process framework'],
+ ['g7','openai','Reports under the Hiroshima Process framework'],
+ ['g7','gdm','Reports under the Hiroshima Process framework (as Google)'],
+ ['meta','owd','Llama weight releases: irreversible once published'],
+ ['deepseek','owd','R1 and V3 weight releases bypass every deployment gate'],
+ ['qwen','owd','Qwen releases: the most-adopted open-weight family'],
+ ['mistral','owd','Open-weight releases from inside EU jurisdiction'],
  ['un','chinagov','The only governance venue including Beijing'],
  ['un','eop','The only governance venue including Washington and Beijing together'],
  ['rand','eop','Compute-governance research; staffed early executive AI policy work'],
@@ -578,7 +636,7 @@ function renderMatrix(){
 }
 
 /* ============ power view ============ */
-var POWERS={can_stop:'Can stop deployment',can_slow:'Can slow or block inputs',can_embarrass:'Can embarrass',aspirational:'Aspirational'};
+var POWERS={can_stop:'Can stop deployment',can_slow:'Can slow or block inputs',can_embarrass:'Can embarrass',aspirational:'Aspirational',ungovernable:'Beyond recall'};
 function renderPower(){
   var vis=visible();
   var pks=Object.keys(POWERS),eks=Object.keys(ENF);
@@ -770,6 +828,34 @@ document.addEventListener('click',function(e){
   var t=e.target.closest('[data-id]');
   if(!t)return;
   if(t.classList.contains('ecard')||t.classList.contains('mchip')||t.closest('#d-body')||t.closest('#datatable'))openDrawer(t.dataset.id);
+});
+
+/* ============ export current view as PNG ============ */
+function ensureExporter(){
+  if(window.htmlToImage)return Promise.resolve();
+  return new Promise(function(res,rej){
+    var s=document.createElement('script');
+    s.src='https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.min.js';
+    s.onload=res;s.onerror=function(){rej(new Error('exporter failed to load'))};
+    document.head.appendChild(s);
+  });
+}
+$('#exportbtn').addEventListener('click',function(){
+  var btn=this,label=btn.querySelector('span'),orig=label.textContent;
+  btn.disabled=true;label.textContent='Exporting…';
+  var node=state.view==='graph'?document.getElementById('graphsvg'):document.getElementById('view-'+state.view);
+  var bg=getComputedStyle(document.body).backgroundColor;
+  ensureExporter().then(function(){
+    return htmlToImage.toPng(node,{pixelRatio:3,backgroundColor:bg,style:{padding:state.view==='graph'?'0':'0 16px'}});
+  }).then(function(url){
+    var a=document.createElement('a');
+    a.download='ai-governance-map-'+state.view+'-'+new Date().toISOString().slice(0,10)+'.png';
+    a.href=url;a.click();
+    label.textContent=orig;btn.disabled=false;
+  }).catch(function(){
+    label.textContent='Export failed';
+    setTimeout(function(){label.textContent=orig;btn.disabled=false},2500);
+  });
 });
 
 /* ============ theme toggle ============ */
