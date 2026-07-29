@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Frontier AI Governance Map · Becoming Stronger</title>
-<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 47 actors and mechanisms across six views.">
+<meta name="description" content="An interactive map of who can actually stop, slow, or merely embarrass a frontier AI deployment: 48 actors and mechanisms across six views.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://becomingstronger.github.io/ai-governance-map.html">
 <meta property="og:title" content="Frontier AI Governance Map">
-<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 47 actors and mechanisms, six views, one uncomfortable empty cell.">
+<meta property="og:description" content="Who can actually stop, slow, or merely embarrass a frontier AI deployment. 48 actors and mechanisms, six views, and the enforcement gap at the center.">
 <meta name="theme-color" id="meta-theme" content="#FBF8F0">
 <script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -287,7 +287,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <section class="view" id="view-power" role="tabpanel">
     <p class="view-note">Claimed power crossed with enforcement. The uncomfortable read: nearly everything that can stop a deployment is voluntary and self-certified, and nearly everything binding sits well below stop-power.</p>
     <div class="powergrid-scroll"><table class="powergrid" id="powertable"></table></div>
-    <div class="gap-note"><strong>The governance gap.</strong> The one binding, currently exercised pre-deployment gate on this map belongs to the Cyberspace Administration of China, and it screens for political control rather than catastrophic risk. In the US, stop-power is either voluntary (lab safety frameworks) or latent (emergency executive authority that has never been used for AI). Closing that highlighted cell is the central project of frontier AI governance.</div>
+    <div class="gap-note"><strong>The governance gap.</strong> The one binding, currently exercised pre-deployment gate on this map belongs to the Cyberspace Administration of China, and it screens for political control rather than catastrophic risk. In the US, stop-power is either voluntary (lab safety frameworks) or latent (Congress holds the constitutional authority and has passed nothing). Closing that highlighted cell is the central project of frontier AI governance.</div>
   </section>
 
   <section class="view" id="view-horizon" role="tabpanel">
@@ -340,12 +340,13 @@ var DATA=[
  {id:'anthropic',name:'Anthropic',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Responsible Scaling Policy (v3.4, July 2026)',note:'Voluntary and self-certified. The v3.0 rewrite (February 2026) replaced binding if-then threshold commitments with nonbinding, publicly graded targets; pausing is now explicitly discretionary.',url:'https://www.anthropic.com/rsp'},
  {id:'chinagov',name:'Chinese Government (CAC)',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'China',enf:'binding',mech:'Generative AI measures: registration, security assessment, content rules',note:'The CAC pre-deployment gate is real Tier 1 power, exercised for political control rather than safety evaluation. The only binding, currently used deployment gate on this map.',url:'https://www.cac.gov.cn'},
  {id:'deepseek',name:'DeepSeek',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'China',enf:'voluntary',mech:'Internal processes, Chinese regulatory compliance',note:'Subject to the CAC gate domestically; open-weight international releases bypass every Western governance mechanism on this map.',url:'https://www.deepseek.com'},
- {id:'eop',name:'Executive Office of the President',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'US',enf:'binding',mech:'Executive orders, OSTP direction, emergency economic powers',note:'Latent power: IEEPA, the Defense Production Act, and CFIUS could stop a deployment without new legislation, but no President has used them for AI and courts would likely be asked to weigh in.',url:'https://www.whitehouse.gov/ostp/'},
+ {id:'congress',name:'US Congress',tier:1,type:'government_body',layer:'legal',power:'can_stop',hor:'current',jur:'US',enf:'binding',mech:'Commerce and spending power, export-control statutes (ECRA, DPA), hearings, preemption',note:'The only US institution with unquestioned constitutional authority to halt a frontier deployment, and the source of the statutes everyone else’s leverage borrows from. So far it has delegated, held hearings, and passed nothing.',url:'https://www.congress.gov'},
  {id:'labs',name:'Frontier AI Labs (collective)',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'global',enf:'voluntary',mech:'Voluntary safety frameworks',note:'Race dynamics make collective restraint a prisoner’s dilemma; any lab can defect. This node stands in for the industry when a mechanism applies to all frontier developers.'},
  {id:'gdm',name:'Google DeepMind',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Frontier Safety Framework (v3.1, April 2026)',note:'Nested inside Alphabet, so safety decisions sit next to commercial pressure from Google product teams. FSF v3.1 added Tracked Capability Levels in April 2026.',url:'https://deepmind.google'},
  {id:'meta',name:'Meta AI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Advanced AI Scaling Framework (v2, April 2026), open-weight release decisions',note:'Replaced its 2025 Frontier AI Framework with the Advanced AI Scaling Framework in April 2026. Open-weight releases remain irreversible: once weights are public, Tier 1 stop-power is spent.',url:'https://ai.meta.com'},
  {id:'openai',name:'OpenAI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Preparedness Framework (v2, April 2025)',note:'Internal and self-enforced. The Superalignment team was disbanded in May 2024; oversight now sits with a board Safety and Security Committee, restructured in September 2024 after Altman stepped off it.',url:'https://www.openai.com'},
  {id:'xai',name:'xAI',tier:1,type:'lab',layer:'corporate',power:'can_stop',hor:'current',jur:'US',enf:'voluntary',mech:'Frontier Artificial Intelligence Framework (June 2026)',note:'Went from no framework to a draft RMF (February 2025) to the FAIF (effective June 2026). Grok has still repeatedly shipped with minimal guardrails, and leadership is publicly hostile to safety regulation.',url:'https://x.ai'},
+ {id:'eop',name:'Executive Office of the President',tier:2,type:'government_body',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Executive orders, OSTP direction, delegated emergency economic powers',note:'Narrower authority over technology and supply chains than it looks: IEEPA, the DPA, and export controls are congressional delegations, and courts pared back expansive IEEPA claims in the 2025 tariff litigation. No President has tried to stop an AI deployment.',url:'https://www.whitehouse.gov/ostp/'},
  {id:'aws',name:'AWS',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Cloud compute access, acceptable use policies',note:'Anthropic’s primary cloud and a major investor; could in principle refuse compute to a reckless customer.',url:'https://aws.amazon.com'},
  {id:'bis',name:'Bureau of Industry and Security',tier:2,type:'government_agency',layer:'legal',power:'can_slow',hor:'current',jur:'US',enf:'binding',mech:'Export controls, Entity List',note:'The compute chokepoint has an expiration date, roughly 2 to 4 years, as non-US fabs and domestic Chinese accelerators come online.',url:'https://www.bis.gov'},
  {id:'gcloud',name:'Google Cloud',tier:2,type:'infrastructure_provider',layer:'market',power:'can_slow',hor:'current',jur:'US',enf:'voluntary',mech:'Cloud compute access, acceptable use policies',note:'Compute provider to Anthropic among others; Alphabet is also an investor.',url:'https://cloud.google.com'},
@@ -395,8 +396,13 @@ var EDGES=[
  ['labs','meta','Meta is one of the frontier developers this collective node stands for'],
  ['labs','xai','xAI is one of the frontier developers this collective node stands for'],
  ['labs','deepseek','DeepSeek is one of the frontier developers this collective node stands for'],
+ ['congress','eop','Delegates, and can revoke, the emergency economic powers the presidency leans on (IEEPA, DPA)'],
+ ['congress','bis','The Export Control Reform Act of 2018 is the statutory basis for its controls'],
+ ['congress','sencom','Its committee of jurisdiction for frontier AI legislation'],
+ ['congress','labs','Hearing and subpoena power today; could legislate a deployment gate'],
+ ['congress','stategov','A federal preemption bill would erase the state-law lane; the 2025 moratorium attempt died 99-1 in the Senate'],
  ['eop','bis','Sets export-control policy direction; BIS implements it'],
- ['eop','labs','2023 White House voluntary commitments; latent IEEPA and DPA authority'],
+ ['eop','labs','2023 White House voluntary commitments; procurement and executive-order pressure'],
  ['bis','nvidia','Export licenses gate which chips can be sold where'],
  ['bis','tsmc','Foreign direct product rule reaches Taiwan-fabricated chips'],
  ['bis','deepseek','Chip embargo constrains Chinese frontier training compute'],
