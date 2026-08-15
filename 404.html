@@ -13,17 +13,34 @@ if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-schem
 document.documentElement.setAttribute('data-theme',t);})();
 </script>
 <style>
-:root{--paper:#FBF8F0;--ink:#1E2B22;--soft:#4A5A4E;--leaf-deep:#24492F;--gold:#E0A526;--line:rgba(30,43,34,.28)}
-html[data-theme="dark"]{--paper:#000;--ink:#EFE9DB;--soft:#A9B4A6;--leaf-deep:#2E5A3B;--gold:#E4B04A;--line:rgba(239,233,219,.26)}
-body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;background:var(--paper);color:var(--ink);
+:root{
+  --md-sys-color-primary:#0e6d35;
+  --md-sys-color-on-primary:#ffffff;
+  --md-sys-color-surface:#fcfdf7;
+  --md-sys-color-on-surface:#191c19;
+  --md-sys-color-on-surface-variant:#414941;
+  --md-sys-color-outline-variant:#c1c9be;
+  --md-custom-color-gold:#705d00;
+}
+html{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;
+  --md-sys-color-primary:#83d995;
+  --md-sys-color-on-primary:#003917;
+  --md-sys-color-surface:#111411;
+  --md-sys-color-on-surface:#e2e3de;
+  --md-sys-color-on-surface-variant:#c1c9be;
+  --md-sys-color-outline-variant:#414941;
+  --md-custom-color-gold:#e5c43f;
+}
+body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;
+  background:var(--md-sys-color-surface);color:var(--md-sys-color-on-surface);
   font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;text-align:center}
-.in{border:1px solid var(--line);padding:56px 64px;max-width:520px;margin:24px}
+.in{border:1px solid var(--md-sys-color-outline-variant);padding:56px 64px;max-width:520px;margin:24px}
 h1{font-family:"Raleway",sans-serif;font-weight:600;font-size:2.2rem;margin:22px 0 10px}
-p{color:var(--soft);margin:0 0 26px}
-a.btn{display:inline-block;font-weight:600;font-size:.95rem;padding:14px 24px;text-decoration:none;
-  border:1.5px solid var(--leaf-deep);background:var(--leaf-deep);color:var(--paper)}
-html[data-theme="dark"] a.btn{color:var(--ink)}
-.gold{color:var(--gold)}
+p{color:var(--md-sys-color-on-surface-variant);margin:0 0 26px}
+a.btn{display:inline-block;font-weight:600;font-size:.95rem;padding:13px 24px;text-decoration:none;
+  border:1px solid var(--md-sys-color-primary);background:var(--md-sys-color-primary);color:var(--md-sys-color-on-primary)}
+.gold{color:var(--md-custom-color-gold)}
 [data-theme="dark"] svg path.p1{fill:#8FCF9F;stroke:#8FCF9F}
 [data-theme="dark"] svg path.p2{fill:#6CB27E;stroke:#6CB27E}
 [data-theme="dark"] svg path.p3{fill:#4E8659;stroke:#4E8659}
