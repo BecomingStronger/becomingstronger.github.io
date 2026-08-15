@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kansas City Effective Giving Guide · Becoming Stronger</title>
+<meta name="description" content="A GiveWell-style vetting of Kansas City charities against the metro's highest-impact causes: verified financials, evidence grades, transparency grades, and the honest gaps where no giving vehicle exists.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://becomingstronger.github.io/kc-giving-guide.html">
+<meta property="og:title" content="Kansas City Effective Giving Guide">
+<meta property="og:description" content="Where a marginal Kansas City dollar actually goes: ~40 charities vetted against proven interventions, with evidence grades, verified 990s, and the causes where nothing exists to fund.">
+<meta name="theme-color" id="meta-theme" content="#FBF8F0">
+<script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+(function(){var t=null;try{t=localStorage.getItem('bs-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);
+document.addEventListener('DOMContentLoaded',function(){
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+});})();
+</script>
+<style>
+:root{
+  --paper:#FBF8F0;--paper-2:#F2EDDE;--ink:#1E2B22;--ink-soft:#4A5A4E;
+  --leaf:#3C6E47;--leaf-deep:#24492F;--gold:#E0A526;--terra:#C4623C;
+  --line:rgba(30,43,34,.16);--line-strong:rgba(30,43,34,.28);--maxw:1080px;
+  --s1:#2E7845;
+}
+html{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;
+  --paper:#000000;--paper-2:#0E0E0E;--ink:#EFE9DB;--ink-soft:#A9B4A6;
+  --leaf:#6CB27E;--leaf-deep:#2E5A3B;--gold:#E4B04A;--terra:#D97B52;
+  --line:rgba(239,233,219,.14);--line-strong:rgba(239,233,219,.26);
+  --s1:#5CA96F;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.55;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Raleway",sans-serif;font-weight:600;line-height:1.15;letter-spacing:-.01em}
+a{color:var(--leaf-deep);text-decoration:none}
+[data-theme="dark"] a{color:var(--leaf)}
+a:hover{text-decoration:underline}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Raleway",sans-serif;font-weight:600;font-size:1.05rem;color:var(--ink)}
+.nav-right{display:flex;align-items:center;gap:14px}
+.backlink{font-size:.9rem;font-weight:500;color:var(--ink-soft)}
+.backlink:hover{color:var(--leaf-deep)}
+.theme-toggle{border:1px solid var(--line-strong);width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft)}
+.theme-toggle:hover{color:var(--gold);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+.head{padding:56px 0 10px}
+.eyebrow{font-size:.76rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);margin:0 0 12px}
+.head h1{font-size:clamp(1.9rem,4.5vw,2.9rem);margin:0 0 16px;max-width:880px}
+.head .sub{font-size:1.08rem;color:var(--ink-soft);max-width:800px;margin:0 0 12px}
+.head .method{font-size:.88rem;color:var(--ink-soft);max-width:800px;margin:0}
+.series{display:flex;flex-wrap:wrap;gap:0;border:1px solid var(--line-strong);margin:26px 0 0;font-size:.82rem}
+.series a,.series span{padding:9px 16px;border-right:1px solid var(--line);color:var(--ink-soft)}
+.series a:hover{color:var(--leaf-deep);text-decoration:none;background:var(--paper-2)}
+.series .here{color:var(--ink);font-weight:600;background:var(--paper-2)}
+.series :last-child{border-right:none}
+section{margin:54px 0 0}
+section h2{font-size:1.5rem;margin:0 0 6px}
+section .secsub{font-size:.92rem;color:var(--ink-soft);margin:0 0 20px;max-width:800px}
+/* tier 1 cards */
+.t1grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:0;border:1px solid var(--leaf);border-left:3px solid var(--leaf)}
+.t1{padding:18px;border-right:1px solid var(--line)}
+.t1:last-child{border-right:none}
+.t1 .cause{font-size:.74rem;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--leaf);margin:0 0 6px}
+.t1 h3{font-size:1.06rem;margin:0 0 7px}
+.t1 p{font-size:.82rem;color:var(--ink-soft);margin:0 0 8px}
+.t1 .fin{font-size:.76rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.t1 a.site{font-size:.82rem;font-weight:500}
+/* filters + registry */
+.filters{position:sticky;top:62px;z-index:40;background:var(--paper);border-bottom:1px solid var(--line);padding:12px 0}
+.filters-in{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.filters select{padding:8px 6px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);font:inherit;font-size:.85rem;outline:none;border-radius:0}
+.filters select:focus{border-color:var(--gold)}
+.count-note{font-size:.8rem;color:var(--ink-soft);margin-left:auto;font-variant-numeric:tabular-nums}
+.registry{border:1px solid var(--line-strong)}
+.org{border-bottom:1px solid var(--line);padding:12px 16px}
+.org:last-child{border-bottom:none}
+.org-top{display:grid;grid-template-columns:minmax(180px,1fr) auto auto auto 110px;gap:14px;align-items:center}
+.org h3{font-size:.98rem;margin:0}
+.org h3 small{display:block;font-weight:400;font-size:.74rem;color:var(--ink-soft)}
+.chip{display:inline-block;border:1px solid var(--line-strong);padding:3px 9px;font-size:.74rem;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap}
+.chip.ev-A{border-color:var(--leaf);color:var(--leaf)}
+.chip.ev-F{border-color:var(--terra);color:var(--terra)}
+.chip.soft{font-weight:400;color:var(--ink-soft)}
+.org .budget{font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-soft)}
+.org button.more{font-size:.78rem;color:var(--leaf-deep);margin-top:4px}
+[data-theme="dark"] .org button.more{color:var(--leaf)}
+.org button.more:hover{color:var(--gold)}
+.cap{display:none;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--line);background:var(--paper-2);font-size:.86rem;max-width:900px}
+.cap.open{display:block}
+.cap p{margin:0 0 8px}.cap p:last-child{margin:0}
+.tier-h{padding:10px 16px;background:var(--paper-2);border-bottom:1px solid var(--line);font-family:"Raleway",sans-serif;font-weight:600;font-size:.9rem}
+/* lists */
+ul.tight{max-width:820px;font-size:.92rem;padding-left:20px;margin:0 0 14px}
+ul.tight li{margin:0 0 9px}
+.callout{border:1px solid var(--line-strong);border-left:3px solid var(--gold);padding:14px 18px;margin:18px 0;max-width:820px;font-size:.92rem}
+.callout b{font-weight:600}
+.prose{max-width:820px;font-size:.95rem}
+.prose p{margin:0 0 13px}
+ol.pcl{max-width:820px;font-size:.92rem;padding-left:22px}
+ol.pcl li{margin:0 0 8px}
+footer{border-top:1px solid var(--line);margin-top:64px;padding:22px 0 30px;font-size:.82rem;color:var(--ink-soft)}
+footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between}
+@media(prefers-reduced-motion:reduce){*{transition:none!important}}
+@media(max-width:760px){
+  .org-top{grid-template-columns:1fr auto;grid-auto-rows:auto}
+  .org .budget{text-align:left}
+}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="brand" href="index.html">
+      <svg width="30" height="26" viewBox="0 0 280 243" aria-hidden="true">
+        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="9" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="9" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" stroke="#437A50" stroke-width="9" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
+      </svg>
+      Becoming Stronger
+    </a>
+    <div class="nav-right">
+      <a class="backlink" href="index.html#portfolio">← Portfolio</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap head">
+  <p class="eyebrow">Giving guide · August 2026</p>
+  <h1>The Kansas City Effective Giving Guide</h1>
+  <p class="sub">Where a marginal Kansas City dollar actually goes. Around forty local organizations vetted GiveWell-style against the metro's highest-impact causes: does each one deliver a <em>proven</em> intervention, and does it show its work? Verified financials, evidence grades, transparency grades, and the honest empty sets where no giving vehicle exists.</p>
+  <p class="method">Every organization was assessed on a uniform instrument: identity and financials verified against IRS filings (never search results); intervention match against the cost-effectiveness evidence from part 2 (awareness campaigns and galas explicitly don't count); an A&ndash;F evidence grade; an outcome-transparency grade; and room for funding. Grades measure fit and transparency, not whether an org's people are good; several downgraded organizations do valuable work outside this frame.</p>
+  <div class="series">
+    <a href="kc-impact-analysis.html">Part 1 · Burden of disease</a>
+    <a href="kc-cause-prioritization.html">Part 2 · The ITN ranking</a>
+    <span class="here">Part 3 · The giving guide</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section id="tier1">
+  <h2>Tier 1: give with confidence</h2>
+  <p class="secsub">Evidence-matched, financially verified, and sized (or gapped) so a marginal gift matters. One organization earns two slots.</p>
+  <div class="t1grid">
+    <div class="t1">
+      <p class="cause">Cancer screening + hypertension</p>
+      <h3>Samuel U. Rodgers Health Center</h3>
+      <p>The only org in this study with peer-reviewed published outcomes: its patient-navigation program raised colorectal screening from 31% to 59%. Also one of nine national CDC-funded self-measured blood pressure pilot sites. Restrict gifts to navigation/SMBP, and give to the health center itself, not its dormant foundation entity.</p>
+      <p class="fin">EIN 43-0899356 · $31.9M revenue (FY23)</p>
+      <a class="site" href="https://samrodgers.org/" target="_blank" rel="noopener">samrodgers.org</a>
+    </div>
+    <div class="t1">
+      <p class="cause">Overdose</p>
+      <h3>First Call</h3>
+      <p>Confirmed street-level naloxone, fentanyl test strip, and overdose-response training delivery across both states, at a size where a gift is a real fraction of budget, and with a dated concrete gap: its joint federal harm-reduction grant expired May 2025.</p>
+      <p class="fin">EIN 44-0641486 · $4.1M revenue (FY23)</p>
+      <a class="site" href="https://www.firstcallkc.org/" target="_blank" rel="noopener">firstcallkc.org</a>
+    </div>
+    <div class="t1">
+      <p class="cause">Elderly falls</p>
+      <h3>Shepherd's Center of KC Central</h3>
+      <p>Delivers A Matter of Balance (a named, evidence-based falls program) in-house, with a live class schedule, and has run three straight years of operating deficits: a demonstrated funding gap in the most actionable top cause. Ask what share of a gift reaches the falls program.</p>
+      <p class="fin">EIN 43-0994417 · $1.6M revenue (FY23)</p>
+      <a class="site" href="https://kcshepherdscenter.org/" target="_blank" rel="noopener">kcshepherdscenter.org</a>
+    </div>
+    <div class="t1">
+      <p class="cause">Road traffic</p>
+      <h3>BikeWalkKC</h3>
+      <p>The advocacy engine behind the one traffic lever proven to work here: Complete Streets (2017), the GO bond's street money, Vision Zero's adoption, and a seat on its task force while city traffic deaths fell 102 to 68. By its own admission, advocacy is its hardest work to fund.</p>
+      <p class="fin">EIN 45-3832438 · $1.2M revenue (FY23)</p>
+      <a class="site" href="https://bikewalkkc.org/" target="_blank" rel="noopener">bikewalkkc.org</a>
+    </div>
+  </div>
+</section>
+
+<section id="registry">
+  <h2>The full registry</h2>
+  <p class="secsub">Every organization that made it to a grade (18 of ~40 assessed; the rest failed identity, locality, or relevance screens), grouped by tier. Evidence grades: A = delivers a named proven intervention with fidelity signals; B = proven model, fidelity or currency unresolved; C = adjacent services or awareness work; F = disqualifying. Transparency: does the org publish outcomes, not activity counts. Expand any row for the reasoning.</p>
+  <div class="filters"><div class="wrap filters-in" style="padding:0">
+    <select id="f-cause" aria-label="Filter by cause">
+      <option value="">All causes</option>
+      <option>Tobacco</option><option>Overdose</option><option>Falls</option>
+      <option>Hypertension/CVD</option><option>Traffic</option><option>Infant &amp; maternal</option>
+      <option>Cancer screening</option><option>Violence</option><option>Mental illness</option>
+      <option>Suicide</option><option>Diabetes</option><option>Alcohol</option>
+    </select>
+    <span class="count-note" id="f-count"></span>
+  </div></div>
+  <div class="registry" id="reg"></div>
+</section>
+
+<section id="createit">
+  <h2>Where nothing exists to fund: the create-it list</h2>
+  <p class="secsub">Four of the fifteen causes, including the #1-ranked one, have no clean local giving vehicle. These are the highest-leverage holes for a funder or organizer who wants to build rather than give.</p>
+  <ul class="tight">
+    <li><b>Tobacco cessation (the #1 cause).</b> The state quitline is run by a Denver nonprofit under government contract; the one local clinical cessation program's page is dead. Nearest moves: confirm whether Swope Health's "Resolve to Stop Smoking" still operates, or vet Tobacco Free Missouri as a state-advocacy bet against Missouri funding tobacco control at 7.4% of the CDC-recommended level.</li>
+    <li><b>Full-model CAPABLE falls prevention with public reporting.</b> One unadvertised CAPABLE site exists inside a $75M hospice organization. A funder could underwrite the CAPABLE National Center's training pathway for a KC host that already has the adjacent infrastructure.</li>
+    <li><b>A charitable on-ramp to Project RISE.</b> The hospital-based violence intervention at University Health is the best-evidenced violence program in the region, and it is tax-funded with no earmark pathway at the hospital foundation. One phone call could change that.</li>
+    <li><b>An independent evaluation of SAVE KC.</b> Its self-reported numbers are internally inconsistent across its own press coverage, and KC's last focused-deterrence program (KC NoVA) posted celebrated early numbers before decaying to an official Ineffective rating. Funding rigorous outside evaluation before scale-up is worth more than funding programming.</li>
+  </ul>
+  <div class="callout"><b>The donor-deployability asymmetry.</b> Tobacco ranks #1 in the ITN analysis but has nothing to fund without building the channel first. Falls ranks #3 and has a starving, evidence-matched vehicle accepting money today. "Best cause" and "best gift you can make this month" are different questions, and this guide answers the second.</div>
+</section>
+
+<section id="calls">
+  <h2>The phone-call list</h2>
+  <p class="secsub">Five facts a person with a phone can resolve that no amount of remote research could. Each one would firm up a Tier 2 recommendation.</p>
+  <ol class="pcl">
+    <li>YMCA of Greater KC (816-561-9622): what is your diabetes-prevention program's CDC recognition tier? Full recognition means it hit CDC's outcome thresholds and moves to Tier 1.</li>
+    <li>Swope Health (816-923-5800): does "Resolve to Stop Smoking" still operate, and what is your HRSA-reported hypertension-control rate?</li>
+    <li>KC CARE Health Center: what is the syringe program's current status and scale? (The widely-cited 750,000-needles figure is 2018 reporting.)</li>
+    <li>University Health Foundation: can a gift be designated to Project RISE?</li>
+    <li>Midland Care Connection: can a gift be restricted to the Overland Park CAPABLE site, and will you publish its outcomes?</li>
+  </ol>
+</section>
+
+<section id="findings">
+  <h2>What the vetting revealed about Kansas City</h2>
+  <ul class="tight">
+    <li><b>KC's nonprofits are a transparency desert.</b> Almost nobody publishes outcome data. No safety-net clinic posts its blood-pressure control rate (all report it to the federal government privately); no harm-reduction org publishes reversal counts; no violence org has independently evaluated results. Transparency graded Opaque or Partial across nearly the entire field, and fixing that is itself a philanthropic opportunity.</li>
+    <li><b>The best-evidenced interventions are government-run and cannot take your money.</b> Nurse-Family Partnership is the health department. The crisis system is the county. The falls classes run through the Area Agencies on Aging. For several causes, the highest-leverage act is civic advocacy, not a check.</li>
+    <li><b>One organization quietly clears the bar twice.</b> Samuel U. Rodgers Health Center is the only org with peer-reviewed outcomes and holds a national pilot role in a second cause. It advertises neither. The correlation between marketing volume and evidence quality in this field is approximately zero.</li>
+    <li><b>The vetting fed back into the rankings.</b> Three neglectedness scores moved (falls down, tobacco and overdose up); re-running the Monte Carlo left the headline ranking unchanged and swapped only the factor-product view's #1 and #2, inside the published intervals. The <a href="kc-cause-prioritization.html">part 2 page</a> carries the update.</li>
+  </ul>
+</section>
+
+<section id="method">
+  <h2>Method, honestly</h2>
+  <div class="prose">
+    <p>Financials come from IRS Form 990 filings via ProPublica's API, mostly FY2023; functional-expense detail was not audited, top-lines only. Program claims were verified on each organization's own pages or primary documents; every unverified item in the underlying research is labeled rather than asserted. "Opaque" means no public outcomes were found, not that none exist internally. Candid/GuideStar transparency seals were not systematically pulled. These are transparency-and-fit audits, not independent program evaluations: they establish whether the model is proven and whether the organization shows its work, not whether its KC implementation is working. On syringe services: Kansas bans them outright; Missouri provides no statutory authorization, yet the metro's one exchange has historically operated openly, so the reality is local tolerance without legal protection.</p>
+    <p>Built with a multi-agent research pipeline I direct, over the burden model (part 1) and cost-effectiveness evidence (part 2) of this series. Grades are structured judgment over verified evidence, stated so you can disagree with them precisely.</p>
+  </div>
+</section>
+
+</div>
+
+<footer>
+  <div class="wrap">
+    <span>Researched and vetted by Alex Hedtke · August 2026 · <a href="kc-impact-analysis.html">Part 1</a> · <a href="kc-cause-prioritization.html">Part 2</a></span>
+    <span><a href="index.html#portfolio">More projects</a> · <a href="mailto:alex.hedtke@gmail.com">Corrections welcome</a></span>
+  </div>
+</footer>
+
+<script>
+'use strict';
+function $(s,c){return (c||document).querySelector(s)}
+/* tier, name, sub, causes[], ein, budget, evidence, transparency, capsule */
+var ORGS=[
+ [1,"Samuel U. Rodgers Health Center","FQHC; the study's only peer-reviewed outcomes",["Cancer screening","Hypertension/CVD"],"43-0899356","$31.9M","A-","Transparent",
+  "<p>Patient navigation + practice facilitation raised colorectal screening from 31% to 59% at this FQHC, documented in a peer-reviewed study (<a href='https://pmc.ncbi.nlm.nih.gov/articles/PMC10887785/' target='_blank' rel='noopener'>PMC10887785</a>): the strongest outcome evidence of any org vetted. Separately verified as one of nine national pilot sites in the CDC-funded self-measured blood pressure implementation program (<a href='https://www.nachc.org/wp-content/uploads/2023/02/NACHC-Health-Care-Delivery-SMBP-Implementation-Guide-08222018.pdf' target='_blank' rel='noopener'>NACHC guide, PDF</a>). Restrict gifts to navigation/SMBP. Caution: its separate foundation entity (EIN 20-0751739) shows $0 activity; give to the health center directly.</p>"],
+ [1,"First Call","Substance-use prevention and recovery",["Overdose","Alcohol"],"44-0641486","$4.1M","A (program)","Opaque",
+  "<p>Confirmed on its own pages: free naloxone distribution, fentanyl test strips, and overdose-response training, serving both states, including a Kansas Fights Addiction grant for Johnson/Wyandotte harm reduction. The joint SAMHSA harm-reduction grant with KC CARE expired 5/2025 (verified via HHS TAGGS): a concrete, current funding gap. Publishes no kits-distributed or reversal counts; ask for them. Also the nearest thing to an alcohol-cause vehicle (SBIRT specificity unconfirmed).</p>"],
+ [1,"Shepherd's Center of KC Central","Senior services with a real falls program",["Falls"],"43-0994417","$1.6M","A (program)","Partial",
+  "<p>Delivers A Matter of Balance in-house with a verified live 2026 schedule: a named, evidence-based falls intervention. Publishes org-wide service counts but no falls-specific outcomes. Three consecutive years of operating deficits make the funding gap unusually concrete. Meals on Wheels is its larger program; ask what share of a gift reaches the falls work.</p>"],
+ [1,"BikeWalkKC","Street-safety advocacy",["Traffic"],"45-3832438","$1.2M","B+","Partial",
+  "<p>Dated, concrete win list mapping onto the one proven traffic lever: led coalitions for the 2017 Complete Streets ordinance and street funding in the GO bond, pushed Vision Zero's 2020 adoption, sits on its task force. Advocacy attribution is inherently unmeasurable (no counterfactual), which caps the grade; the wins are specific and the finances are honest, with thin reserves and self-described difficulty funding advocacy.</p>"],
+ [2,"Nurture KC","The metro's infant-mortality organization",["Infant & maternal"],"43-1897000","$3.3M","B","Partial",
+  "<p>Hosts the only urban HRSA Healthy Start Initiative in Missouri, with community health workers in the 12 highest-infant-mortality ZIP codes across both states, in a cause every hospital needs-assessment ignores. Evidence is the Healthy Start literature (quasi-experimental), not RCT-grade. 100% grant-funded (concentration risk), and its published numbers are process metrics; ask for client-outcome reporting.</p>"],
+ [2,"Uzazi Village","Perinatal equity and doula care",["Infant & maternal"],"46-0589830","$1.4M","B","Opaque",
+  "<p>Community doula model (a proven intervention class) sharply targeted at the highest Black maternal/infant mortality ZIPs; a named provider in the city's doula initiative; more diversified revenue than Nurture KC and 10x growth in five years. Its claimed university-partnered outcome measurement has no findable publication: the ask. A split gift with Nurture KC is defensible.</p>"],
+ [2,"KC CARE Health Center","FQHC; the metro's syringe exchange",["Overdose"],"43-0967292","$35.6M","A (if current)","Opaque",
+  "<p>Historically operated the metro's only syringe exchange at large scale, the rarest, highest-fidelity harm-reduction intervention here, under local tolerance (Missouri statute provides no authorization; Kansas bans SSPs outright). The widely-cited 750,000-needles figure dates to 2018 reporting and the harm-reduction page 404s today: confirm current status before giving for this purpose, then earmark, since harm reduction is a small line in a $35.6M budget.</p>"],
+ [2,"ReDiscover","Community behavioral health",["Overdose","Mental illness"],"23-7169417","$75.6M","A/B","Partial",
+  "<p>Described as the only medication-assisted opioid treatment provider in eastern Jackson County (methadone/buprenorphine/naltrexone, CARF-accredited per county program pages), and the best-available option in a thin mental-health field. At $75.6M, unrestricted gifts dilute; earmark to MOUD access. Collaborative-care fidelity (the specifically costed model) unconfirmed here as everywhere locally.</p>"],
+ [2,"Keep The Spark Alive","Youth suicide prevention",["Suicide"],"82-5149545","$0.3M","B-","Partial",
+  "<p>Funds Sources of Strength, the one program in this cause with real controlled-trial evidence (improved help-seeking norms among at-risk youth), reaching 100,000+ students across 75 schools with its merging partner Speak Up (gifts redirect here from 1/2026). Small and thin-reserved mid-merger: genuine execution risk, but small gifts are genuinely additive. No KC-specific outcome tracking published.</p>"],
+ [2,"Midland Care Connection","Hospice/PACE org with a hidden CAPABLE site",["Falls"],"48-0883888","$75.1M","A (program)","Opaque",
+  "<p>Runs a confirmed CAPABLE site in Overland Park, verified in the CAPABLE National Center's own locator, that its own website never mentions. CAPABLE is the best-evidenced falls intervention (~$3K/participant vs ~$22K Medicare savings). Earmarked gifts only, via the development office, paired with an ask to report outcomes publicly.</p>"],
+ [2,"YMCA of Greater Kansas City","Community org running the National DPP",["Diabetes"],"44-0546002","$46.4M","B (pending)","Opaque",
+  "<p>The visible KC deliverer of the CDC-recognized National Diabetes Prevention Program. One phone call resolves its CDC recognition tier: Full recognition is itself an outcomes bar and would move this to Tier 1; anything less, keep looking. Donor-restrict to the chronic-disease program either way.</p>"],
+ [2,"Friends of Johnson County Mental Health Center","Small friends-of foundation",["Suicide","Mental illness"],"74-2837497","$0.2M","B (model)","Partial",
+  "<p>The giving vehicle for Johnson County Mental Health Center's evidence-based work, including its formal adoption of the Zero Suicide clinical model, distinct from the Zero Reasons Why awareness campaign it also houses. A small, clean complement for a donor who wants the clinical-systems bet.</p>"],
+ [3,"KC Common Good","Violence-prevention convener",["Violence"],"83-4482500","$0.9M","C+","Opaque",
+  "<p>Real organization, but its flagship rests on an imported Omaha statistic that appears with different values in different materials and no source: the exact outcomes-without-denominators pattern this guide screens for. Its youth-employment program borrows a model with real RCT evidence elsewhere, unevaluated locally. Fund only with an earmark for youth employment or independent evaluation.</p>"],
+ [3,"KC Mothers In Charge","Homicide-victim family services",["Violence"],"47-2342408","$0.4M","C (off-model)","Opaque",
+  "<p>Crisis response and peer support for families of homicide victims: real, valuable postvention work that simply is not violence <em>reduction</em> and is not framed or measured as such. Give for what it is; do not count it against this cause's evidence bar.</p>"],
+ [3,"AFSP (Greater Kansas chapter)","National brand, local walks",["Suicide"],"13-3393329","$48M (national)","C","Opaque locally",
+  "<p>Awareness walks and school programs under a volunteer chapter of the national foundation, which files no local financials and is not visibly funding-constrained ($92M net assets). A local gift is functionally a national gift with a walk attached; a KC donor cannot trace it.</p>"],
+ [3,"NAMI Greater Kansas City","Peer and family education",["Mental illness"],"43-1209702","$0.1M","C (this frame)","Opaque",
+  "<p>Peer support, family education, and advocacy: a different theory of change than the collaborative-care model this cause's cost-effectiveness numbers price. Volunteer-scale budget. Graded against this frame only.</p>"],
+ [3,"Zero Reasons Why","County-housed awareness campaign",["Suicide"],"none (county program)","n/a","C","Partial",
+  "<p>A teen-led destigmatization campaign housed at Johnson County Mental Health Center, not an independent charity. The county's encouraging suicide trend has multiple concurrent causes per its own experts; the evidence-based thing underneath is the Zero Suicide clinical model, reachable via Friends of JCMHC.</p>"],
+ [3,"Preferred Family Healthcare","Disqualified",["Overdose","Mental illness"],"43-1236557","$100M+","F","n/a",
+  "<p>Paid $8M+ in a federal embezzlement/bribery settlement with multiple executives convicted; operates under a corporate integrity agreement. Governance risk overrides any intervention match.</p>"]
+];
+var reg=$('#reg');
+var TIERS={1:"Tier 1 · Give with confidence",2:"Tier 2 · Give with asks attached",3:"Tier 3 · Not recommended for these causes"};
+function render(){
+  var causeF=$('#f-cause').value;
+  reg.innerHTML='';
+  var shown=0, tierShown={};
+  ORGS.forEach(function(o,i){
+    if(causeF && o[3].indexOf(causeF)===-1) return;
+    if(!tierShown[o[0]]){
+      tierShown[o[0]]=true;
+      var th=document.createElement('div');th.className='tier-h';th.textContent=TIERS[o[0]];
+      reg.appendChild(th);
+    }
+    shown++;
+    var d=document.createElement('div');d.className='org';
+    d.innerHTML='<div class="org-top">'+
+      '<h3>'+o[1]+'<small>'+o[2]+' · EIN '+o[4]+'</small></h3>'+
+      '<span class="chip soft">'+o[3].join(' · ')+'</span>'+
+      '<span class="chip '+(o[6][0]==='A'?'ev-A':o[6][0]==='F'?'ev-F':'')+'">Evidence '+o[6]+'</span>'+
+      '<span class="chip soft">'+o[7]+'</span>'+
+      '<span class="budget">'+o[5]+'</span></div>'+
+      '<button class="more" data-i="'+i+'">Why this grade</button>'+
+      '<div class="cap" id="cap-'+i+'">'+o[8]+'</div>';
+    reg.appendChild(d);
+  });
+  $('#f-count').textContent=shown+' of '+ORGS.length+' organizations';
+  reg.querySelectorAll('button.more').forEach(function(b){
+    b.addEventListener('click',function(){document.getElementById('cap-'+b.dataset.i).classList.toggle('open')});
+  });
+}
+$('#f-cause').addEventListener('change',render);
+render();
+/* theme toggle */
+function setTheme(t,save){
+  document.documentElement.setAttribute('data-theme',t);
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+  if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
+}
+$('#theme-toggle').addEventListener('click',function(){
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+  var saved=null;try{saved=localStorage.getItem('bs-theme')}catch(err){}
+  if(saved!=='dark'&&saved!=='light')setTheme(e.matches?'dark':'light',false);
+});
+</script>
+</body>
+</html>
