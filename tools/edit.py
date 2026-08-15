@@ -155,14 +155,37 @@ var pairs = [];     // {node, entry}
   while (walker.nextNode()) nodes.push(walker.currentNode);
   var ei = 0;
   nodes.forEach(function(n){
-    while (ei < INDEX.length && INDEX[ei].text !== n.nodeValue) ei++;
-    if (ei < INDEX.length) { pairs.push({node:n, entry:INDEX[ei]}); ei++; }
+    var j = ei;                                   // scan ahead without consuming
+    while (j < INDEX.length && INDEX[j].text !== n.nodeValue) j++;
+    if (j < INDEX.length) {
+      pairs.push({node:n, entry:INDEX[j], parent:n.parentElement});
+      ei = j + 1;
+    }
   });
   nodes.forEach(function(n){
     if (!pairs.some(function(p){return p.node===n}))
       n.parentElement.classList.add('bse-unmapped');
   });
 })();
+// Recover pairs whose text node the browser replaced during editing:
+// re-bind each parent's pairs, in order, to its current direct text nodes.
+function rebind(scope){
+  var byParent = new Map();
+  pairs.forEach(function(p){
+    if (scope && !scope.contains(p.parent)) return;
+    if (!byParent.has(p.parent)) byParent.set(p.parent, []);
+    byParent.get(p.parent).push(p);
+  });
+  byParent.forEach(function(plist, parent){
+    if (!document.contains(parent)) return;
+    if (plist.every(function(p){return document.contains(p.node) && p.node.parentElement===parent})) return;
+    var texts = [].filter.call(parent.childNodes, function(c){
+      return c.nodeType === 3 && c.nodeValue.trim();
+    });
+    if (texts.length === plist.length)
+      plist.forEach(function(p, k){ p.node = texts[k]; });
+  });
+}
 
 function blockOf(el){
   return el.closest('p,h1,h2,h3,h4,li,td,th,figcaption,blockquote,span,a,button,summary,label,div') || el;
@@ -182,10 +205,14 @@ document.addEventListener('click', function(e){
   editing = b;
   b.classList.add('bse-edit');
   b.setAttribute('contenteditable', 'true');
+  b.addEventListener('input', onType);
   b.focus();
 }, true);
+function onType(){ collect(); refresh(); }
 function endEdit(){
   if (!editing) return;
+  editing.removeEventListener('input', onType);
+  editing.normalize();
   editing.removeAttribute('contenteditable');
   editing.classList.remove('bse-edit');
   collect();
@@ -201,8 +228,9 @@ document.addEventListener('focusout', function(e){
 });
 
 function collect(){
+  rebind(editing);
   pairs.forEach(function(p){
-    if (!document.contains(p.node)) return;   // node replaced by typing? contenteditable keeps text nodes for plain edits
+    if (!document.contains(p.node)) return;   // unrecoverable (element deleted)
     var now = p.node.nodeValue;
     if (now !== p.entry.text) pending[p.entry.id] = {old:p.entry.text, text:now};
     else delete pending[p.entry.id];
@@ -251,6 +279,10 @@ function gitStatus(){
     document.getElementById('bse-pub').disabled = !s.dirty;
   });
 }
+window.addEventListener('beforeunload', function(e){
+  collect();
+  if (count()) { e.preventDefault(); e.returnValue = ''; }
+});
 document.getElementById('bse-save').addEventListener('click', function(){ endEdit(); save(); });
 document.getElementById('bse-pub').addEventListener('click', publish);
 document.getElementById('bse-revert').addEventListener('click', revert);
