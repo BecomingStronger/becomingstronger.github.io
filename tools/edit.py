@@ -188,7 +188,7 @@ function rebind(scope){
 }
 
 function blockOf(el){
-  return el.closest('p,h1,h2,h3,h4,li,td,th,figcaption,blockquote,span,a,button,summary,label,div') || el;
+  return el.closest('b,i,em,strong,small,code,a,span,sup,p,h1,h2,h3,h4,li,td,th,figcaption,blockquote,button,summary,label,div') || el;
 }
 var editing = null;
 document.addEventListener('mouseover', function(e){
@@ -203,12 +203,34 @@ document.addEventListener('click', function(e){
   if (!b || b === document.body) return;
   if (editing && editing !== b) endEdit();
   editing = b;
+  b._bseSnap = b.innerHTML;
+  b._bsePairs = pairs.filter(function(p){ return b.contains(p.parent); });
   b.classList.add('bse-edit');
   b.setAttribute('contenteditable', 'true');
   b.addEventListener('input', onType);
   b.focus();
 }, true);
-function onType(){ collect(); refresh(); }
+function repairScope(scope, plist){
+  var walker = document.createTreeWalker(scope, NodeFilter.SHOW_TEXT, {
+    acceptNode: function(n){ return n.nodeValue.trim() ? 1 : 2; }});
+  var nodes = []; while (walker.nextNode()) nodes.push(walker.currentNode);
+  var k = 0;
+  plist.forEach(function(p){
+    var j = k;
+    while (j < nodes.length && nodes[j].nodeValue !== p.entry.text) j++;
+    if (j < nodes.length){ p.node = nodes[j]; p.parent = nodes[j].parentElement; k = j + 1; }
+  });
+}
+function onType(){
+  rebind(editing);
+  var broken = editing._bsePairs.some(function(p){ return !document.contains(p.parent); });
+  if (broken){
+    editing.innerHTML = editing._bseSnap;
+    repairScope(editing, editing._bsePairs);
+    msg('That edit removed inline formatting or links, which the editor cannot save; restored. Edit within one run of text.');
+  }
+  collect(); refresh();
+}
 function endEdit(){
   if (!editing) return;
   editing.removeEventListener('input', onType);
