@@ -85,6 +85,17 @@ section .secsub{font-size:.92rem;color:var(--ink-soft);margin:0 0 20px;max-width
 .filters-in{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .filters select{padding:8px 6px;border:1px solid var(--line-strong);background:var(--paper);color:var(--ink);font:inherit;font-size:.85rem;outline:none;border-radius:0}
 .filters select:focus{border-color:var(--gold)}
+.vtoggle{display:inline-flex;border:1px solid var(--line-strong)}
+.vtoggle button{padding:8px 14px;font-size:.85rem;color:var(--ink-soft);border-right:1px solid var(--line)}
+.vtoggle button:last-child{border-right:none}
+.vtoggle button.on{background:var(--paper-2);color:var(--ink);font-weight:600}
+.vtoggle button:hover:not(.on){color:var(--leaf-deep)}
+.cause-h{display:flex;flex-wrap:wrap;gap:12px;align-items:baseline;padding:12px 16px;background:var(--paper-2);border-bottom:1px solid var(--line)}
+.cause-h .rk{border:1px solid var(--leaf);color:var(--leaf);font-weight:700;font-size:.8rem;padding:2px 8px;font-variant-numeric:tabular-nums}
+.cause-h h3{font-family:"Raleway",sans-serif;font-size:.95rem;margin:0}
+.cause-h .m{font-size:.76rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.cause-h .vd{font-size:.78rem;color:var(--ink-soft);flex-basis:100%}
+.org-empty{padding:12px 16px;font-size:.85rem;color:var(--ink-soft);border-bottom:1px solid var(--line);font-style:italic}
 .count-note{font-size:.8rem;color:var(--ink-soft);margin-left:auto;font-variant-numeric:tabular-nums}
 .registry{border:1px solid var(--line-strong)}
 .org{border-bottom:1px solid var(--line);padding:12px 16px}
@@ -195,7 +206,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 
 <section id="registry">
   <h2>The full registry</h2>
-  <p class="secsub">Every organization that made it to a grade (18 of ~40 assessed; the rest failed identity, locality, or relevance screens), grouped by tier. Evidence grades: A = delivers a named proven intervention with fidelity signals; B = proven model, fidelity or currency unresolved; C = adjacent services or awareness work; F = disqualifying. Transparency: does the org publish outcomes, not activity counts. Expand any row for the reasoning.</p>
+  <p class="secsub">Every organization that made it to a grade (18 of ~40 assessed; the rest failed identity, locality, or relevance screens). Causes appear in ITN rank order so you can see which have vehicles and which sit empty; switch to the tier view for a straight recommendation list. Evidence grades: A = delivers a named proven intervention with fidelity signals; B = proven model, fidelity or currency unresolved; C = adjacent services or awareness work; F = disqualifying. Transparency: does the org publish outcomes, not activity counts. Expand any row for the reasoning.</p>
   <div class="filters"><div class="wrap filters-in" style="padding:0">
     <select id="f-cause" aria-label="Filter by cause">
       <option value="">All causes</option>
@@ -204,6 +215,10 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
       <option>Cancer screening</option><option>Violence</option><option>Mental illness</option>
       <option>Suicide</option><option>Diabetes</option><option>Alcohol</option>
     </select>
+    <div class="vtoggle" role="group" aria-label="Registry view">
+      <button id="v-cause" class="on">By cause, ITN order</button>
+      <button id="v-tier">By tier</button>
+    </div>
     <span class="count-note" id="f-count"></span>
   </div></div>
   <div class="registry" id="reg"></div>
@@ -304,34 +319,92 @@ var ORGS=[
 ];
 var reg=$('#reg');
 var TIERS={1:"Tier 1 · Give with confidence",2:"Tier 2 · Give with asks attached",3:"Tier 3 · Not recommended for these causes"};
+/* ITN View A order: rank label, cause tag (matches org tags; null = no orgs), ~DALYs/$10M, one-line verdict */
+var CAUSES=[
+ ["1","Tobacco","~2,800","No local giving vehicle exists. The state quitline is a government contract; see the create-it list."],
+ ["2","Overdose","~1,800","Best available: First Call (Tier 1). KC CARE for syringe access after confirming current status."],
+ ["3","Falls","~1,200","Best available: Shepherd's Center of KC Central (Tier 1). Midland Care's CAPABLE site with an earmark."],
+ ["4","Hypertension/CVD","~900","Best available: Samuel U. Rodgers Health Center (Tier 1), restricted to SMBP."],
+ ["5","Traffic","~700","Best available: BikeWalkKC (Tier 1)."],
+ ["6","Infant & maternal","~650","Best available: Nurture KC + Uzazi Village as a split gift (Tier 2)."],
+ ["7–8","Cancer screening","~400","Best available: Samuel U. Rodgers Health Center (Tier 1), restricted to patient navigation."],
+ ["7–8","Violence","~250","No clean pick. The strongest move is funding independent evaluation; see the create-it list."],
+ ["9","Mental illness","~320","Best available in a thin field: ReDiscover (Tier 2). Friends of JCMHC as a small complement."],
+ ["9–10","Diabetes","~300","Best available: YMCA of Greater KC (Tier 2), pending its CDC recognition tier."],
+ ["11","Alcohol","~180","Nearest vehicle: First Call (overlaps its overdose work); no SBIRT-specific org confirmed."],
+ ["12","Suicide","~150","Best available: Keep The Spark Alive (Tier 2)."],
+ ["12–13","Digestive / cirrhosis","~150",null],
+ ["14","Musculoskeletal","~100",null],
+ ["14–15","Neurological","~80",null]
+];
+var EMPTY={"Digestive / cirrhosis":"No vettable local charity delivers evidence-based hepatitis C testing and linkage at scale; Missouri law constrains the standard delivery model.",
+"Musculoskeletal":"Confirmed absent: no proven city-scale intervention exists anywhere, so there is nothing to deploy locally. A research bet, not a program bet.",
+"Neurological":"No population-scale lever found; the dementia-prevention channel runs through hypertension control (see Samuel U. Rodgers)."};
+var view='cause';
+function orgRow(o,i,extraChip){
+  var d=document.createElement('div');d.className='org';
+  d.innerHTML='<div class="org-top">'+
+    '<h3>'+o[1]+'<small>'+o[2]+' · EIN '+o[4]+'</small></h3>'+
+    (extraChip||'<span class="chip soft">'+o[3].join(' · ')+'</span>')+
+    '<span class="chip '+(o[6][0]==='A'?'ev-A':o[6][0]==='F'?'ev-F':'')+'">Evidence '+o[6]+'</span>'+
+    '<span class="chip soft">'+o[7]+'</span>'+
+    '<span class="budget">'+o[5]+'</span></div>'+
+    '<button class="more" data-i="'+i+'">Why this grade</button>'+
+    '<div class="cap" id="cap-'+i+'">'+o[8]+'</div>';
+  return d;
+}
 function render(){
   var causeF=$('#f-cause').value;
   reg.innerHTML='';
-  var shown=0, tierShown={};
-  ORGS.forEach(function(o,i){
-    if(causeF && o[3].indexOf(causeF)===-1) return;
-    if(!tierShown[o[0]]){
-      tierShown[o[0]]=true;
-      var th=document.createElement('div');th.className='tier-h';th.textContent=TIERS[o[0]];
-      reg.appendChild(th);
-    }
-    shown++;
-    var d=document.createElement('div');d.className='org';
-    d.innerHTML='<div class="org-top">'+
-      '<h3>'+o[1]+'<small>'+o[2]+' · EIN '+o[4]+'</small></h3>'+
-      '<span class="chip soft">'+o[3].join(' · ')+'</span>'+
-      '<span class="chip '+(o[6][0]==='A'?'ev-A':o[6][0]==='F'?'ev-F':'')+'">Evidence '+o[6]+'</span>'+
-      '<span class="chip soft">'+o[7]+'</span>'+
-      '<span class="budget">'+o[5]+'</span></div>'+
-      '<button class="more" data-i="'+i+'">Why this grade</button>'+
-      '<div class="cap" id="cap-'+i+'">'+o[8]+'</div>';
-    reg.appendChild(d);
-  });
-  $('#f-count').textContent=shown+' of '+ORGS.length+' organizations';
+  var shown=0;
+  if(view==='tier'){
+    var tierShown={};
+    ORGS.forEach(function(o,i){
+      if(causeF && o[3].indexOf(causeF)===-1) return;
+      if(!tierShown[o[0]]){
+        tierShown[o[0]]=true;
+        var th=document.createElement('div');th.className='tier-h';th.textContent=TIERS[o[0]];
+        reg.appendChild(th);
+      }
+      shown++;
+      reg.appendChild(orgRow(o,i));
+    });
+  } else {
+    CAUSES.forEach(function(c){
+      if(causeF && c[1]!==causeF) return;
+      var members=[];
+      ORGS.forEach(function(o,i){ if(o[3].indexOf(c[1])!==-1) members.push([o,i]); });
+      var h=document.createElement('div');h.className='cause-h';
+      h.innerHTML='<span class="rk">#'+c[0]+'</span><h3>'+c[1]+'</h3>'+
+        '<span class="m">'+c[2]+' DALYs averted per $10M/yr</span>'+
+        (c[3]?'<span class="vd">'+c[3]+'</span>':'');
+      reg.appendChild(h);
+      if(!members.length){
+        var e=document.createElement('div');e.className='org-empty';
+        e.textContent=EMPTY[c[1]]||'No graded organization for this cause.';
+        reg.appendChild(e);
+      } else {
+        members.sort(function(a,b){return a[0][0]-b[0][0]});
+        members.forEach(function(m){
+          shown++;
+          reg.appendChild(orgRow(m[0],m[1],'<span class="chip soft">Tier '+m[0][0]+'</span>'));
+        });
+      }
+    });
+  }
+  $('#f-count').textContent=(view==='tier'?shown+' of '+ORGS.length+' organizations':shown+' listings across '+CAUSES.length+' causes');
   reg.querySelectorAll('button.more').forEach(function(b){
     b.addEventListener('click',function(){document.getElementById('cap-'+b.dataset.i).classList.toggle('open')});
   });
 }
+function setView(v){
+  view=v;
+  $('#v-tier').classList.toggle('on',v==='tier');
+  $('#v-cause').classList.toggle('on',v==='cause');
+  render();
+}
+$('#v-tier').addEventListener('click',function(){setView('tier')});
+$('#v-cause').addEventListener('click',function(){setView('cause')});
 $('#f-cause').addEventListener('change',render);
 render();
 /* theme toggle */
