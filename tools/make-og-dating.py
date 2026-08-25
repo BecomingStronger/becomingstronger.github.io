@@ -54,7 +54,7 @@ body{width:1200px;height:630px;overflow:hidden;background:var(--surface);
   color:var(--gold);margin-bottom:10px}
 h1{font-family:"Raleway",sans-serif;font-weight:600;font-size:46px;line-height:1.08;
   letter-spacing:-.015em;margin-bottom:14px}
-.dek{font-size:17px;color:var(--on-surface-variant);margin-bottom:20px}
+.dek{font-size:17px;color:var(--on-surface-variant);margin-bottom:20px;text-wrap:pretty}
 .facts{list-style:none;padding:0;font-size:16px;line-height:1.5}
 .facts li{padding-left:18px;position:relative;margin-bottom:7px}
 .facts li:before{content:"";position:absolute;left:0;top:10px;width:7px;height:7px;
@@ -79,7 +79,7 @@ h1{font-family:"Raleway",sans-serif;font-weight:600;font-size:46px;line-height:1
     <p class="eb">Becoming Stronger</p>
     <h1>Dating Document</h1>
     <p class="dek">Not your typical dating profile. Kansas City, 32, philosophy
-      nerd, effective altruism organizer, and one very well-behaved cat.</p>
+      nerd, effective altruism organizer, and a menace of a cat named Loki.</p>
     <ul class="facts">
       <li>Organizes Effective Altruism KC, donates 10%% of his income</li>
       <li>Vegan. D&amp;D, urban exploration, foraging, Burning Man</li>
