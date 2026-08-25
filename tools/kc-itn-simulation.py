@@ -9,7 +9,7 @@ METHOD
 - Each of the 15 problems carries four uncertain quantities, each expressed
   as (low, point, high):
     I    annual DALYs (thousands), the 80% CI from the burden model
-         (kc-impact-analysis.html);
+         (the Impact section of the page above);
     T    tractability score 0-10 (log-scale anchor: $500/DALY ~ 9,
          $5K ~ 7, $50K ~ 5, nothing proven ~ 1-2, adjusted for evidence
          strength, Missouri legal feasibility, and KC precedent);

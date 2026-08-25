@@ -4,11 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kansas City Cause Prioritization · Becoming Stronger</title>
-<meta name="description" content="Where would a marginal dollar do the most good in Kansas City? Fifteen problems scored on impact, tractability, and neglectedness, with a Monte Carlo over the uncertainty and the evidence behind every score.">
+<meta name="description" content="Where would a marginal dollar do the most good in Kansas City? Fifteen problems scored on impact, tractability and neglectedness, with the full burden-of-disease model, a Monte Carlo over the uncertainty, and the evidence behind every score.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://becomingstronger.github.io/kc-cause-prioritization.html">
 <meta property="og:title" content="Kansas City Cause Prioritization">
-<meta property="og:description" content="Fifteen problems, three factors, and rank intervals instead of false precision. Tobacco control, overdose response, elderly falls, and hypertension come out on top, and you can adjust every score I made.">
+<meta property="og:description" content="Fifteen problems, three factors, and rank intervals instead of false precision. The burden model, the cost-effectiveness ladder and the local funding map in one place. Tobacco control, overdose response, elderly falls and hypertension come out on top.">
 <meta name="theme-color" id="meta-theme" content="#FBF8F0">
 <script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
 <link rel="icon" type="image/svg+xml" href="favicon.svg">
@@ -71,6 +71,8 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .v p{font-size:.8rem;color:var(--ink-soft);margin:0}
 section{margin:56px 0 0}
 section h2{font-size:1.5rem;margin:0 0 6px}
+section h3{font-size:1.12rem;margin:40px 0 6px;padding-top:18px;border-top:1px solid var(--line)}
+section h3:first-of-type{border-top:none;padding-top:0}
 section .secsub{font-size:.92rem;color:var(--ink-soft);margin:0 0 20px;max-width:800px}
 .legend-row{display:flex;flex-wrap:wrap;gap:16px;align-items:center;font-size:.8rem;color:var(--ink-soft);margin:0 0 14px}
 .key{display:inline-flex;align-items:center;gap:6px}
@@ -103,6 +105,66 @@ section .secsub{font-size:.92rem;color:var(--ink-soft);margin:0 0 20px;max-width
 .rrow:hover .rdot{box-shadow:0 0 0 2px var(--paper-2)}
 .rrow .end{font-size:.82rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-soft)}
 .rgrid{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+/* headline tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:0;border:1px solid var(--line-strong);margin:22px 0 0}
+.tile{padding:18px 18px 16px;border-right:1px solid var(--line)}
+.tile:last-child{border-right:none}
+.tile .lbl{font-size:.8rem;color:var(--ink-soft);margin:0 0 6px}
+.tile .val{font-size:2rem;font-weight:600;line-height:1.05;margin:0}
+.tile .note{font-size:.76rem;color:var(--ink-soft);margin:5px 0 0}
+/* league chart: stacked YLL/YLD bars */
+.crow{display:grid;grid-template-columns:minmax(150px,220px) 1fr 92px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line);cursor:default}
+.crow:last-child{border-bottom:none}
+.crow:hover,.crow:focus-visible{background:var(--paper-2);outline:none}
+.crow .nm{font-size:.88rem;font-weight:500}
+.crow .nm .conf{display:block;font-size:.72rem;font-weight:400;color:var(--ink-soft)}
+.bar{position:absolute;top:1px;height:24px;display:flex}
+.seg{height:100%}
+.seg+.seg{margin-left:2px} /* surface gap between stacked segments */
+.seg.yll{background:var(--s1)}
+.seg.yld{background:var(--s2)}
+.bar .seg:last-child{border-radius:0 4px 4px 0}
+.crow .end{font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink)}
+.crow .end .ratio{display:block;font-size:.72rem;color:var(--ink-soft)}
+.crow .end .ratio.hot{color:var(--terra);font-weight:600}
+/* single-series bars: damages, the money map */
+.sbar-row{display:grid;grid-template-columns:minmax(150px,240px) 1fr 120px;gap:12px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--line)}
+.sbar-row:last-child{border-bottom:none}
+.sbar-row:hover,.sbar-row:focus-visible{background:var(--paper-2);outline:none}
+.sbar-row .nm{font-size:.88rem;font-weight:500}
+.sbar-row .nm small{display:block;font-weight:400;font-size:.72rem;color:var(--ink-soft)}
+.sbarzone{position:relative;height:26px}
+.sbar{position:absolute;top:1px;height:24px;background:var(--s1);border-radius:0 4px 4px 0}
+.sbar.olap{background:repeating-linear-gradient(45deg,var(--s1) 0 5px,transparent 5px 9px)}
+.sbar.zero{background:none;border-left:2px solid var(--terra)}
+.rowchart.n3 .sbar{background:var(--s3)}
+/* cost-per-QALY ladder, log axis */
+.qrow{display:grid;grid-template-columns:minmax(150px,230px) 1fr 122px;gap:12px;align-items:center;padding:9px 14px;border-bottom:1px solid var(--line)}
+.qrow:last-child{border-bottom:none}
+.qrow:hover,.qrow:focus-visible{background:var(--paper-2);outline:none}
+.qrow .nm{font-size:.88rem;font-weight:500}
+.qrow .nm small{display:block;font-weight:400;font-size:.72rem;color:var(--ink-soft)}
+.qzone{position:relative;height:22px}
+.qgrid{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
+.qband{position:absolute;top:50%;height:6px;margin-top:-3px;background:var(--s2);opacity:.45}
+.qdot{position:absolute;top:50%;width:11px;height:11px;background:var(--s2);transform:translate(-50%,-50%);box-shadow:0 0 0 2px var(--paper)}
+.qrow:hover .qdot{box-shadow:0 0 0 2px var(--paper-2)}
+.qsave{position:absolute;top:50%;left:2px;transform:translateY(-50%);font-size:.72rem;color:var(--leaf-deep);font-weight:600}
+[data-theme="dark"] .qsave{color:var(--leaf)}
+.qrow .end{font-size:.79rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-soft)}
+.qaxis{display:grid;grid-template-columns:minmax(150px,230px) 1fr 122px;gap:12px;padding:8px 14px 0;font-size:.7rem;color:var(--ink-soft)}
+.qaxis .ax{position:relative;height:15px}
+.qaxis .ax span{position:absolute;transform:translateX(-50%);font-variant-numeric:tabular-nums;white-space:nowrap}
+/* preemption table */
+.ptab{width:100%;min-width:620px;border-collapse:collapse;font-size:.85rem;margin:0 0 6px}
+.ptab th,.ptab td{border:1px solid var(--line);padding:7px 10px;text-align:left;vertical-align:top}
+.ptab th{font-weight:600;background:var(--paper-2)}
+.ptab td.no{color:var(--terra)}
+.ptab td.na{color:var(--ink-soft)}
+.ptab td.yes{color:var(--leaf-deep)}
+[data-theme="dark"] .ptab td.yes{color:var(--leaf)}
+.sbar-row .end{font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right}
+.sbar-row .end small{display:block;font-size:.72rem;color:var(--ink-soft)}
 /* per-problem evidence: one block per ITN factor */
 .explorer{border:1px solid var(--line-strong)}
 .xrow{border-bottom:1px solid var(--line);padding:12px 14px}
@@ -156,7 +218,8 @@ ol.src li:target{background:var(--paper-2);outline:1px solid var(--gold)}
 #tip .trow span:last-child{font-variant-numeric:tabular-nums}
 details.tblv{margin:12px 0 0;font-size:.85rem}
 details.tblv summary{cursor:pointer;color:var(--ink-soft)}
-details.tblv .tscroll{overflow-x:auto;margin:10px 0 0}
+.tscroll{overflow-x:auto}
+details.tblv .tscroll{margin:10px 0 0}
 details.tblv table{border-collapse:collapse;width:100%;min-width:760px}
 details.tblv th,details.tblv td{border:1px solid var(--line);padding:5px 8px;text-align:right;font-variant-numeric:tabular-nums}
 details.tblv th:first-child,details.tblv td:first-child{text-align:left}
@@ -175,6 +238,11 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 }
 @media(max-width:640px){
   .mrow,.rrow{grid-template-columns:minmax(110px,150px) 1fr 78px;gap:8px;padding:8px 10px}
+  .crow{grid-template-columns:minmax(110px,140px) 1fr 74px;gap:8px;padding:8px 10px}
+  .qrow,.qaxis{grid-template-columns:minmax(110px,150px) 1fr 96px;gap:8px;padding-left:10px;padding-right:10px}
+  .qaxis .ax span.mid{display:none}
+  .sbar-row{grid-template-columns:minmax(110px,150px) 1fr 90px;gap:8px;padding:8px 10px}
+  .tile .val{font-size:1.6rem}
 }
 </style>
 </head>
@@ -203,8 +271,8 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 <div class="wrap head">
   <p class="eyebrow">Interactive analysis · August 2026</p>
   <h1>Where Would a Marginal Dollar Do the Most Good in Kansas City?</h1>
-  <p class="sub">Fifteen problems from my <a href="kc-impact-analysis.html">KC burden-of-disease analysis</a>, rank-ordered by the effective altruism framework: impact × tractability × neglectedness. Tractability comes from verified intervention cost-effectiveness and Missouri's actual legal room to act. Neglectedness comes from mapping who currently funds what, in dollars. A 10,000-draw Monte Carlo over the uncertainty turns the ranking into rank <em>intervals</em>, and every score below expands into the evidence and citations behind it.</p>
-  <p class="method">The impact figures are measured; the T and N scores are structured judgment over verified evidence, which is exactly why they are adjustable. Every claim cites its source at the bottom of the page.</p>
+  <p class="sub">Fifteen problems in the Kansas City metro, rank-ordered by the effective altruism framework: impact × tractability × neglectedness. <a href="#impact">Impact</a> is measured, in annual disability-adjusted life years built from county death certificates and CDC prevalence data. <a href="#tractability">Tractability</a> comes from verified intervention cost-effectiveness and Missouri's actual legal room to act. <a href="#neglectedness">Neglectedness</a> comes from mapping who currently funds what, in dollars. Each factor gets its own section below, a 10,000-draw Monte Carlo over the uncertainty turns the ranking into rank <em>intervals</em>, and every score expands into the evidence and citations behind it.</p>
+  <p class="method">The impact figures are measured; the tractability and neglectedness scores are structured judgment over verified evidence, and each one states its reasoning where it is scored. Every claim cites its source at the bottom of the page.</p>
   <div class="verdict">
     <div class="v"><p class="rk">1 · P(top 3) = 100%</p><h3>Tobacco control</h3><p>Quitlines at $849&ndash;2,358/QALY meet the most extreme neglect in the study: Missouri funds tobacco control at 7.4% of the CDC-recommended level.</p></div>
     <div class="v"><p class="rk">2 · P(top 3) = 93%</p><h3>Overdose response</h3><p>Naloxone at $438/QALY, a 2&ndash;5× mortality gap for people in vs out of MOUD treatment, and settlement money sitting undeployed while KC lags the national decline.</p></div>
@@ -231,6 +299,122 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <div class="rankstrip" id="rank-chart" role="list"></div>
 </section>
 
+<section id="impact">
+  <h2>Impact: the disease burden</h2>
+  <p class="secsub">The measured factor, and the one this whole ranking sits on. Every major problem in the metro quantified in annual disability-adjusted life years (DALYs) and in dollars, with 80% confidence intervals, for the five instrumented counties: Jackson, Clay and Platte in Missouri, Wyandotte and Johnson in Kansas. 1.88 million people, about 85% of the MSA.</p>
+  <div class="tiles">
+    <div class="tile"><p class="lbl">Total annual health burden</p><p class="val">~620K</p><p class="note">DALYs per year, 5-county core (envelope 570&ndash;700K)</p></div>
+    <div class="tile"><p class="lbl">Excess years of life lost before 75</p><p class="val">62,160</p><p class="note">every year, vs the Johnson County benchmark 20 minutes away</p></div>
+    <div class="tile"><p class="lbl">County life-expectancy gap</p><p class="val">6.9 yrs</p><p class="note">Johnson Co. 80.64 vs Wyandotte Co. 73.70 (CHR 2020&ndash;22)</p></div>
+    <div class="tile"><p class="lbl">Tangible economic damage</p><p class="val">~$15B</p><p class="note">per year across identified categories, excluding VSL valuations</p></div>
+  </div>
+
+  <h3>The league table</h3>
+  <p class="secsub">Annual DALYs by problem, split into years of life lost to death (YLL) and years lived with disability (YLD). Whiskers are 80% confidence intervals. The KC/US column is the local rate divided by the national rate: the "is Kansas City distinctively bad here?" number. Hover or focus any row for details.</p>
+  <div class="legend-row">
+    <span class="key"><span class="sw" style="background:var(--s1)"></span>YLL (death)</span>
+    <span class="key"><span class="sw" style="background:var(--s2)"></span>YLD (disability)</span>
+    <span class="key"><span class="whisk"></span>80% CI</span>
+  </div>
+  <div class="rowchart" id="league-chart" role="list"></div>
+  <details class="tblv"><summary>Data table</summary><div id="league-table"></div></details>
+
+  <h3>The distribution finding</h3>
+  <p class="secsub">Excess premature mortality (years of potential life lost before age 75, YPLL-75) against two benchmarks. Against the US average the metro nets out to almost exactly zero. Against its own healthiest county it loses 62,000 years of life annually.</p>
+  <div class="rowchart" id="gap-chart" role="list"></div>
+  <div class="callout"><b>Kansas City's aggregate health is average; the problem is distribution.</b> Johnson County (YPLL 4,977 per 100K, life expectancy 80.64) is one of the healthiest large counties in America. Jackson (11,090) and Wyandotte (11,751) run at more than double its premature-death rate, twenty minutes away, and the net-vs-US figure for the whole core is &minus;2,058: Johnson's surplus almost exactly cancels the deficit everywhere else.<sup class="c"><a href="#t1">[1]</a></sup> The ZIP-code life-expectancy gap is pinned to its primary source, the city's own Community Health Improvement Plan 2022&ndash;2027: Brookside's 64113 at 86.3 years vs 64128 on the east side at 68.1, an <b>18-year gap</b> that the CHIP notes widened from 12 years between 2016 and 2019. (A 19.3-year figure that circulated in local TV coverage appears in no primary source and is dropped.)<sup class="c"><a href="#t2">[2]</a></sup> This is why the ranking below scores neglect at the prevention margin rather than by total spending: the metro is not short of health care.</div>
+
+  <h3>Economic damages</h3>
+  <p class="secsub">Tangible annual costs (medical, productivity, property, criminal justice) in 2025 dollars. Value-of-statistical-life and quality-of-life valuations are deliberately excluded: they are the dollar shadow of the DALY column, and including both counts the same suffering twice. Hatched bars overlap the disease rows above them (tobacco's cost lives inside CVD, cancer and COPD) and are never summed.</p>
+  <div class="legend-row">
+    <span class="key"><span class="sw" style="background:var(--s1)"></span>Tangible cost</span>
+    <span class="key"><span class="sw" style="background:repeating-linear-gradient(45deg,var(--s1) 0 5px,transparent 5px 9px)"></span>Overlaps disease rows</span>
+    <span class="key"><span class="whisk"></span>80% CI</span>
+  </div>
+  <div class="rowchart" id="econ-chart" role="list"></div>
+  <p class="secsub" style="margin-top:12px">Child poverty's $5&ndash;7B/yr is a long-run future cost (NAS Roadmap apportioned to ~60K local poor children), not current cash flow, and is listed separately from the annual-damage rows.<sup class="c"><a href="#t17">[17]</a></sup> Comprehensive VSL-inclusive figures, for comparison against advocacy numbers: violence ~$3.5B, overdose ~$6B, traffic ~$8.9B.</p>
+
+  <h3>What is distinctively Kansas City</h3>
+  <p class="secsub">Deviation from the national baseline matters more than absolute size for local action, because it is the part a local actor can plausibly close. Eight places KC measurably departs from the country:</p>
+  <ul class="tight">
+    <li><b>Homicide.</b> Jackson County homicide mortality is 25.1 per 100K, 4.2&times; the US rate. KCMO recorded 182 homicides in the record year 2023, falling to 145 (2024) and 139 (2025), with 571 nonfatal shootings in 2024. Victims skew young (72% aged 18&ndash;44).<sup class="c"><a href="#t18">[18]</a><a href="#t19">[19]</a></sup></li>
+    <li><b>The overdose recovery that missed KC.</b> Missouri's overdose deaths fell 26.4% in 2024 (2,014 &rarr; 1,482); the KC four-county region fell only ~10%, with deaths rising among seniors (+94%) and Black men (+11%) even as every other group declined.<sup class="c"><a href="#t20">[20]</a><a href="#t21">[21]</a></sup></li>
+    <li><b>Chronic homelessness is climbing fast.</b> The 2024 point-in-time count reached 2,181 (+10% in one year); chronic homelessness rose 35%, and KC's chronic population is ~91% unsheltered, among the most exposed profiles in the country.<sup class="c"><a href="#t22">[22]</a></sup></li>
+    <li><b>Evictions run above the pre-pandemic norm.</b> Jackson County logged ~5,800 filings in the first half of 2023 alone, annualizing ~11.3K against a ~9K historical baseline.<sup class="c"><a href="#t23">[23]</a></sup></li>
+    <li><b>Depression prevalence.</b> Jackson County's diagnosed-depression rate (25.6%) runs 7&ndash;8 points above its Kansas neighbors and among the highest county figures in CDC PLACES; frequent mental distress (19.2%) corroborates a real elevation.<sup class="c"><a href="#t24">[24]</a></sup></li>
+    <li><b>Kidney disease mortality 1.5&times; national</b> in Jackson County (25 vs 16 per 100K), consistent with the diabetes and hypertension gradient east of Troost.<sup class="c"><a href="#t25">[25]</a></sup></li>
+    <li><b>City traffic deaths, improving from a bad base.</b> KCMO ranks among the worst five big cities per capita, but deaths fell from 102 (2023) to 68 (2025); the pedestrian share is rising even as totals fall.<sup class="c"><a href="#t26">[26]</a></sup></li>
+    <li><b>Wyandotte County's air</b> exceeds the new federal PM2.5 annual standard (10.8 &micro;g/m&sup3; vs 9.0; Jackson 7.9, Johnson 8.9, Clay 6.0). Standard dose-response puts metro-attributable mortality at roughly 370&ndash;700 deaths/yr, wide CI, mostly elderly.<sup class="c"><a href="#t27">[27]</a><a href="#t28">[28]</a></sup></li>
+  </ul>
+  <p class="secsub" style="margin-top:14px">Read that list against the ranking and one thing stands out: the places KC is most distinctively bad (homicide, the missed overdose recovery) are not the places with the most total burden, and two of the eight (homelessness, evictions) are structural drivers that sit underneath the disease rows rather than inside them. Distinctiveness tells a local actor where the gap is; it does not by itself say the gap is closable, which is what the next section is for.</p>
+</section>
+
+<section id="tractability">
+  <h2>Tractability: what actually works, and what is legal here</h2>
+  <p class="secsub">The first judgment factor. A 0&ndash;10 score built from four things: the verified cost-effectiveness of the best locally-feasible intervention, the strength of the evidence behind it (CPSTF- or RCT-verified beats contested beats absent), Missouri's legal room to act, and whether Kansas City has tried it before and what happened. High burden with nothing deployable scores low, which is the entire point of the factor.</p>
+
+  <h3>The cost-effectiveness ladder</h3>
+  <p class="secsub">Cost per quality-adjusted life year for the best locally-feasible intervention, on a log axis. Bands are the range the source publishes; a dot marks a published point estimate, and rows with a band alone are ranges the source gives without one. Dollar years differ by source and are not inflation-harmonized, so read the decade, not the digit. For scale, the conventional US willingness-to-pay benchmark sits around $100,000 per QALY, the threshold the diabetes evidence below is measured against.</p>
+  <div class="legend-row">
+    <span class="key"><span class="sw" style="background:var(--s2)"></span>Published point estimate</span>
+    <span class="key"><span class="sw" style="background:var(--s2);opacity:.45"></span>Published range</span>
+  </div>
+  <div class="rowchart" id="qaly-chart" role="list"></div>
+
+  <h3>Where there is no price to quote</h3>
+  <p class="secsub">Eight of the fifteen problems have no usable cost-per-QALY for a locally-deployable intervention. The reasons are not the same, and the difference matters more than the missing number.</p>
+  <ul class="tight">
+    <li><b>Nothing proven exists.</b> Musculoskeletal disease, the third-largest burden in the study, has no CPSTF-recommended city-scale intervention at all. That is a verified absence, not a gap in the search.<sup class="c"><a href="#t29">[29]</a></sup> Neurological is similar in practice: the real lever runs through blood-pressure control, which the cardiovascular row already claims.</li>
+    <li><b>Proven, but the effect did not show up.</b> Real-world National DPP evaluation found no significant two-year QALY gain and a medical-cost saving whose confidence interval crosses zero, landing at an 84% probability of cost-effectiveness at $100K/QALY.<sup class="c"><a href="#t30">[30]</a></sup> Diabetes is not untreatable; the prevention program is just weaker than its reputation.</li>
+    <li><b>Works, but the lever is preempted.</b> Alcohol's best-evidenced instrument is price (pooled elasticity &minus;0.51, and &minus;0.28 for heavy drinking specifically<sup class="c"><a href="#t31">[31]</a></sup>), which is a state tax decision, not a local one. Suicide's best-evidenced instrument is means restriction, and KC's method mix is firearm-dominant while firearm policy is totally preempted.<sup class="c"><a href="#t32">[32]</a><a href="#t33">[33]</a></sup> Traffic enforcement cameras run into the same wall.<sup class="c"><a href="#t34">[34]</a></sup> These are high-value interventions with the local door closed.</li>
+    <li><b>Contested evidence.</b> Focused deterrence carries statistically significant moderate effects across 24 quasi-experiments, but the effects shrink in the more rigorous designs<sup class="c"><a href="#t35">[35]</a></sup>, and Chicago's READI RCT was null on its pre-registered primary outcome.<sup class="c"><a href="#t36">[36]</a></sup> A number exists; it is not one to build a budget on.</li>
+  </ul>
+
+  <h3>The State Line asymmetry</h3>
+  <p class="secsub">Two states, one metro, and the same intervention can be legal on one side of a street and void on the other. This is the single largest structural constraint on tractability in Kansas City, and it is the reason policy-shaped effort belongs on the Kansas side or in Jefferson City rather than in a KCMO ordinance campaign.</p>
+  <div class="tscroll"><table class="ptab">
+    <thead><tr><th>Lever</th><th>Missouri</th><th>Kansas</th></tr></thead>
+    <tbody>
+      <tr><td>Local firearm regulation</td><td class="no">Totally preempted. RSMo 21.750: the state "occupies and preempts the entire field."<sup class="c"><a href="#t33">[33]</a></sup></td><td>Not the binding constraint on the Kansas side of the metro.</td></tr>
+      <tr><td>Local tobacco tax</td><td class="no">Void. RSMo &sect;149.192 freezes existing local taxes at 1993 levels; the 17-cent state tax needs a ballot initiative.<sup class="c"><a href="#t37">[37]</a><a href="#t38">[38]</a></sup></td><td class="yes">Constitutional home rule, proven when Topeka's Tobacco 21 ordinance survived court challenge.<sup class="c"><a href="#t39">[39]</a></sup></td></tr>
+      <tr><td>Syringe services</td><td class="no">Not authorized. No SSP exemption in statute; legalization bills have sat in committee since 2021.<sup class="c"><a href="#t40">[40]</a></sup></td><td class="na">Not separately verified.</td></tr>
+      <tr><td>Local minimum wage</td><td class="no">Preempted. RSMo 67.1571.<sup class="c"><a href="#t41">[41]</a></sup></td><td class="na">Not separately verified.</td></tr>
+      <tr><td>Paid sick leave</td><td class="no">Repealed by HB 567 in 2025, nine months after voters passed it.<sup class="c"><a href="#t41">[41]</a></sup></td><td class="na">Not separately verified.</td></tr>
+      <tr><td>Automated traffic enforcement</td><td class="no">Constrained since <i>Tupper</i>; statewide ban bills pending.<sup class="c"><a href="#t34">[34]</a></sup></td><td class="na">Not separately verified.</td></tr>
+      <tr><td>Fentanyl test strips, naloxone standing order</td><td class="yes">Legal since 2023.<sup class="c"><a href="#t40">[40]</a></sup></td><td class="na">Not separately verified.</td></tr>
+    </tbody>
+  </table></div>
+  <p class="secsub" style="margin-top:10px">Notice which way the asymmetry cuts. Every preempted lever above is a <em>policy</em> lever, and every intervention that survives into the top of the ranking is <em>programmatic</em>: a quitline, a naloxone supply, a home visit, a blood-pressure cuff. Preemption does not just remove options, it systematically selects for the kind of work a donor can fund and against the kind a voter can pass.</p>
+
+  <h3>The violence caveat</h3>
+  <div class="prose">
+    <p>One tractability score deserves its own paragraph, because the history is specific and recent. Kansas City ran the celebrated focused-deterrence playbook once already: KC NoVA cut homicides in 2014, was declared a success, decayed to nothing by year three, and was formally rated Ineffective by the National Institute of Justice; KCPD withdrew in 2018.<sup class="c"><a href="#t42">[42]</a></sup> SAVE KC, today's version, reports encouraging numbers from exactly the same early stage, with no independent evaluation. The expected-value ranking already discounts for this. What survives that history is a value-of-information play: fund rigorous independent evaluation of SAVE KC, and watch 2026&ndash;27, the window where a NoVA-style decay would first become visible.</p>
+  </div>
+</section>
+
+<section id="neglectedness">
+  <h2>Neglectedness: who is already paying, and for what</h2>
+  <p class="secsub">The second judgment factor, and the one that most often decides the ranking. Scored at the <em>prevention margin</em>: annual local dollars aimed at stopping the problem, not at treating people who already have it, per DALY of burden. Treatment spending is reported but does not count as crowding, because a fully-staffed cardiology service tells you nothing about whether anyone is funding blood-pressure control.</p>
+
+  <h3>The local money map</h3>
+  <p class="secsub">Annual dollars visible against each problem, from verified budgets and 990 filings. This is deliberately not a like-for-like comparison and should not be read as one: the rows differ in geography (state, county, city, metro philanthropy) and in how much of the money is prevention rather than treatment or response. It is a map of where money exists at all, and the informative rows are the ones at zero.</p>
+  <div class="rowchart n3" id="money-chart" role="list"></div>
+  <p class="secsub" style="margin-top:12px">Two things fall out of that chart. The largest single flow, the opioid settlement, is the one least constrained by scarcity and most constrained by deployment: the pool roughly doubled to ~$900M over fifteen years while 50-plus Missouri jurisdictions spent nothing at all in 2025 and Jackson County left ~$4M unspent.<sup class="c"><a href="#t43">[43]</a></sup> And the two rows at zero are not small problems. Elderly falls is a top-three cause in this ranking with no dedicated Kansas City nonprofit or funder in existence, a systematic-sweep result rather than an assumption.<sup class="c"><a href="#t44">[44]</a></sup></p>
+
+  <h3>Missouri's public health floor is the meta-problem</h3>
+  <p class="secsub">State public health funding per capita. Missouri is last of all fifty states, at less than half of 49th-place Indiana and about a fifth of Kansas.</p>
+  <div class="rowchart n3" id="floor-chart" role="list"></div>
+  <div class="callout">The top-ranked interventions in this study are cheap precisely because they piggyback on infrastructure Missouri barely has.<sup class="c"><a href="#t45">[45]</a></sup> That cuts both ways, and the ranking holds both halves at once: delivery is harder here than the cost-effectiveness literature assumes, and a marginal dollar goes further here than it would in Kansas, because the low-hanging fruit was never picked. The State Line runs through this too. The same metro contains the 50th-ranked state and one spending nearly five times as much.</div>
+
+  <h3>Local institutions do not aim where this ranking points</h3>
+  <ul class="tight">
+    <li><b>The dominant funder left disease-specific work.</b> Health Forward Foundation holds $905M in assets and spends ~$50M/yr, and its current purpose framework names no disease areas at all, having moved to an equity-and-housing frame.<sup class="c"><a href="#t46">[46]</a></sup> That is a defensible strategy and it is also why several top causes have no institutional champion here.</li>
+    <li><b>Every hospital needs assessment converges on the same answer.</b> All three verified CHNAs (University Health 2025&ndash;28, Children's Mercy 2022&ndash;25, Saint Luke's 2023) name mental and behavioral health first, and two name violence.<sup class="c"><a href="#t47">[47]</a></sup> Mental illness ranks 7th in the factor product and 9th on the headline metric. Neither infant mortality nor falls, two of the top six, appears in any of them.</li>
+    <li><b>National research funding tracks burden badly, in different ways in different studies.</b> The denominators differ and these figures are not directly comparable to each other: gun violence received 1.6% of the funding its mortality predicts<sup class="c"><a href="#t48">[48]</a></sup>; neck pain 0.83% of its DALY-predicted level, a 120&times; gap, with low back pain at 13.88%<sup class="c"><a href="#t49">[49]</a></sup>; and on dollar residuals, depression (&minus;$719M), injuries (&minus;$691M) and COPD (&minus;$613M) are the most underfunded against burden while AIDS (+$2,474M) is the most overfunded.<sup class="c"><a href="#t50">[50]</a></sup> Falls is the least-funded cause of death in America relative to its mortality, with ~$53M in cumulative federal prevention grants since 2014 against $50&ndash;80B/yr in costs.<sup class="c"><a href="#t48">[48]</a><a href="#t51">[51]</a></sup></li>
+  </ul>
+  <p class="secsub" style="margin-top:14px">That is what neglectedness looks like from the inside: not an absence of money in Kansas City, but money pointed somewhere else, for reasons each institution can defend on its own terms.</p>
+</section>
+
 <section id="evidence">
   <h2>The three scores, problem by problem</h2>
   <p class="secsub">Every problem gets the same three-part breakdown. Each factor carries a point estimate, the interval the Monte Carlo draws from, and its own contribution to the factor score (log<sub>10</sub> I + T/2 + N/2), on a scale where any one factor can contribute at most 5 points. "Evidence" opens all three: a separate paragraph of reasoning and citations for impact, for tractability, and for neglectedness. Watch the bar lengths across the fifteen rows: because impact enters as a logarithm it spans barely a single point across all fifteen (3.95 to 5.00), while tractability and neglectedness each span a full three (1.00 to 4.00 and 1.75 to 4.75). Burden sets the scale of the prize; the two judgment scores do almost all of the ordering.</p>
@@ -238,15 +422,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <details class="tblv"><summary>Data table (study values, with each factor's point contribution)</summary><div id="xp-table"></div></details>
 </section>
 
-<section id="crosscut">
-  <h2>Three findings that shape everything</h2>
-  <ul class="tight">
-    <li><b>The State Line asymmetry.</b> Missouri totally preempts local firearm regulation (RSMo 21.750: the state "occupies and preempts the entire field," read from the statute<sup class="c"><a href="#t32">[32]</a></sup>), bars new local tobacco taxes, preempts local minimum wage, and in 2025 repealed a statewide paid-sick-leave mandate that voters had passed nine months earlier.<sup class="c"><a href="#t41">[41]</a></sup> Kansas has constitutional home rule, concretely proven when Topeka's Tobacco 21 ordinance survived its court challenge.<sup class="c"><a href="#t4">[4]</a></sup> The same intervention can be legal in Wyandotte County and void in KCMO, so policy-shaped effort belongs on the Kansas side or in Jefferson City, never in preempted KCMO ordinance campaigns.</li>
-    <li><b>Missouri's public health floor is the meta-problem.</b> $6.67 per capita in state public health funding, last of all 50 states, less than half of 49th-place Indiana ($15.16; Kansas spends $31.78).<sup class="c"><a href="#t21">[21]</a></sup> The top-ranked interventions are cheap precisely because they piggyback on infrastructure Missouri barely has: harder to deliver, and further for a marginal dollar to go, because the low-hanging fruit was never picked.</li>
-    <li><b>Local institutional priorities anti-correlate with this ranking in places.</b> The region's dominant health funder (Health Forward, $905M in assets, ~$50M/yr) has exited disease-specific funding for an equity-and-housing framework<sup class="c"><a href="#t20">[20]</a></sup>; all three verified hospital needs assessments converge on mental and behavioral health (this study's #9)<sup class="c"><a href="#t26">[26]</a></sup>; and neither infant mortality nor falls, two of this study's top six, appears in any of them. Two top causes have no local champion. That is what neglectedness looks like from the inside.</li>
-  </ul>
-  <div class="callout"><b>The violence caveat deserves its own paragraph.</b> Kansas City ran the celebrated focused-deterrence playbook once already: KC NoVA cut homicides in 2014, was declared a success, decayed to nothing by year three, and was formally rated <i>Ineffective</i> by the National Institute of Justice.<sup class="c"><a href="#t31">[31]</a></sup> SAVE KC, today's version, reports encouraging numbers from exactly the same early stage, with no independent evaluation. The expected-value ranking above already discounts for this; what survives that history is a value-of-information play: fund rigorous independent evaluation of SAVE KC, and watch 2026&ndash;27, the window where a NoVA-style decay would first become visible.</div>
-</section>
 
 <section id="portfolio-sketch">
   <h2>What a marginal $10M/yr would buy</h2>
@@ -258,13 +433,16 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 <section id="method">
   <h2>Method</h2>
   <div class="prose">
-    <p><b>Impact</b> (annual DALYs) carries over whole from the <a href="kc-impact-analysis.html">companion burden analysis</a><sup class="c"><a href="#t46">[46]</a></sup>. Local DALYs per cause = the US cause-specific rate from WHO Global Health Estimates 2021, which publishes years of life lost and years lived with disability separately<sup class="c"><a href="#t42">[42]</a></sup>, × the five-county core population (Jackson, Johnson, Clay, Wyandotte, Platte; ~1.88M) × a local adjustment factor. The adjustment comes from a real local instrument wherever one exists: 2023 death counts by cause from Missouri and Kansas vital statistics<sup class="c"><a href="#t43">[43]</a></sup>, CDC PLACES prevalence with published CIs<sup class="c"><a href="#t44">[44]</a></sup>, KCPD's homicide analysis<sup class="c"><a href="#t45">[45]</a></sup>, and verified county overdose and traffic counts<sup class="c"><a href="#t11">[11]</a></sup><sup class="c"><a href="#t23">[23]</a></sup>. Where no instrument exists (musculoskeletal, digestive, neurological, falls) the adjustment defaults to 1.00 with a wider interval and a lower confidence grade, and each problem's impact paragraph above says which case it is. Intervals are 80%.</p>
+    <p><b>Impact</b> (annual DALYs) is the burden model in the <a href="#impact">Impact section</a> above<sup class="c"><a href="#t57">[57]</a></sup>. Local DALYs per cause = the US cause-specific rate from WHO Global Health Estimates 2021, which publishes years of life lost and years lived with disability separately<sup class="c"><a href="#t68">[68]</a></sup>, × the five-county core population (Jackson, Johnson, Clay, Wyandotte, Platte; ~1.88M) × a local adjustment factor. The adjustment comes from a real local instrument wherever one exists: 2023 death counts by cause from Missouri and Kansas vital statistics<sup class="c"><a href="#t25">[25]</a></sup>, CDC PLACES prevalence with published CIs<sup class="c"><a href="#t24">[24]</a></sup>, KCPD's homicide analysis<sup class="c"><a href="#t18">[18]</a></sup>, and verified county overdose and traffic counts<sup class="c"><a href="#t20">[20]</a></sup><sup class="c"><a href="#t26">[26]</a></sup>. Where no instrument exists (musculoskeletal, digestive, neurological, falls) the adjustment defaults to 1.00 with a wider interval and a lower confidence grade, and each problem's impact paragraph above says which case it is. Intervals are 80%.</p>
     <p><b>Tractability</b> (0&ndash;10) anchors to the best locally-feasible intervention's verified cost-effectiveness on a log scale ($500/DALY ≈ 9, $5K ≈ 7, $50K ≈ 5, nothing proven ≈ 1&ndash;2), adjusted for evidence strength (CPSTF- or RCT-verified beats contested beats absent), Missouri's legal room to act, and KC-specific precedent.</p>
     <p><b>Neglectedness</b> (0&ndash;10) is scored at the prevention margin: annual local dollars aimed at reducing the problem, not treating it, per DALY of burden, from verified budgets (city, county COMBAT tax, settlement flows, HUD awards) and philanthropy (990-verified), benchmarked against national funding-versus-burden residuals. Treatment spending is reported but does not count as crowding for prevention.</p>
     <p><b>Putting the three on one scale.</b> The factor score is log<sub>10</sub> I + T/2 + N/2, so each factor's contribution is directly readable and directly comparable: the bars in the list above are all drawn against the same 5-point ceiling. Tractability and neglectedness reach that ceiling by construction (10/2); impact would reach it at 100,000 DALYs, and the largest row in the study is 99,000. The compression is deliberate, not a bug: a logarithm says a problem ten times larger is worth about one extra point, not ten times the priority, because absolute burden is a weak guide to what a marginal dollar can move. The consequence is worth stating plainly, since it means the ranking mostly turns on the two scores I assigned rather than the one I measured. That is why tractability and neglectedness each carry an interval, a stated anchor, and their own cited paragraph.</p>
+    <p><b>Framework note.</b> WHO GHE uses a frontier life table, so YLL-per-death runs higher than IHME GBD conventions. Everything here shares one framework, so ranks and ratios are internally consistent; absolute DALYs run ~10&ndash;15% above what an IHME-based version would report. IHME's own US ranking (CVD &gt; cancer &gt; musculoskeletal &gt; mental disorders) matches this table's top four.<sup class="c"><a href="#t69">[69]</a></sup></p>
+    <p><b>Double-counting rules.</b> The league table holds mutually exclusive disease and injury endpoints. Risk factors and structural drivers (smoking, obesity, alcohol-as-risk, air quality, poverty, housing) overlap those endpoints; they are shown hatched in the damages chart and never summed with it. Value-of-statistical-life and quality-of-life valuations are excluded from the dollar figures for the same reason: they are the dollar shadow of the DALY column.</p>
+    <p><b>Known limitations of the burden model.</b> Kansas blocks county-level cancer-registry data by statute, so Wyandotte cancer leans on state rates. Kansas-side overdose and suicide counts are estimates. Musculoskeletal, digestive, neurological and falls have no local instrument. 2021 base rates embed COVID-era and peak-violence conditions, which makes the violence and drug KC/US ratios conservative. Scaling from the 5-county core to the full 2.2M MSA adds roughly 15&ndash;17% to most rows and changes no ranks.</p>
     <p><b>The Monte Carlo</b> draws every factor from a triangular distribution over its range, 10,000 times (fixed seed), and records each problem's rank per draw. The full simulation is a <a href="https://github.com/BecomingStronger/becomingstronger.github.io/blob/main/tools/kc-itn-simulation.py" target="_blank" rel="noopener">60-line stdlib Python script</a> that reproduces every number in the table above. Two scoring views run in parallel: marginal DALYs per $10M (the headline) and the factor product (the per-problem list above). Where they disagree, the disagreement is the finding: falls leads the factor product but its modest burden caps absolute gains; musculoskeletal disease scores high on burden-times-neglect but has no deployable intervention, making it a research bet, not a program bet.</p>
     <p><b>Post-vetting update (Aug 15).</b> A follow-on pass vetting KC's actual charities fed back into three neglectedness scores: falls down (delivery infrastructure exists after all, small and deficit-funded), tobacco up (no local giving vehicle exists at all), overdose up slightly (the metro's joint federal harm-reduction grant lapsed in May). Re-running the Monte Carlo: the headline View A ranking is unchanged in every number; View B's only change is falls and tobacco swapping #1 and #2. Everything stays inside the published rank intervals. For a donor, note the asymmetry the scores can't hold: tobacco ranks #1 but has nothing to fund without building the channel, while falls has a starving, fundable vehicle today.</p>
-<p><b>What this is not.</b> Local institutions' own priorities entered only as crowdedness data, never as conclusions. The T and N scores are my judgment over the verified evidence, with the reasoning for each one stated in full above so it can be argued with specifically. A state-level actor's ranking would differ (alcohol and tobacco taxes jump); so would a researcher's (musculoskeletal jumps).</p>
+<p><b>What this is not.</b> Local institutions' own priorities entered only as crowdedness data, never as conclusions. The cost-per-QALY figures are not inflation-harmonized across sources, so they support comparisons by order of magnitude, not by digit. The T and N scores are my judgment over the verified evidence, with the reasoning for each one stated in full above so it can be argued with specifically. A state-level actor's ranking would differ (alcohol and tobacco taxes jump); so would a researcher's (musculoskeletal jumps).</p>
   </div>
 </section>
 
@@ -272,52 +450,75 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <h2>Sources</h2>
   <p class="secsub">Numbered as cited in the capsules and text. Flags mark anything that resisted primary verification; those claims are labeled in place.</p>
   <ol class="src">
-    <li id="t1">Community Preventive Services Task Force, tobacco cessation economic reviews: quitline counseling $2,358/QALY (IQI $1,761&ndash;$3,156); counseling plus medications $849/QALY (IQI $369&ndash;$2,426), 2013$. <a href="https://www.thecommunityguide.org/findings/tobacco-use-quitline-interventions.html" target="_blank" rel="noopener">thecommunityguide.org</a></li>
-    <li id="t2">KCUR, 2025-07-20: Missouri cigarette tax 17 cents/pack since 1993, lowest in the US; raising it requires a ballot initiative under the Hancock Amendment. <a href="https://www.kcur.org/health/2025-07-20/missouris-low-tobacco-tax-and-minimal-cessation-funding-concern-health-advocates" target="_blank" rel="noopener">kcur.org</a></li>
-    <li id="t3">RSMo &sect;149.192 (1993), read from the statute: the state "occupies and preempts the entire field of legislation increasing the taxation of cigarettes and tobacco products"; new local tobacco taxes are void and existing local taxes are frozen at their September 30, 1993 levels. <a href="https://revisor.mo.gov/main/OneSection.aspx?section=149.192" target="_blank" rel="noopener">revisor.mo.gov</a></li>
-    <li id="t4">Kansas constitutional home rule (Art. 12 §5); Topeka Tobacco 21 ordinance upheld by the Kansas Supreme Court.</li>
-    <li id="t5">Campaign for Tobacco-Free Kids, Missouri FY2026 state report: $5.4M spent vs $72.9M CDC-recommended (7.4%), rank 39/50, up from dead last circa 2019. Retrieved via archive snapshot. <a href="https://www.tobaccofreekids.org/what-we-do/us/statereport/missouri" target="_blank" rel="noopener">tobaccofreekids.org</a></li>
-    <li id="t6">CTFK "Broken Promises to Our Children" FY2024: states spend 2.8% of tobacco revenue on prevention (22% of CDC-recommended). <a href="https://www.tobaccofreekids.org/press-releases/2024_01_10_state-report-fy2024" target="_blank" rel="noopener">tobaccofreekids.org</a></li>
-    <li id="t7">Coffin &amp; Sullivan, Annals of Internal Medicine 2013;158(1):1-9: naloxone distribution $438/QALY base case (95% CI $48&ndash;$1,706), $14,000/QALY worst case; verified from the abstract (no open-access full text exists). <a href="https://pubmed.ncbi.nlm.nih.gov/23277895/" target="_blank" rel="noopener">PubMed 23277895</a>.</li>
-    <li id="t8">Sordo et al., BMJ 2017;357:j1550 (read from the PMC full text): all-cause mortality 11.3 vs 36.1 per 1,000 person-years in vs out of methadone treatment (rate ratio 3.20, CI 2.65&ndash;3.86); 4.3 vs 9.5 for buprenorphine (rate ratio 2.20, CI 1.34&ndash;3.61). <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5421454/" target="_blank" rel="noopener">PMC5421454</a></li>
-    <li id="t9">Missouri fentanyl test strips legalized effective 2023-08-28; statewide naloxone standing order in place. Syringe services: NOT authorized under Missouri law (RSMo 579.040/579.074 contain no SSP exemption, read from statute; the 2021 legalization bill was SB 64, died in committee; 2026 bills HB 2602/SB 1219 remain in committee; the July 2026 omnibus healthcare law is silent on SSPs). <a href="https://revisor.mo.gov/main/OneSection.aspx?section=579.074" target="_blank" rel="noopener">revisor.mo.gov</a></li>
-    <li id="t10">CDC VSRR provisional overdose deaths: Missouri 12-month-ending Dec 2023 = 2,014, Dec 2024 = 1,482 (&minus;26.4%). <a href="https://data.cdc.gov/NCHS/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a" target="_blank" rel="noopener">data.cdc.gov</a></li>
-    <li id="t11">MIMH Addiction Science, KC-area medical examiner data: 4-county drug deaths 402 in 2024 (&minus;10%); 65+ deaths +94%; Black male deaths +11%. <a href="https://mimhaddisci.org/kc-area-drug-involved-deaths" target="_blank" rel="noopener">mimhaddisci.org</a></li>
-    <li id="t12">The Beacon, 2026-04-15: Missouri opioid settlement ~$900M over ~15 years (roughly double the 2022 estimate); 50+ jurisdictions spent nothing in 2025; Jackson County ~$4M unspent. <a href="https://thebeaconnews.org/stories/2026/04/15/missouri-opioid-settlement-spending-2025/" target="_blank" rel="noopener">thebeaconnews.org</a></li>
-    <li id="t13">ProPublica Nonprofit Explorer, verified filings: First Call $4.1M revenue; ReDiscover $75.6M; Tri-County Mental Health $26.2M; Nurture KC $3.3M; KC Common Good $0.9M (FY2023&ndash;24). <a href="https://projects.propublica.org/nonprofits/" target="_blank" rel="noopener">propublica.org</a></li>
-    <li id="t14">CHCS profile of CAPABLE: ~$3,000/participant; $22,120 average 2-year Medicare savings (CMMI demonstration); $867/month Medicaid savings in a dual-eligible study.</li>
-    <li id="t15">PLOS ONE 2022 (PMC9020705): Otago in a post-fall cohort, fall-rate reduction 39% (men, significant) / 32% (women, ns); delivery cost $393/person (2019 CAD).</li>
-    <li id="t16">Verified absence: no dedicated Kansas City falls-prevention nonprofit or funder found in a systematic sweep.</li>
-    <li id="t17">Stark &amp; Shah, JAMA 2017;317(1):84-85 (read from the full text): gun violence received 1.6% of funding predicted by mortality ($22M observed vs $1.4B predicted) and 4.5% of predicted publications; falls is the least-funded cause of death relative to mortality, gun violence second. <a href="https://jamanetwork.com/journals/jama/fullarticle/2595514" target="_blank" rel="noopener">jamanetwork.com</a></li>
-    <li id="t18">Administration for Community Living: ~$53M cumulative falls-prevention grants since 2014, against $50&ndash;80B/yr in fall-related medical costs. <a href="https://acl.gov/programs/health-wellness/falls-prevention-program" target="_blank" rel="noopener">acl.gov</a></li>
-    <li id="t19">CPSTF economic reviews: self-measured blood pressure monitoring $2,800&ndash;$10,800/QALY (2014$); team-based hypertension care $15,202/QALY (2020$) with median health-system ROI of &minus;80% (cost-effective, not self-funding). <a href="https://www.thecommunityguide.org/" target="_blank" rel="noopener">thecommunityguide.org</a></li>
-    <li id="t20">Health Forward Foundation: $905.3M assets, $50.3M expenses (FY2023, ProPublica raw filing data); current purpose framework (People/Power/Place/Platform) names no disease areas. <a href="https://projects.propublica.org/nonprofits/organizations/200167282" target="_blank" rel="noopener">propublica.org</a> · <a href="https://healthforward.org/" target="_blank" rel="noopener">healthforward.org</a></li>
-    <li id="t21">SHADAC/TFAH state public health funding, FY2023: Missouri $6.67/capita (50th of 50); Indiana $15.16 (49th); Kansas $31.78. Cross-referenced against America's Health Rankings' broader $92/person measure (different definition: 2-year average including federal pass-through, rank 41st). <a href="https://www.americashealthrankings.org/explore/measures/PH_funding/MO" target="_blank" rel="noopener">americashealthrankings.org</a></li>
-    <li id="t22">Tupper v. City of St. Louis (Mo. banc 2015); St. Louis Automated Camera Enforcement Act (2024, driver-face capture); statewide camera-ban bills HB658/SB196 not passed as of mid-2026.</li>
-    <li id="t23">KCUR Vision Zero series: KCMO traffic deaths 102 (2023) → 97 (2024) → 68 (2025). <a href="https://www.kcur.org/housing-development-section/2026-01-06/kansas-city-traffic-deaths-2025-vision-zero-road-safety" target="_blank" rel="noopener">kcur.org</a></li>
-    <li id="t24">KCUR, 2026-04-02: KCMO FY2026-27 budget: Vision Zero $4M (earlier reporting cited $8M for FY2025-26; unreconciled). <a href="https://www.kcur.org/politics-elections-and-government/2026-04-02/kansas-city-budget-police-transit-housing-infrastructure" target="_blank" rel="noopener">kcur.org</a></li>
-    <li id="t25">Wu, Dean, Rosen &amp; Muennig, J Health Care Poor Underserved 2017;28(4):1578-97: Nurse-Family Partnership at $14,642/QALY offered to all first-time mothers (CI spans cost-saving to $71,877); net benefit $2,764/child targeted to high-risk mothers. <a href="https://pubmed.ncbi.nlm.nih.gov/29176115/" target="_blank" rel="noopener">PubMed 29176115</a></li>
-    <li id="t26">Verified hospital CHNA priority lists: University Health 2025-28 (behavioral health #1, violence named); Children's Mercy 2022-25 (mental health, violence named); Saint Luke's 2023 (behavioral health). Infant/maternal health appears in none.</li>
-    <li id="t27">CPSTF economic review: multicomponent colorectal cancer screening interventions $1,651&ndash;$3,817/QALY (2016$).</li>
-    <li id="t28">Nguyen et al., Lancet Regional Health &ndash; Americas 2024 (NIH RCDC 2021): cancer $6,520M (highest non-HIV $/patient); neck pain funded at 0.83% of DALY-predicted (a 120× gap); low back pain 13.88%; COPD $5.56/patient. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10788788/" target="_blank" rel="noopener">PMC10788788</a></li>
-    <li id="t29">Braga, Weisburd &amp; Turchan, Campbell systematic review of focused deterrence (24 quasi-experiments): statistically significant moderate effects, smaller in more rigorous designs (via OJP abstract).</li>
-    <li id="t30">University of Chicago Crime Lab, READI Chicago RCT (n=2,456): null on the pre-registered primary outcome; outreach-referred subgroup &minus;79% shooting/homicide arrests (significant); benefit-cost 4:1&ndash;18:1. <a href="https://crimelab.uchicago.edu/" target="_blank" rel="noopener">crimelab.uchicago.edu</a></li>
-    <li id="t31">Fox &amp; Novak, Police Quarterly 2018 (KC NoVA time-series evaluation); NIJ CrimeSolutions rating: Ineffective. KCPD withdrew 2018. SAVE KC (2024&ndash;): self-reported &minus;40% group-member homicides, no independent evaluation. <a href="https://crimesolutions.ojp.gov/ratedprograms/625" target="_blank" rel="noopener">crimesolutions.ojp.gov</a></li>
-    <li id="t32">RSMo 21.750, read from revisor.mo.gov: complete state preemption of local firearms regulation; SAPA struck down (8th Cir. 2024). <a href="https://revisor.mo.gov/main/OneSection.aspx?section=21.750" target="_blank" rel="noopener">revisor.mo.gov</a></li>
-    <li id="t33">Jackson County COMBAT: ~$30M/yr quarter-cent sales tax; $4.8M violence-prevention grants (2024); KCMO Department of Community Safety ~$20M (KCTV5). <a href="https://www.jacksoncountycombat.com/151/Funding" target="_blank" rel="noopener">jacksoncountycombat.com</a></li>
-    <li id="t34">PMC2826303: collaborative care for depression, systematic review of 8 RCTs: $21,478&ndash;$49,500/QALY. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2826303/" target="_blank" rel="noopener">PMC2826303</a></li>
-    <li id="t35">The Beacon, 2026-04-02: Missouri 988 funded from general revenue; ~$18.5M (988) + ~$22.3M (crisis services) proposed FY2027; dedicated telecom-fee bill stalled. <a href="https://thebeaconnews.org/stories/2026/04/02/missouri-explores-state-sources-for-988-funding/" target="_blank" rel="noopener">thebeaconnews.org</a></li>
-    <li id="t36">Diabetes Care 2025 real-world NDPP cost-effectiveness: &minus;$4,552 two-year medical costs (CI crosses zero), no significant 2-year QALY gain, 84% probability cost-effective at $100K/QALY.</li>
-    <li id="t37">Gillum et al., PLOS ONE 2011: NIH funding vs burden: depression (&minus;$719M), injuries (&minus;$691M), COPD (&minus;$613M) most underfunded; AIDS (+$2,474M), diabetes (+$390M), perinatal research (+$297M) overfunded. <a href="https://doi.org/10.1371/journal.pone.0016837" target="_blank" rel="noopener">doi:10.1371/journal.pone.0016837</a></li>
-    <li id="t38">Wagenaar, Salois &amp; Komro, Addiction 2009;104(2):179-90 (verified from abstract + full text): 112 studies / 1,003 estimates; elasticities beer &minus;0.46, wine &minus;0.69, spirits &minus;0.80, overall &minus;0.51, heavy drinking &minus;0.28. <a href="https://pubmed.ncbi.nlm.nih.gov/19149811/" target="_blank" rel="noopener">PubMed</a> &middot; <a href="https://centaur.reading.ac.uk/17960/1/MS-08-0405_Alcohol_price_meta-analysis_REVISED_9-23-08.pdf" target="_blank" rel="noopener">full text (PDF)</a></li>
-    <li id="t39">Suicide means-restriction: PMC11450421 (full bridge barriers &minus;63/&minus;74%; partial measures ineffective); PMC7514406 (lethal-means counseling: feasibility evidence only). KC's method mix is firearm-dominant, and firearm policy is preempted.</li>
-    <li id="t40">Verified absence: no CPSTF-recommended city-scale musculoskeletal intervention found; MSK is a research opportunity, not a deployment target.</li>
+    <li id="t1">County Health Rankings 2025, Missouri and Kansas data files: YPLL-75 and life expectancy with 95% CIs (2020&ndash;22 aggregate). Jackson 11,090.3 (10,807.9&ndash;11,372.7); Wyandotte 11,750.9; Johnson 4,976.6; life expectancy 74.76 / 73.70 / 80.64. <a href="https://www.countyhealthrankings.org/" target="_blank" rel="noopener">countyhealthrankings.org</a></li>
+    <li id="t2">ZIP-level life expectancy: KCMO Health Department, Community Health Improvement Plan 2022&ndash;2027: ZIP 64113 (Brookside) 86.3 years vs ZIP 64128 (east side) 68.1 years, an 18-year gap that grew from 12 years between 2016 and 2019 (CHIP figures confirmed via FlatlandKC’s coverage of the plan; the CHIP portal itself is a JS app). The once-circulating 19.3-year figure appears in no primary source and is dropped. <a href="https://flatlandkc.org/news-issues/racism-at-the-root-of-kansas-city-health-disparities-new-plan-concludes/" target="_blank" rel="noopener">flatlandkc.org</a></li>
+    <li id="t3">CDC, Economic Trends in Tobacco (verified from CDC’s archive mirror): cigarette smoking cost the US more than $600B in 2018 ($240B+ health care, ~$185B lost productivity from illness, ~$180B from premature death, ~$7B secondhand-smoke deaths). <a href="https://archive.cdc.gov/www_cdc_gov/tobacco/php/data-statistics/economic-trends/index.html" target="_blank" rel="noopener">archive.cdc.gov</a></li>
+    <li id="t4">AHA 2024 Heart Disease and Stroke Statistics (Circulation; verified verbatim from the PMC copy): average annual US CVD cost $422.3B in 2019&ndash;2020 ($254.3B direct + $168.0B indirect). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC12146881/" target="_blank" rel="noopener">PMC12146881</a></li>
+    <li id="t5">American Diabetes Association, Economic Costs of Diabetes in the U.S. in 2022: $412.9B total ($306.6B direct). <a href="https://diabetes.org/newsroom/press-releases/new-american-diabetes-association-report-finds-annual-costs-diabetes-be" target="_blank" rel="noopener">diabetes.org</a></li>
+    <li id="t6">Greenberg et al., PharmacoEconomics 2021: US burden of adult MDD, $237B (2010) → $326B (2018). <a href="https://www.analysisgroup.com/Insights/publishing/the-economic-burden-of-adults-with-major-depressive-disorder-in-the-united-states-2010-and-2018/" target="_blank" rel="noopener">analysisgroup.com</a></li>
+    <li id="t7">NHTSA, The Economic and Societal Impact of Motor Vehicle Crashes, 2019 (DOT HS 813 403): $340B economic, ~$1.4T comprehensive; $1.6M / $11.3M per fatality. <a href="https://crashstats.nhtsa.dot.gov/Api/Public/ViewPublication/813403.pdf" target="_blank" rel="noopener">crashstats.nhtsa.dot.gov (PDF)</a></li>
+    <li id="t8">Sacks et al., Am J Prev Med 2015 (verified via CDC’s release): excessive drinking cost the US $249B in 2010, $2.05/drink; binge drinking 77% of costs. State-level Missouri figure not independently verifiable (article paywalled, state tool JS-only). <a href="https://archive.cdc.gov/www_cdc_gov/media/releases/2015/p1015-excessive-alcohol.html" target="_blank" rel="noopener">archive.cdc.gov</a></li>
+    <li id="t9">NCI Cancer Trends Progress Report (verified from the archived page): national cancer-care costs projected at $208.9B in 2020 (2020$, medical services + oral prescription drugs), built on Mariotto et al. 2020. <a href="http://web.archive.org/web/20260723133512/https://progressreport.cancer.gov/after/economic_burden" target="_blank" rel="noopener">progressreport.cancer.gov (archived)</a></li>
+    <li id="t10">Ward et al. 2021, PLOS ONE: excess medical cost of obesity $1,861/adult/yr; $173B national (2019$). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC7990296/" target="_blank" rel="noopener">PMC7990296</a></li>
+    <li id="t11">Florence et al., CDC MMWR 2021: state-level costs of OUD and fatal overdose, 2017: Missouri $18.515B; ~84% of the national total is intangible (QoL + VSL). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC8344997/" target="_blank" rel="noopener">PMC8344997</a></li>
+    <li id="t12">McCollister, French &amp; Fang 2010, Drug and Alcohol Dependence: cost per murder $8,982,907 (2008$); aggravated assault $107,020; robbery $42,310. <a href="https://doi.org/10.1016/j.drugalcdep.2009.12.002" target="_blank" rel="noopener">doi:10.1016/j.drugalcdep.2009.12.002</a></li>
+    <li id="t13">Everytown Research, The Economic Cost of Gun Violence: Missouri $17.6B/yr, $2,875/resident; 87.8% of the national total is quality-of-life valuation (VSL $10.9M, 2019$). <a href="https://everytownresearch.org/report/the-economic-cost-of-gun-violence/" target="_blank" rel="noopener">everytownresearch.org</a></li>
+    <li id="t14">CDC older-adult falls cost data: $50B national medical (2014$); Missouri $883M, Kansas $338M. <a href="https://stacks.cdc.gov/view/cdc/122747" target="_blank" rel="noopener">stacks.cdc.gov</a></li>
+    <li id="t15">Berkowitz et al., Health Services Research 2018 (verified from the PMC copy): food insecurity carries $1,863/person/yr excess health expenditures ($6,072 vs $4,208), $77.5B aggregate (NHIS 2011 + MEPS 2012&ndash;13). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5980147/" target="_blank" rel="noopener">PMC5980147</a></li>
+    <li id="t16">Missouri Hunger Atlas 2023, Jackson County: food insecurity 11.5% overall, 16.1% of children (2021 data). <a href="https://mohungeratlas.org/counties/2023/Jackson.pdf" target="_blank" rel="noopener">mohungeratlas.org (PDF)</a></li>
+    <li id="t17">National Academies, A Roadmap to Reducing Child Poverty (2019): child poverty costs the US $800B&ndash;$1.1T/yr. <a href="https://www.nationalacademies.org/read/25246/chapter/2" target="_blank" rel="noopener">nationalacademies.org</a></li>
+    <li id="t18">KCPD Daily Homicide Analysis (pulled 2026-08-14): 182 homicides in 2023, 145 in 2024, 139 in 2025. City limits only, so it is narrower than the five-county burden model. <a href="https://mediaweb.kcpd.org/CrimeStats/DailyHomicideAnalysis.pdf" target="_blank" rel="noopener">mediaweb.kcpd.org (PDF)</a></li>
+    <li id="t19">KCUR, Dec 2024: 571 nonfatal shootings in 2024; KCPD 2025 release: nonfatal shootings &minus;31%.</li>
+    <li id="t20">MIMH Addiction Science, KC-area medical examiner data: 4-county drug deaths 402 in 2024 (&minus;10%); 65+ deaths +94%; Black male deaths +11%. <a href="https://mimhaddisci.org/kc-area-drug-involved-deaths" target="_blank" rel="noopener">mimhaddisci.org</a></li>
+    <li id="t21">CDC VSRR provisional overdose deaths: Missouri 12-month-ending Dec 2023 = 2,014, Dec 2024 = 1,482 (&minus;26.4%). <a href="https://data.cdc.gov/NCHS/VSRR-Provisional-Drug-Overdose-Death-Counts/xkb8-kh2a" target="_blank" rel="noopener">data.cdc.gov</a></li>
+    <li id="t22">HUD CoC Performance Profile, MO-604, 2024: PIT 2,181 (2023: 1,986); chronic 377 (+35%). <a href="https://files.hudexchange.info/reports/published/CoC_Perf_CoC_MO-604-2024_MO_2024.pdf" target="_blank" rel="noopener">hudexchange.info (PDF)</a></li>
+    <li id="t23">Eviction Lab, Kansas City tracker (Jackson County filings, monthly CSV). <a href="https://evictionlab.org/eviction-tracking/kansas-city-mo/" target="_blank" rel="noopener">evictionlab.org</a></li>
+    <li id="t24">CDC PLACES, 2025 release (2023 BRFSS), county model-based prevalence with 95% CIs, pulled via the Socrata API: COPD 6.7% Jackson / 7.0% Wyandotte / 4.1% Johnson; frequent mental distress 19.2% in Jackson vs US ~15.7%. <a href="https://data.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-County-Data-20/swc5-untb" target="_blank" rel="noopener">data.cdc.gov</a></li>
+    <li id="t25">Missouri Vital Statistics 2023, Tables 16C/22A/23/26C (Jackson County: 7,001 deaths; heart 1,414; cancer 1,291; homicide 180; suicide 134; accidental poisoning 282), and the Kansas Annual Summary of Vital Statistics 2023 plus the Kansas Infant Mortality and Stillbirth Report 2024. <a href="https://health.mo.gov/sites/health/files/2026-07/2023MissouriVitalStatistics.pdf" target="_blank" rel="noopener">health.mo.gov (PDF)</a> &middot; <a href="https://kdhe.ks.gov/DocumentCenter/View/43918" target="_blank" rel="noopener">kdhe.ks.gov</a></li>
+    <li id="t26">KCUR Vision Zero series: KCMO traffic deaths 102 (2023) → 97 (2024) → 68 (2025). <a href="https://www.kcur.org/housing-development-section/2026-01-06/kansas-city-traffic-deaths-2025-vision-zero-road-safety" target="_blank" rel="noopener">kcur.org</a></li>
+    <li id="t27">EPA, annual PM2.5 design values 2020&ndash;2022 (Feb 2024 table): Jackson 7.9, Clay 6.0, Johnson 8.9, Wyandotte 10.8 µg/m³. <a href="https://www.epa.gov/system/files/documents/2024-02/table_annual-pm25-county-design-values-2020-2022-for-web.pdf" target="_blank" rel="noopener">epa.gov (PDF)</a></li>
+    <li id="t28">Di et al., NEJM 2017;376:2513-22 (verified verbatim from the PMC copy): +7.3% all-cause mortality per 10 µg/m³ PM2.5 (95% CI 7.1&ndash;7.5); +13.6% (CI 13.1&ndash;14.1) below 12 µg/m³. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5766848/" target="_blank" rel="noopener">PMC5766848</a></li>
+    <li id="t29">Verified absence: no CPSTF-recommended city-scale musculoskeletal intervention found; MSK is a research opportunity, not a deployment target.</li>
+    <li id="t30">Gillum et al., PLOS ONE 2011: NIH funding vs burden: depression (&minus;$719M), injuries (&minus;$691M), COPD (&minus;$613M) most underfunded; AIDS (+$2,474M), diabetes (+$390M), perinatal research (+$297M) overfunded. <a href="https://doi.org/10.1371/journal.pone.0016837" target="_blank" rel="noopener">doi:10.1371/journal.pone.0016837</a></li>
+    <li id="t31">Wagenaar, Salois &amp; Komro, Addiction 2009;104(2):179-90 (verified from abstract + full text): 112 studies / 1,003 estimates; elasticities beer &minus;0.46, wine &minus;0.69, spirits &minus;0.80, overall &minus;0.51, heavy drinking &minus;0.28. <a href="https://pubmed.ncbi.nlm.nih.gov/19149811/" target="_blank" rel="noopener">PubMed</a> &middot; <a href="https://centaur.reading.ac.uk/17960/1/MS-08-0405_Alcohol_price_meta-analysis_REVISED_9-23-08.pdf" target="_blank" rel="noopener">full text (PDF)</a></li>
+    <li id="t32">Suicide means-restriction: PMC11450421 (full bridge barriers &minus;63/&minus;74%; partial measures ineffective); PMC7514406 (lethal-means counseling: feasibility evidence only). KC's method mix is firearm-dominant, and firearm policy is preempted.</li>
+    <li id="t33">RSMo 21.750, read from revisor.mo.gov: complete state preemption of local firearms regulation; SAPA struck down (8th Cir. 2024). <a href="https://revisor.mo.gov/main/OneSection.aspx?section=21.750" target="_blank" rel="noopener">revisor.mo.gov</a></li>
+    <li id="t34">Tupper v. City of St. Louis (Mo. banc 2015); St. Louis Automated Camera Enforcement Act (2024, driver-face capture); statewide camera-ban bills HB658/SB196 not passed as of mid-2026.</li>
+    <li id="t35">Braga, Weisburd &amp; Turchan, Campbell systematic review of focused deterrence (24 quasi-experiments): statistically significant moderate effects, smaller in more rigorous designs (via OJP abstract).</li>
+    <li id="t36">University of Chicago Crime Lab, READI Chicago RCT (n=2,456): null on the pre-registered primary outcome; outreach-referred subgroup &minus;79% shooting/homicide arrests (significant); benefit-cost 4:1&ndash;18:1. <a href="https://crimelab.uchicago.edu/" target="_blank" rel="noopener">crimelab.uchicago.edu</a></li>
+    <li id="t37">RSMo &sect;149.192 (1993), read from the statute: the state "occupies and preempts the entire field of legislation increasing the taxation of cigarettes and tobacco products"; new local tobacco taxes are void and existing local taxes are frozen at their September 30, 1993 levels. <a href="https://revisor.mo.gov/main/OneSection.aspx?section=149.192" target="_blank" rel="noopener">revisor.mo.gov</a></li>
+    <li id="t38">KCUR, 2025-07-20: Missouri cigarette tax 17 cents/pack since 1993, lowest in the US; raising it requires a ballot initiative under the Hancock Amendment. <a href="https://www.kcur.org/health/2025-07-20/missouris-low-tobacco-tax-and-minimal-cessation-funding-concern-health-advocates" target="_blank" rel="noopener">kcur.org</a></li>
+    <li id="t39">Kansas constitutional home rule (Art. 12 §5); Topeka Tobacco 21 ordinance upheld by the Kansas Supreme Court.</li>
+    <li id="t40">Missouri fentanyl test strips legalized effective 2023-08-28; statewide naloxone standing order in place. Syringe services: NOT authorized under Missouri law (RSMo 579.040/579.074 contain no SSP exemption, read from statute; the 2021 legalization bill was SB 64, died in committee; 2026 bills HB 2602/SB 1219 remain in committee; the July 2026 omnibus healthcare law is silent on SSPs). <a href="https://revisor.mo.gov/main/OneSection.aspx?section=579.074" target="_blank" rel="noopener">revisor.mo.gov</a></li>
     <li id="t41">RSMo 67.1571 (local minimum wage preemption, read from statute); Prop A paid sick leave repealed by HB 567, effective 2025-08-28, ~9 months after voters passed it.</li>
-    <li id="t42">WHO Global Health Estimates 2021, DALY/YLL/YLD by country (June 2024 revision), USA columns: the national rate template underneath every impact figure. <a href="https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/global-health-estimates-leading-causes-of-dalys" target="_blank" rel="noopener">who.int</a></li>
-    <li id="t43">Missouri Vital Statistics 2023, Tables 16C/22A/23/26C (Jackson County: 7,001 deaths; heart 1,414; cancer 1,291; homicide 180; suicide 134; accidental poisoning 282), and the Kansas Annual Summary of Vital Statistics 2023 plus the Kansas Infant Mortality and Stillbirth Report 2024. <a href="https://health.mo.gov/sites/health/files/2026-07/2023MissouriVitalStatistics.pdf" target="_blank" rel="noopener">health.mo.gov (PDF)</a> &middot; <a href="https://kdhe.ks.gov/DocumentCenter/View/43918" target="_blank" rel="noopener">kdhe.ks.gov</a></li>
-    <li id="t44">CDC PLACES, 2025 release (2023 BRFSS), county model-based prevalence with 95% CIs, pulled via the Socrata API: COPD 6.7% Jackson / 7.0% Wyandotte / 4.1% Johnson; frequent mental distress 19.2% in Jackson vs US ~15.7%. <a href="https://data.cdc.gov/500-Cities-Places/PLACES-Local-Data-for-Better-Health-County-Data-20/swc5-untb" target="_blank" rel="noopener">data.cdc.gov</a></li>
-    <li id="t45">KCPD Daily Homicide Analysis (pulled 2026-08-14): 182 homicides in 2023, 145 in 2024, 139 in 2025. City limits only, so it is narrower than the five-county burden model. <a href="https://mediaweb.kcpd.org/CrimeStats/DailyHomicideAnalysis.pdf" target="_blank" rel="noopener">mediaweb.kcpd.org (PDF)</a></li>
-    <li id="t46">Part 1 of this series, the KC burden-of-disease model: per-cause DALY point estimates with 80% intervals, the YLL/YLD split, the KC/US adjustment ratios and confidence grades, and the full limitations list. <a href="kc-impact-analysis.html">Part 1: the burden of disease</a></li>
+    <li id="t42">Fox &amp; Novak, Police Quarterly 2018 (KC NoVA time-series evaluation); NIJ CrimeSolutions rating: Ineffective. KCPD withdrew 2018. SAVE KC (2024&ndash;): self-reported &minus;40% group-member homicides, no independent evaluation. <a href="https://crimesolutions.ojp.gov/ratedprograms/625" target="_blank" rel="noopener">crimesolutions.ojp.gov</a></li>
+    <li id="t43">The Beacon, 2026-04-15: Missouri opioid settlement ~$900M over ~15 years (roughly double the 2022 estimate); 50+ jurisdictions spent nothing in 2025; Jackson County ~$4M unspent. <a href="https://thebeaconnews.org/stories/2026/04/15/missouri-opioid-settlement-spending-2025/" target="_blank" rel="noopener">thebeaconnews.org</a></li>
+    <li id="t44">Verified absence: no dedicated Kansas City falls-prevention nonprofit or funder found in a systematic sweep.</li>
+    <li id="t45">SHADAC/TFAH state public health funding, FY2023: Missouri $6.67/capita (50th of 50); Indiana $15.16 (49th); Kansas $31.78. Cross-referenced against America's Health Rankings' broader $92/person measure (different definition: 2-year average including federal pass-through, rank 41st). <a href="https://www.americashealthrankings.org/explore/measures/PH_funding/MO" target="_blank" rel="noopener">americashealthrankings.org</a></li>
+    <li id="t46">Health Forward Foundation: $905.3M assets, $50.3M expenses (FY2023, ProPublica raw filing data); current purpose framework (People/Power/Place/Platform) names no disease areas. <a href="https://projects.propublica.org/nonprofits/organizations/200167282" target="_blank" rel="noopener">propublica.org</a> · <a href="https://healthforward.org/" target="_blank" rel="noopener">healthforward.org</a></li>
+    <li id="t47">Verified hospital CHNA priority lists: University Health 2025-28 (behavioral health #1, violence named); Children's Mercy 2022-25 (mental health, violence named); Saint Luke's 2023 (behavioral health). Infant/maternal health appears in none.</li>
+    <li id="t48">Stark &amp; Shah, JAMA 2017;317(1):84-85 (read from the full text): gun violence received 1.6% of funding predicted by mortality ($22M observed vs $1.4B predicted) and 4.5% of predicted publications; falls is the least-funded cause of death relative to mortality, gun violence second. <a href="https://jamanetwork.com/journals/jama/fullarticle/2595514" target="_blank" rel="noopener">jamanetwork.com</a></li>
+    <li id="t49">Nguyen et al., Lancet Regional Health &ndash; Americas 2024 (NIH RCDC 2021): cancer $6,520M (highest non-HIV $/patient); neck pain funded at 0.83% of DALY-predicted (a 120× gap); low back pain 13.88%; COPD $5.56/patient. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC10788788/" target="_blank" rel="noopener">PMC10788788</a></li>
+    <li id="t50">Diabetes Care 2025 real-world NDPP cost-effectiveness: &minus;$4,552 two-year medical costs (CI crosses zero), no significant 2-year QALY gain, 84% probability cost-effective at $100K/QALY.</li>
+    <li id="t51">Administration for Community Living: ~$53M cumulative falls-prevention grants since 2014, against $50&ndash;80B/yr in fall-related medical costs. <a href="https://acl.gov/programs/health-wellness/falls-prevention-program" target="_blank" rel="noopener">acl.gov</a></li>
+    <li id="t52">CHCS profile of CAPABLE: ~$3,000/participant; $22,120 average 2-year Medicare savings (CMMI demonstration); $867/month Medicaid savings in a dual-eligible study.</li>
+    <li id="t53">PLOS ONE 2022 (PMC9020705): Otago in a post-fall cohort, fall-rate reduction 39% (men, significant) / 32% (women, ns); delivery cost $393/person (2019 CAD).</li>
+    <li id="t54">Community Preventive Services Task Force, tobacco cessation economic reviews: quitline counseling $2,358/QALY (IQI $1,761&ndash;$3,156); counseling plus medications $849/QALY (IQI $369&ndash;$2,426), 2013$. <a href="https://www.thecommunityguide.org/findings/tobacco-use-quitline-interventions.html" target="_blank" rel="noopener">thecommunityguide.org</a></li>
+    <li id="t55">Campaign for Tobacco-Free Kids, Missouri FY2026 state report: $5.4M spent vs $72.9M CDC-recommended (7.4%), rank 39/50, up from dead last circa 2019. Retrieved via archive snapshot. <a href="https://www.tobaccofreekids.org/what-we-do/us/statereport/missouri" target="_blank" rel="noopener">tobaccofreekids.org</a></li>
+    <li id="t56">CTFK "Broken Promises to Our Children" FY2024: states spend 2.8% of tobacco revenue on prevention (22% of CDC-recommended). <a href="https://www.tobaccofreekids.org/press-releases/2024_01_10_state-report-fy2024" target="_blank" rel="noopener">tobaccofreekids.org</a></li>
+    <li id="t57">This study's own burden model, above: per-cause DALY point estimates with 80% intervals, the YLL/YLD split, the KC/US adjustment ratios and confidence grades. Method and limitations in the Method section. <a href="#impact">Impact: the disease burden</a></li>
+    <li id="t58">Coffin &amp; Sullivan, Annals of Internal Medicine 2013;158(1):1-9: naloxone distribution $438/QALY base case (95% CI $48&ndash;$1,706), $14,000/QALY worst case; verified from the abstract (no open-access full text exists). <a href="https://pubmed.ncbi.nlm.nih.gov/23277895/" target="_blank" rel="noopener">PubMed 23277895</a>.</li>
+    <li id="t59">Sordo et al., BMJ 2017;357:j1550 (read from the PMC full text): all-cause mortality 11.3 vs 36.1 per 1,000 person-years in vs out of methadone treatment (rate ratio 3.20, CI 2.65&ndash;3.86); 4.3 vs 9.5 for buprenorphine (rate ratio 2.20, CI 1.34&ndash;3.61). <a href="https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5421454/" target="_blank" rel="noopener">PMC5421454</a></li>
+    <li id="t60">ProPublica Nonprofit Explorer, verified filings: First Call $4.1M revenue; ReDiscover $75.6M; Tri-County Mental Health $26.2M; Nurture KC $3.3M; KC Common Good $0.9M (FY2023&ndash;24). <a href="https://projects.propublica.org/nonprofits/" target="_blank" rel="noopener">propublica.org</a></li>
+    <li id="t61">CPSTF economic reviews: self-measured blood pressure monitoring $2,800&ndash;$10,800/QALY (2014$); team-based hypertension care $15,202/QALY (2020$) with median health-system ROI of &minus;80% (cost-effective, not self-funding). <a href="https://www.thecommunityguide.org/" target="_blank" rel="noopener">thecommunityguide.org</a></li>
+    <li id="t62">Wu, Dean, Rosen &amp; Muennig, J Health Care Poor Underserved 2017;28(4):1578-97: Nurse-Family Partnership at $14,642/QALY offered to all first-time mothers (CI spans cost-saving to $71,877); net benefit $2,764/child targeted to high-risk mothers. <a href="https://pubmed.ncbi.nlm.nih.gov/29176115/" target="_blank" rel="noopener">PubMed 29176115</a></li>
+    <li id="t63">PMC2826303: collaborative care for depression, systematic review of 8 RCTs: $21,478&ndash;$49,500/QALY. <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC2826303/" target="_blank" rel="noopener">PMC2826303</a></li>
+    <li id="t64">The Beacon, 2026-04-02: Missouri 988 funded from general revenue; ~$18.5M (988) + ~$22.3M (crisis services) proposed FY2027; dedicated telecom-fee bill stalled. <a href="https://thebeaconnews.org/stories/2026/04/02/missouri-explores-state-sources-for-988-funding/" target="_blank" rel="noopener">thebeaconnews.org</a></li>
+    <li id="t65">KCUR, 2026-04-02: KCMO FY2026-27 budget: Vision Zero $4M (earlier reporting cited $8M for FY2025-26; unreconciled). <a href="https://www.kcur.org/politics-elections-and-government/2026-04-02/kansas-city-budget-police-transit-housing-infrastructure" target="_blank" rel="noopener">kcur.org</a></li>
+    <li id="t66">CPSTF economic review: multicomponent colorectal cancer screening interventions $1,651&ndash;$3,817/QALY (2016$).</li>
+    <li id="t67">Jackson County COMBAT: ~$30M/yr quarter-cent sales tax; $4.8M violence-prevention grants (2024); KCMO Department of Community Safety ~$20M (KCTV5). <a href="https://www.jacksoncountycombat.com/151/Funding" target="_blank" rel="noopener">jacksoncountycombat.com</a></li>
+    <li id="t68">WHO Global Health Estimates 2021, DALY/YLL/YLD by country (June 2024 revision), USA columns: the national rate template underneath every impact figure. <a href="https://www.who.int/data/gho/data/themes/mortality-and-global-health-estimates/global-health-estimates-leading-causes-of-dalys" target="_blank" rel="noopener">who.int</a></li>
+    <li id="t69">GBD 2021 US Burden of Disease Collaborators, The Lancet (2024). <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11694014/" target="_blank" rel="noopener">PMC11694014</a></li>
   </ol>
 </section>
 
@@ -327,7 +528,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 
 <footer>
   <div class="wrap">
-    <span>Researched and modeled by Alex Hedtke · August 2026 · <a href="kc-impact-analysis.html">Part 1: the burden of disease</a> · <a href="kc-giving-guide.html">Part 3: the giving guide</a></span>
+    <span>Researched and modeled by Alex Hedtke · August 2026 · Companion: <a href="kc-giving-guide.html">the KC effective giving guide</a></span>
     <span><a href="index.html#portfolio">More projects</a> · <a href="mailto:alex.hedtke@gmail.com">Corrections welcome</a></span>
   </div>
 </footer>
@@ -338,66 +539,138 @@ function $(s,c){return (c||document).querySelector(s)}
 /* id, name, I DALYs K [pt,lo,hi], T [lo,pt,hi], N [lo,pt,hi], marg [lo,pt,hi], rankA[med,lo,hi], pTop3, rankB[med,lo,hi], evidence [impact,tractability,neglectedness] */
 var D=[
  ["tob","Tobacco control (chronic respiratory lever)",[34,28,41],[5.5,6.5,7.5],[7.5,8.5,9.5],[1200,2800,6000],[1,1,2],100,[2,1,3],
-  ["<p>The COPD row, 8th of the fifteen burdens. 42% of it is years lived with disability rather than years of life lost: COPD disables for a long time before it kills. In aggregate the metro is unremarkable at 0.96× the national rate, but the county spread carries the argument. COPD prevalence runs 6.7% in Jackson and 7.0% in Wyandotte against 4.1% in Johnson<sup class='c'><a href='#t44'>[44]</a></sup>. Confidence high. The burden this lever actually reaches is larger than the row, because cessation also moves the cardiovascular and cancer lines.</p>",
-   "<p>Quitline counseling costs $2,358/QALY and adding free medications drops it to $849/QALY, CPSTF-recommended on 77 randomized trials<sup class='c'><a href='#t1'>[1]</a></sup>. Cessation spillovers reach cardiovascular disease and cancer, so the true denominator is larger than the COPD row. The constraint is legal: Missouri's 17-cent cigarette tax is locked (ballot initiative required<sup class='c'><a href='#t2'>[2]</a></sup>), and RSMo &sect;149.192 voids any new local tobacco tax while freezing existing ones at their 1993 levels<sup class='c'><a href='#t3'>[3]</a></sup>, so the feasible lever is programmatic cessation plus Kansas-side policy, where home rule holds<sup class='c'><a href='#t4'>[4]</a></sup>.</p>",
-   "<p>Missouri spends $5.4M/yr on tobacco control against a CDC-recommended $72.9M: 7.4%, rank 39 of 50, up from dead last<sup class='c'><a href='#t5'>[5]</a></sup>. Nationally states spend 2.8% of tobacco revenue on prevention<sup class='c'><a href='#t6'>[6]</a></sup>. The cleanest T×N combination in the study.</p>"]],
+  ["<p>The COPD row, 8th of the fifteen burdens. 42% of it is years lived with disability rather than years of life lost: COPD disables for a long time before it kills. In aggregate the metro is unremarkable at 0.96× the national rate, but the county spread carries the argument. COPD prevalence runs 6.7% in Jackson and 7.0% in Wyandotte against 4.1% in Johnson<sup class='c'><a href='#t24'>[24]</a></sup>. Confidence high. The burden this lever actually reaches is larger than the row, because cessation also moves the cardiovascular and cancer lines.</p>",
+   "<p>Quitline counseling costs $2,358/QALY and adding free medications drops it to $849/QALY, CPSTF-recommended on 77 randomized trials<sup class='c'><a href='#t54'>[54]</a></sup>. Cessation spillovers reach cardiovascular disease and cancer, so the true denominator is larger than the COPD row. The constraint is legal: Missouri's 17-cent cigarette tax is locked (ballot initiative required<sup class='c'><a href='#t38'>[38]</a></sup>), and RSMo &sect;149.192 voids any new local tobacco tax while freezing existing ones at their 1993 levels<sup class='c'><a href='#t37'>[37]</a></sup>, so the feasible lever is programmatic cessation plus Kansas-side policy, where home rule holds<sup class='c'><a href='#t39'>[39]</a></sup>.</p>",
+   "<p>Missouri spends $5.4M/yr on tobacco control against a CDC-recommended $72.9M: 7.4%, rank 39 of 50, up from dead last<sup class='c'><a href='#t55'>[55]</a></sup>. Nationally states spend 2.8% of tobacco revenue on prevention<sup class='c'><a href='#t56'>[56]</a></sup>. The cleanest T×N combination in the study.</p>"]],
  ["od","Drug use & overdose",[41,32,51],[7.0,8.0,8.8],[5.0,6.0,7.0],[700,1800,4000],[2,1,3],93,[3,2,4],
-  ["<p>38% disability, 62% premature death, and the deaths land young, which is how a mid-sized body count produces the 7th-largest burden on the list. The metro-wide 0.85× ratio is a blending artifact and should not be read as good news: Jackson County alone runs 1.35× the national rate while Johnson County's roughly 12 per 100K pulls the five-county average under par<sup class='c'><a href='#t46'>[46]</a></sup>. Confidence high, with real local instruments behind it in medical-examiner counts<sup class='c'><a href='#t11'>[11]</a></sup> and state provisional data<sup class='c'><a href='#t10'>[10]</a></sup>. The 2021 base rates embed peak-epidemic conditions, which makes this ratio conservative.</p>",
-   "<p>Naloxone distribution costs $438/QALY in the base case and $14K worst case<sup class='c'><a href='#t7'>[7]</a></sup>; people in medication treatment for opioid use disorder die at a half to a third the rate of those out of it<sup class='c'><a href='#t8'>[8]</a></sup>. Fentanyl test strips are legal in Missouri since 2023 and a naloxone standing order exists; syringe services remain illegal in Missouri (legalization bills parked in committee)<sup class='c'><a href='#t9'>[9]</a></sup>. KC's decline is lagging the state badly (metro &minus;10% vs Missouri &minus;26.4% in 2024<sup class='c'><a href='#t10'>[10]</a></sup>), with deaths rising among seniors and Black men<sup class='c'><a href='#t11'>[11]</a></sup>: catch-up headroom, not saturation.</p>",
-   "<p>Missouri's settlement pool has roughly doubled to ~$900M over 15 years, but 50+ jurisdictions spent nothing in 2025 and Jackson County left ~$4M unspent<sup class='c'><a href='#t12'>[12]</a></sup>; dedicated local philanthropy is ~$3M<sup class='c'><a href='#t13'>[13]</a></sup>. The money exists; deployment is the neglected margin.</p>"]],
+  ["<p>38% disability, 62% premature death, and the deaths land young, which is how a mid-sized body count produces the 7th-largest burden on the list. The metro-wide 0.85× ratio is a blending artifact and should not be read as good news: Jackson County alone runs 1.35× the national rate while Johnson County's roughly 12 per 100K pulls the five-county average under par<sup class='c'><a href='#t57'>[57]</a></sup>. Confidence high, with real local instruments behind it in medical-examiner counts<sup class='c'><a href='#t20'>[20]</a></sup> and state provisional data<sup class='c'><a href='#t21'>[21]</a></sup>. The 2021 base rates embed peak-epidemic conditions, which makes this ratio conservative.</p>",
+   "<p>Naloxone distribution costs $438/QALY in the base case and $14K worst case<sup class='c'><a href='#t58'>[58]</a></sup>; people in medication treatment for opioid use disorder die at a half to a third the rate of those out of it<sup class='c'><a href='#t59'>[59]</a></sup>. Fentanyl test strips are legal in Missouri since 2023 and a naloxone standing order exists; syringe services remain illegal in Missouri (legalization bills parked in committee)<sup class='c'><a href='#t40'>[40]</a></sup>. KC's decline is lagging the state badly (metro &minus;10% vs Missouri &minus;26.4% in 2024<sup class='c'><a href='#t21'>[21]</a></sup>), with deaths rising among seniors and Black men<sup class='c'><a href='#t20'>[20]</a></sup>: catch-up headroom, not saturation.</p>",
+   "<p>Missouri's settlement pool has roughly doubled to ~$900M over 15 years, but 50+ jurisdictions spent nothing in 2025 and Jackson County left ~$4M unspent<sup class='c'><a href='#t43'>[43]</a></sup>; dedicated local philanthropy is ~$3M<sup class='c'><a href='#t60'>[60]</a></sup>. The money exists; deployment is the neglected margin.</p>"]],
  ["falls","Elderly falls",[13,11,17],[6.0,7.0,8.0],[8.5,9.5,10],[500,1200,2600],[3,2,5],65,[1,1,2],
-  ["<p>One of the three smallest burdens in the study, and the reason falls never wins the headline metric no matter how cheap the intervention gets. 69% of it is disability rather than death, which is the honest shape of the problem: the hip fracture, the fear of falling, the lost independence, not usually the funeral. Jackson County's fall-death rate of 13.4 per 100K sits essentially on the national 13.5<sup class='c'><a href='#t43'>[43]</a></sup>, so the local adjustment is a flat 1.00. Confidence medium: past the death certificates there is no local instrument for non-fatal falls, and non-fatal falls are most of the burden.</p>",
-   "<p>CAPABLE costs ~$3,000 per participant against ~$22,120 in two-year Medicare savings<sup class='c'><a href='#t14'>[14]</a></sup>; Otago cut fall rates 32&ndash;39% in a verified trial<sup class='c'><a href='#t15'>[15]</a></sup>. Nothing is preempted, nothing is controversial, and parts are cost-saving.</p>",
-   "<p>No dedicated Kansas City falls-prevention nonprofit or funder exists at all, a verified absence<sup class='c'><a href='#t16'>[16]</a></sup>. Nationally, falls is the least-funded cause of death relative to its mortality<sup class='c'><a href='#t17'>[17]</a></sup>, with ~$53M in cumulative federal prevention grants since 2014 against $50&ndash;80B/yr in costs<sup class='c'><a href='#t18'>[18]</a></sup>. The boring winner.</p>"]],
+  ["<p>One of the three smallest burdens in the study, and the reason falls never wins the headline metric no matter how cheap the intervention gets. 69% of it is disability rather than death, which is the honest shape of the problem: the hip fracture, the fear of falling, the lost independence, not usually the funeral. Jackson County's fall-death rate of 13.4 per 100K sits essentially on the national 13.5<sup class='c'><a href='#t25'>[25]</a></sup>, so the local adjustment is a flat 1.00. Confidence medium: past the death certificates there is no local instrument for non-fatal falls, and non-fatal falls are most of the burden.</p>",
+   "<p>CAPABLE costs ~$3,000 per participant against ~$22,120 in two-year Medicare savings<sup class='c'><a href='#t52'>[52]</a></sup>; Otago cut fall rates 32&ndash;39% in a verified trial<sup class='c'><a href='#t53'>[53]</a></sup>. Nothing is preempted, nothing is controversial, and parts are cost-saving.</p>",
+   "<p>No dedicated Kansas City falls-prevention nonprofit or funder exists at all, a verified absence<sup class='c'><a href='#t44'>[44]</a></sup>. Nationally, falls is the least-funded cause of death relative to its mortality<sup class='c'><a href='#t48'>[48]</a></sup>, with ~$53M in cumulative federal prevention grants since 2014 against $50&ndash;80B/yr in costs<sup class='c'><a href='#t51'>[51]</a></sup>. The boring winner.</p>"]],
  ["cvd","Cardiovascular / hypertension",[99,84,116],[5.5,6.5,7.5],[5.0,6.0,7.0],[400,900,2000],[4,3,6],28,[4,3,5],
-  ["<p>The largest single burden in the study, by a margin no other row approaches. Only 12% of it is disability; cardiovascular disease mostly registers as death, and 1,414 heart deaths in Jackson County in 2023 anchor the local estimate<sup class='c'><a href='#t43'>[43]</a></sup>. At 0.92× the national rate Kansas City is slightly better than average, held there by Johnson County while Wyandotte runs above it<sup class='c'><a href='#t46'>[46]</a></sup>. Confidence high. The size of this denominator is why a merely decent cost-per-QALY still buys more absolute health here than an excellent one buys in a small row.</p>",
-   "<p>Self-measured blood pressure monitoring runs $2,800&ndash;$10,800/QALY and team-based care $15,202/QALY, both CPSTF-recommended<sup class='c'><a href='#t19'>[19]</a></sup>, deliverable through the safety-net clinics with no policy fight. Caveat: cost-effective, not self-funding (median health-system ROI was negative).</p>",
-   "<p>Treatment spending is enormous but no dedicated local prevention program was found; the region's dominant funder exited disease-specific work<sup class='c'><a href='#t20'>[20]</a></sup>, and Missouri's $6.67/capita public health floor<sup class='c'><a href='#t21'>[21]</a></sup> means prevention infrastructure barely exists. Partial saturation through routine clinical care dampens the score.</p>"]],
+  ["<p>The largest single burden in the study, by a margin no other row approaches. Only 12% of it is disability; cardiovascular disease mostly registers as death, and 1,414 heart deaths in Jackson County in 2023 anchor the local estimate<sup class='c'><a href='#t25'>[25]</a></sup>. At 0.92× the national rate Kansas City is slightly better than average, held there by Johnson County while Wyandotte runs above it<sup class='c'><a href='#t57'>[57]</a></sup>. Confidence high. The size of this denominator is why a merely decent cost-per-QALY still buys more absolute health here than an excellent one buys in a small row.</p>",
+   "<p>Self-measured blood pressure monitoring runs $2,800&ndash;$10,800/QALY and team-based care $15,202/QALY, both CPSTF-recommended<sup class='c'><a href='#t61'>[61]</a></sup>, deliverable through the safety-net clinics with no policy fight. Caveat: cost-effective, not self-funding (median health-system ROI was negative).</p>",
+   "<p>Treatment spending is enormous but no dedicated local prevention program was found; the region's dominant funder exited disease-specific work<sup class='c'><a href='#t46'>[46]</a></sup>, and Missouri's $6.67/capita public health floor<sup class='c'><a href='#t45'>[45]</a></sup> means prevention infrastructure barely exists. Partial saturation through routine clinical care dampens the score.</p>"]],
  ["traffic","Road traffic injuries",[16,13,19],[4.5,6.0,7.0],[5.0,6.0,7.0],[200,700,1800],[5,3,7],12,[8,6,9],
-  ["<p>24% disability, and, as with overdose, the deaths are young enough to push the burden above what the raw count suggests. The 0.90× ratio hides the same geographic blend: KCMO proper is a per-capita outlier while the five-county average, Johnson and Platte included, sits near national<sup class='c'><a href='#t46'>[46]</a></sup>. This is also one of the fastest-moving rows in the study, with KCMO traffic deaths falling 102 → 97 → 68 across 2023 to 2025<sup class='c'><a href='#t23'>[23]</a></sup>. Confidence high.</p>",
-   "<p>Automated speed enforcement has solid national evidence (directionally 10&ndash;40% crash reductions; not primary-verified this pass) and a legally open but untested door: the 2015 <i>Tupper</i> ruling killed owner-liability cameras, St. Louis redesigned around it in 2024, and statewide ban bills have failed<sup class='c'><a href='#t22'>[22]</a></sup>. Street redesign is proven and already working: KCMO deaths fell 102 to 68 from 2023 to 2025<sup class='c'><a href='#t23'>[23]</a></sup>.</p>",
-   "<p>Vision Zero is funded at $4M/yr<sup class='c'><a href='#t24'>[24]</a></sup> against a 16K-DALY problem, with federal SS4A money available. Some crowding: the city is already acting, and improving.</p>"]],
+  ["<p>24% disability, and, as with overdose, the deaths are young enough to push the burden above what the raw count suggests. The 0.90× ratio hides the same geographic blend: KCMO proper is a per-capita outlier while the five-county average, Johnson and Platte included, sits near national<sup class='c'><a href='#t57'>[57]</a></sup>. This is also one of the fastest-moving rows in the study, with KCMO traffic deaths falling 102 → 97 → 68 across 2023 to 2025<sup class='c'><a href='#t26'>[26]</a></sup>. Confidence high.</p>",
+   "<p>Automated speed enforcement has solid national evidence (directionally 10&ndash;40% crash reductions; not primary-verified this pass) and a legally open but untested door: the 2015 <i>Tupper</i> ruling killed owner-liability cameras, St. Louis redesigned around it in 2024, and statewide ban bills have failed<sup class='c'><a href='#t34'>[34]</a></sup>. Street redesign is proven and already working: KCMO deaths fell 102 to 68 from 2023 to 2025<sup class='c'><a href='#t26'>[26]</a></sup>.</p>",
+   "<p>Vision Zero is funded at $4M/yr<sup class='c'><a href='#t65'>[65]</a></sup> against a 16K-DALY problem, with federal SS4A money available. Some crowding: the city is already acting, and improving.</p>"]],
  ["infant","Infant & maternal health",[15,12,19],[5.0,6.0,7.0],[7.0,8.0,9.0],[250,650,1300],[6,4,8],2,[5,3,5],
-  ["<p>Small in total and enormous per event: an infant death costs a full life expectancy, so 15K DALYs comes out of relatively few deaths. This is one of the few rows where Kansas City is worse than the country rather than better, at 1.10×. Jackson County infant mortality runs 7.5 per 1,000 against a US 5.6, and the Black/white gap inside that number is roughly 3×<sup class='c'><a href='#t43'>[43]</a></sup><sup class='c'><a href='#t46'>[46]</a></sup>. Confidence high.</p>",
-   "<p>Nurse-Family Partnership runs $14,642/QALY offered universally and reaches net benefit ($2,764/child) targeted at high-risk mothers, from the peer-reviewed cost-effectiveness analysis<sup class='c'><a href='#t25'>[25]</a></sup>; Medicaid expansion provides the delivery vehicle, and the ~3× Black/white mortality gap concentrates the addressable burden.</p>",
-   "<p>The starkest institutional mismatch found: Nurture KC's ~$3M is the entire dedicated infrastructure<sup class='c'><a href='#t13'>[13]</a></sup>, and infant or maternal health appears in zero of the three verified hospital needs assessments<sup class='c'><a href='#t26'>[26]</a></sup>.</p>"]],
+  ["<p>Small in total and enormous per event: an infant death costs a full life expectancy, so 15K DALYs comes out of relatively few deaths. This is one of the few rows where Kansas City is worse than the country rather than better, at 1.10×. Jackson County infant mortality runs 7.5 per 1,000 against a US 5.6, and the Black/white gap inside that number is roughly 3×<sup class='c'><a href='#t25'>[25]</a></sup><sup class='c'><a href='#t57'>[57]</a></sup>. Confidence high.</p>",
+   "<p>Nurse-Family Partnership runs $14,642/QALY offered universally and reaches net benefit ($2,764/child) targeted at high-risk mothers, from the peer-reviewed cost-effectiveness analysis<sup class='c'><a href='#t62'>[62]</a></sup>; Medicaid expansion provides the delivery vehicle, and the ~3× Black/white mortality gap concentrates the addressable burden.</p>",
+   "<p>The starkest institutional mismatch found: Nurture KC's ~$3M is the entire dedicated infrastructure<sup class='c'><a href='#t60'>[60]</a></sup>, and infant or maternal health appears in zero of the three verified hospital needs assessments<sup class='c'><a href='#t47'>[47]</a></sup>.</p>"]],
  ["cancer","Cancer (screening + tobacco spillover)",[77,66,89],[4.5,5.5,6.5],[3.0,4.0,5.0],[150,400,900],[7,6,10],0,[9,8,11],
-  ["<p>The second-largest burden, and the most death-weighted of the large rows: 7% disability, 93% years of life lost. Incidence sits near the national rate and the 0.94× adjustment is as much age structure as anything<sup class='c'><a href='#t46'>[46]</a></sup>. Confidence is high on the Missouri side and structurally weak on the Kansas side, because Kansas blocks county-level cancer-registry data by statute, so Wyandotte leans on state rates.</p>",
-   "<p>Multicomponent colorectal screening runs $1,651&ndash;$3,817/QALY<sup class='c'><a href='#t27'>[27]</a></sup>, but colorectal is a small slice of the 77K DALYs; the biggest lever is tobacco, credited to row 1.</p>",
-   "<p>Cancer is the best-funded disease category in America<sup class='c'><a href='#t28'>[28]</a></sup> and local screening infrastructure exists. Marginal dollars buy less here than the burden suggests.</p>"]],
+  ["<p>The second-largest burden, and the most death-weighted of the large rows: 7% disability, 93% years of life lost. Incidence sits near the national rate and the 0.94× adjustment is as much age structure as anything<sup class='c'><a href='#t57'>[57]</a></sup>. Confidence is high on the Missouri side and structurally weak on the Kansas side, because Kansas blocks county-level cancer-registry data by statute, so Wyandotte leans on state rates.</p>",
+   "<p>Multicomponent colorectal screening runs $1,651&ndash;$3,817/QALY<sup class='c'><a href='#t66'>[66]</a></sup>, but colorectal is a small slice of the 77K DALYs; the biggest lever is tobacco, credited to row 1.</p>",
+   "<p>Cancer is the best-funded disease category in America<sup class='c'><a href='#t49'>[49]</a></sup> and local screening infrastructure exists. Marginal dollars buy less here than the burden suggests.</p>"]],
  ["viol","Interpersonal violence",[12,10,15],[2.5,4.0,5.5],[4.0,5.0,6.0],[0,250,1200],[8,5,13],0,[15,12,15],
-  ["<p>The second-smallest burden in the study and the largest ratio in it. At 1.70× the national rate, with Jackson County alone at 4.2×<sup class='c'><a href='#t46'>[46]</a></sup>, this is the most distinctively Kansas City problem on the list; KCPD counted 182 homicides inside city limits in 2023, 145 in 2024 and 139 in 2025<sup class='c'><a href='#t45'>[45]</a></sup>. 13% disability, so it is almost purely years of life lost, and lost early. The distance between how exceptional KC is here and how little total health it costs is the sharpest tension in the study, and the 2021 base rates make even the 1.70× conservative.</p>",
-   "<p>For: focused deterrence shows moderate real effects across 24 quasi-experiments<sup class='c'><a href='#t29'>[29]</a></sup>, victims are young, and per-victim prevention value is enormous. Against: effects shrink in rigorous designs; READI Chicago was null on its pre-registered primary outcome<sup class='c'><a href='#t30'>[30]</a></sup>; KC NoVA, this city's own version, decayed to nothing and was rated Ineffective by NIJ, and SAVE KC today is at the same self-reported-success stage NoVA was in 2014<sup class='c'><a href='#t31'>[31]</a></sup>; and all local firearm policy is preempted<sup class='c'><a href='#t32'>[32]</a></sup>.</p>",
-   "<p>Philanthropy is tiny (~$1M) but public money is crowding in fast: a ~$20M city Department of Community Safety, COMBAT's $4.8M violence grants, federal CVIPI<sup class='c'><a href='#t33'>[33]</a></sup>. Treat it as a value-of-information play: fund the independent evaluation.</p>"]],
+  ["<p>The second-smallest burden in the study and the largest ratio in it. At 1.70× the national rate, with Jackson County alone at 4.2×<sup class='c'><a href='#t57'>[57]</a></sup>, this is the most distinctively Kansas City problem on the list; KCPD counted 182 homicides inside city limits in 2023, 145 in 2024 and 139 in 2025<sup class='c'><a href='#t18'>[18]</a></sup>. 13% disability, so it is almost purely years of life lost, and lost early. The distance between how exceptional KC is here and how little total health it costs is the sharpest tension in the study, and the 2021 base rates make even the 1.70× conservative.</p>",
+   "<p>For: focused deterrence shows moderate real effects across 24 quasi-experiments<sup class='c'><a href='#t35'>[35]</a></sup>, victims are young, and per-victim prevention value is enormous. Against: effects shrink in rigorous designs; READI Chicago was null on its pre-registered primary outcome<sup class='c'><a href='#t36'>[36]</a></sup>; KC NoVA, this city's own version, decayed to nothing and was rated Ineffective by NIJ, and SAVE KC today is at the same self-reported-success stage NoVA was in 2014<sup class='c'><a href='#t42'>[42]</a></sup>; and all local firearm policy is preempted<sup class='c'><a href='#t33'>[33]</a></sup>.</p>",
+   "<p>Philanthropy is tiny (~$1M) but public money is crowding in fast: a ~$20M city Department of Community Safety, COMBAT's $4.8M violence grants, federal CVIPI<sup class='c'><a href='#t67'>[67]</a></sup>. Treat it as a value-of-information play: fund the independent evaluation.</p>"]],
  ["mental","Mental illness (collaborative care)",[53,43,64],[5.0,6.0,7.0],[4.0,5.0,6.0],[150,320,600],[9,7,11],0,[7,6,8],
-  ["<p>Fourth-largest burden, and 95% of it is disability rather than death. That is the whole reason to rank in DALYs: a mortality-ordered list buries this row, a disability-weighted one puts it in the top four. Jackson County adults reporting frequent mental distress run 19.2% against a US ~15.7%<sup class='c'><a href='#t44'>[44]</a></sup>, which is where the 1.04× comes from. Confidence medium-high: the prevalence instrument is good, the disability weights are national.</p>",
-   "<p>Collaborative care for depression costs $21,478&ndash;$49,500/QALY across 8 randomized trials<sup class='c'><a href='#t34'>[34]</a></sup> and scales through primary care; it plausibly touches a quarter to a third of the 53K DALYs.</p>",
-   "<p>It is the #1 or #2 priority in all three verified hospital needs assessments<sup class='c'><a href='#t26'>[26]</a></sup>, has a dedicated county levy, ~$90M/yr of Medicaid-funded provider capacity<sup class='c'><a href='#t13'>[13]</a></sup>, and new state 988 money<sup class='c'><a href='#t35'>[35]</a></sup>. Access gaps are real, but many actors are already pushing.</p>"]],
+  ["<p>Fourth-largest burden, and 95% of it is disability rather than death. That is the whole reason to rank in DALYs: a mortality-ordered list buries this row, a disability-weighted one puts it in the top four. Jackson County adults reporting frequent mental distress run 19.2% against a US ~15.7%<sup class='c'><a href='#t24'>[24]</a></sup>, which is where the 1.04× comes from. Confidence medium-high: the prevalence instrument is good, the disability weights are national.</p>",
+   "<p>Collaborative care for depression costs $21,478&ndash;$49,500/QALY across 8 randomized trials<sup class='c'><a href='#t63'>[63]</a></sup> and scales through primary care; it plausibly touches a quarter to a third of the 53K DALYs.</p>",
+   "<p>It is the #1 or #2 priority in all three verified hospital needs assessments<sup class='c'><a href='#t47'>[47]</a></sup>, has a dedicated county levy, ~$90M/yr of Medicaid-funded provider capacity<sup class='c'><a href='#t60'>[60]</a></sup>, and new state 988 money<sup class='c'><a href='#t64'>[64]</a></sup>. Access gaps are real, but many actors are already pushing.</p>"]],
  ["diab","Diabetes + kidney disease",[43,35,52],[4.5,5.5,6.5],[2.5,3.5,4.5],[100,300,700],[9,7,12],0,[12,10,14],
-  ["<p>A near-even split, 53% disability and 47% death. Diabetes prevalence sits close to national parity, which is why the adjustment is a flat 1.00, but Jackson County kidney mortality runs about 1.5× the US rate<sup class='c'><a href='#t43'>[43]</a></sup><sup class='c'><a href='#t46'>[46]</a></sup>: the complications are worse here than the disease is. Confidence high.</p>",
-   "<p>The Diabetes Prevention Program is real but its QALY evidence is softer than the talking point: the most rigorous recent real-world study found probable cost savings and no significant two-year QALY gain<sup class='c'><a href='#t36'>[36]</a></sup>.</p>",
-   "<p>Diabetes is nationally overfunded relative to burden<sup class='c'><a href='#t37'>[37]</a></sup>, local DPP delivery exists, and GLP-1 drugs are transforming the space from the clinical side.</p>"]],
+  ["<p>A near-even split, 53% disability and 47% death. Diabetes prevalence sits close to national parity, which is why the adjustment is a flat 1.00, but Jackson County kidney mortality runs about 1.5× the US rate<sup class='c'><a href='#t25'>[25]</a></sup><sup class='c'><a href='#t57'>[57]</a></sup>: the complications are worse here than the disease is. Confidence high.</p>",
+   "<p>The Diabetes Prevention Program is real but its QALY evidence is softer than the talking point: the most rigorous recent real-world study found probable cost savings and no significant two-year QALY gain<sup class='c'><a href='#t50'>[50]</a></sup>.</p>",
+   "<p>Diabetes is nationally overfunded relative to burden<sup class='c'><a href='#t30'>[30]</a></sup>, local DPP delivery exists, and GLP-1 drugs are transforming the space from the clinical side.</p>"]],
  ["alc","Alcohol (narrow AUD lever)",[9,7,11],[2.5,3.5,4.5],[6.5,7.5,8.5],[60,180,500],[11,9,14],0,[10,9,12],
-  ["<p>The smallest row in the study, and deliberately so. This is the narrow alcohol-use-disorder endpoint only. Alcohol's real damage is scattered across the digestive, road-traffic and violence rows and is counted there, so adding this row to those would double-count. Binge-drinking prevalence is near parity<sup class='c'><a href='#t44'>[44]</a></sup>, hence the 1.02×. 50% disability. Confidence medium.</p>",
-   "<p>The powerful lever, excise tax (consumption elasticity &minus;0.51, heavy drinking &minus;0.28<sup class='c'><a href='#t38'>[38]</a></sup>), is state-locked. What remains locally (screening and brief intervention, outlet density) is weaker or unverified.</p>",
+  ["<p>The smallest row in the study, and deliberately so. This is the narrow alcohol-use-disorder endpoint only. Alcohol's real damage is scattered across the digestive, road-traffic and violence rows and is counted there, so adding this row to those would double-count. Binge-drinking prevalence is near parity<sup class='c'><a href='#t24'>[24]</a></sup>, hence the 1.02×. 50% disability. Confidence medium.</p>",
+   "<p>The powerful lever, excise tax (consumption elasticity &minus;0.51, heavy drinking &minus;0.28<sup class='c'><a href='#t31'>[31]</a></sup>), is state-locked. What remains locally (screening and brief intervention, outlet density) is weaker or unverified.</p>",
    "<p>Near-zero dedicated local effort in a famously permissive state. A state-advocacy cause more than a local-deployment one.</p>"]],
  ["suicide","Suicide & self-harm",[15,12,18],[3.0,4.0,5.0],[4.0,5.0,6.0],[50,150,400],[12,10,14],0,[14,13,15],
-  ["<p>The purest mortality row in the study: 98% years of life lost, 2% disability. About 295 deaths a year across the five-county core is 15.7 per 100K against a US 14.7, a 1.08× ratio<sup class='c'><a href='#t46'>[46]</a></sup>, 134 of them in Jackson County in 2023<sup class='c'><a href='#t43'>[43]</a></sup>. Confidence medium-high; the Kansas-side counts are estimates.</p>",
-   "<p>The dominant local method is firearms and gun policy is fully preempted<sup class='c'><a href='#t32'>[32]</a></sup>; lethal-means counseling has feasibility-grade evidence only, and full physical barriers work where partial ones fail, but KC's method mix is not bridge-shaped<sup class='c'><a href='#t39'>[39]</a></sup>.</p>",
-   "<p>New state crisis funding is arriving<sup class='c'><a href='#t35'>[35]</a></sup>. Depression treatment (the mental illness row) is partly a suicide intervention too.</p>"]],
+  ["<p>The purest mortality row in the study: 98% years of life lost, 2% disability. About 295 deaths a year across the five-county core is 15.7 per 100K against a US 14.7, a 1.08× ratio<sup class='c'><a href='#t57'>[57]</a></sup>, 134 of them in Jackson County in 2023<sup class='c'><a href='#t25'>[25]</a></sup>. Confidence medium-high; the Kansas-side counts are estimates.</p>",
+   "<p>The dominant local method is firearms and gun policy is fully preempted<sup class='c'><a href='#t33'>[33]</a></sup>; lethal-means counseling has feasibility-grade evidence only, and full physical barriers work where partial ones fail, but KC's method mix is not bridge-shaped<sup class='c'><a href='#t32'>[32]</a></sup>.</p>",
+   "<p>New state crisis funding is arriving<sup class='c'><a href='#t64'>[64]</a></sup>. Depression treatment (the mental illness row) is partly a suicide intervention too.</p>"]],
  ["digest","Digestive / cirrhosis",[25,21,31],[3.0,4.0,5.0],[5.0,6.0,7.0],[50,150,450],[12,9,14],0,[11,9,12],
-  ["<p>20% disability, and mostly cirrhosis mortality. Liver mortality is near national parity and no better local instrument exists, so the adjustment defaults to 1.00 with a wide interval<sup class='c'><a href='#t46'>[46]</a></sup>. Confidence medium, and the honest description of this number is a national rate applied to a local population.</p>",
+  ["<p>20% disability, and mostly cirrhosis mortality. Liver mortality is near national parity and no better local instrument exists, so the adjustment defaults to 1.00 with a wide interval<sup class='c'><a href='#t57'>[57]</a></sup>. Confidence medium, and the honest description of this number is a national rate applied to a local population.</p>",
    "<p>Mostly the alcohol problem wearing a different coat, plus hepatitis C cure delivery. The main lever is state-locked; local options are clinical.</p>",
    "<p>Nothing dedicated locally.</p>"]],
  ["msk","Musculoskeletal",[68,53,83],[1.2,2.0,3.0],[8.0,9.0,9.8],[20,100,300],[14,12,15],0,[7,6,8],
-  ["<p>Third-largest burden in the study and 97% disability: back pain and arthritis almost never kill, they take years of function instead. That is exactly why the problem is invisible to mortality-driven priorities and why it lands this high here. There is no local instrument for musculoskeletal prevalence, so the adjustment defaults to 1.00, with above-national obesity offsetting Johnson County's advantage<sup class='c'><a href='#t46'>[46]</a></sup>. Confidence medium, and the 53&ndash;83 interval should be read as the real uncertainty, not decoration.</p>",
-   "<p><b>The study's strangest object.</b> No proven population-scale intervention exists, and that is a verified absence in the Community Guide ecosystem rather than a gap in the search<sup class='c'><a href='#t40'>[40]</a></sup>. Nothing here is deployable, which is why musculoskeletal ranks 7th in the factor product and 14th in deployable value. The distance between those two numbers is what separates a research bet from a program bet.</p>",
-   "<p>The most extreme underfunding ratios in the national literature: neck pain is funded at 0.83% of its DALY-predicted level, a 120× gap, starker than gun violence's ~64×<sup class='c'><a href='#t28'>[28]</a></sup>. The third-largest burden in the study meeting close to the least research attention in the country.</p>"]],
+  ["<p>Third-largest burden in the study and 97% disability: back pain and arthritis almost never kill, they take years of function instead. That is exactly why the problem is invisible to mortality-driven priorities and why it lands this high here. There is no local instrument for musculoskeletal prevalence, so the adjustment defaults to 1.00, with above-national obesity offsetting Johnson County's advantage<sup class='c'><a href='#t57'>[57]</a></sup>. Confidence medium, and the 53&ndash;83 interval should be read as the real uncertainty, not decoration.</p>",
+   "<p><b>The study's strangest object.</b> No proven population-scale intervention exists, and that is a verified absence in the Community Guide ecosystem rather than a gap in the search<sup class='c'><a href='#t29'>[29]</a></sup>. Nothing here is deployable, which is why musculoskeletal ranks 7th in the factor product and 14th in deployable value. The distance between those two numbers is what separates a research bet from a program bet.</p>",
+   "<p>The most extreme underfunding ratios in the national literature: neck pain is funded at 0.83% of its DALY-predicted level, a 120× gap, starker than gun violence's ~64×<sup class='c'><a href='#t49'>[49]</a></sup>. The third-largest burden in the study meeting close to the least research attention in the country.</p>"]],
  ["neuro","Neurological",[47,39,56],[1.5,2.5,3.5],[5.0,6.0,7.0],[20,80,250],[14,13,15],0,[13,11,15],
-  ["<p>Alzheimer's, Parkinson's, epilepsy and migraine in one row; 44% disability. Alzheimer's-coded deaths run low in Jackson County<sup class='c'><a href='#t43'>[43]</a></sup>, which is at least as likely to be a death-certificate coding artifact as a real local advantage, and migraine essentially scales with population. Confidence medium: the 0.95× adjustment is weakly supported<sup class='c'><a href='#t46'>[46]</a></sup>.</p>",
+  ["<p>Alzheimer's, Parkinson's, epilepsy and migraine in one row; 44% disability. Alzheimer's-coded deaths run low in Jackson County<sup class='c'><a href='#t25'>[25]</a></sup>, which is at least as likely to be a death-certificate coding artifact as a real local advantage, and migraine essentially scales with population. Confidence medium: the 0.95× adjustment is weakly supported<sup class='c'><a href='#t57'>[57]</a></sup>.</p>",
    "<p>Alzheimer's prevention runs through blood pressure control (credited to the CVD row); migraine has no population-scale lever found.</p>",
    "<p>Alzheimer's research money is already large nationally; migraine is genuinely underfunded but untargetable locally with current tools.</p>"]]
 ];
+/* burden model, carried over whole from the companion analysis this page absorbed */
+/* name, dalys pt, lo, hi, yldShare, kc/us, confidence, tooltip note */
+var LEAGUE=[
+ ["Cardiovascular disease",99,84,116,.12,0.92,"High","Jackson heart mortality near US parity; Johnson well below; Wyandotte above"],
+ ["Cancer",77,66,89,.07,0.94,"High","Jackson incidence 454/100K vs US ~445; Kansas blocks county registry data"],
+ ["Musculoskeletal (back pain, arthritis)",68,53,83,.97,1.00,"Medium","No local instrument; obesity above national offsets Johnson"],
+ ["Mental illness (excl. substance)",53,43,64,.95,1.04,"Medium-high","Jackson frequent mental distress 19.2% vs US ~15.7%"],
+ ["Neurological (Alzheimer's, migraine)",47,39,56,.44,0.95,"Medium","Alzheimer's-coded deaths low in Jackson; migraine scales with population"],
+ ["Diabetes + kidney disease",43,35,52,.53,1.00,"High","Prevalence near parity; Jackson kidney mortality 1.5× US"],
+ ["Drug use & overdose",41,32,51,.38,0.85,"High","Jackson alone 1.35× US; blend pulled down by Johnson (~12/100K)"],
+ ["Chronic respiratory (COPD)",34,28,41,.42,0.96,"High","COPD prevalence: Jackson 6.7 / Wyandotte 7.0 / Johnson 4.1%"],
+ ["Digestive (incl. cirrhosis)",25,21,31,.20,1.00,"Medium","Liver mortality near parity; no better instrument"],
+ ["Road traffic injuries",16,13,19,.24,0.90,"High","KCMO city is top-5 worst per capita; the 5-county blend sits near national"],
+ ["Infant & congenital",15,12,19,.33,1.10,"High","Jackson infant mortality 7.5/1,000 vs US 5.6; Black/white gap ~3×"],
+ ["Suicide & self-harm",15,12,18,.02,1.08,"Medium-high","~295 deaths/yr = 15.7/100K vs US 14.7"],
+ ["Elderly falls",13,11,17,.69,1.00,"Medium","Jackson fall-death rate 13.4/100K ≈ US 13.5"],
+ ["Interpersonal violence",12,10,15,.13,1.70,"High","~190 homicides/yr = 10.1/100K vs US ~6; Jackson alone 4.2×"],
+ ["Alcohol use disorder (narrow)",9,7,11,.50,1.02,"Medium","Binge drinking near parity; attributable burden overlaps other rows"]
+];
+var GAP=[ /* county, excess YPLL vs Johnson, ypll rate, note */
+ ["Jackson Co., MO",43931,11090,"YPLL 11,090/100K (CI 10,808–11,373) · pop 718.6K"],
+ ["Wyandotte Co., KS",11197,11751,"YPLL 11,751/100K (CI 11,165–12,337) · pop 165.3K"],
+ ["Clay Co., MO",5445,7073,"YPLL 7,073/100K (CI 6,711–7,435) · pop 259.8K"],
+ ["Platte Co., MO",1587,6420,"YPLL 6,420/100K (CI 5,860–6,980) · pop ~110K"]
+];
+var ECON=[ /* name, $B, lo, hi, overlap, note */
+ ["Tobacco-attributable",4.4,3.2,5.6,1,"CDC ~$600B national (2018$), per-capita, prevalence-adjusted. Lives inside CVD, cancer, COPD rows.","<sup class='c'><a href='#t3'>[3]</a></sup>"],
+ ["Cardiovascular disease",2.7,2.0,3.4,0,"AHA $422.3B national (2019–20$), scaled and adjusted","<sup class='c'><a href='#t4'>[4]</a></sup>"],
+ ["Diabetes",2.5,1.9,3.1,0,"ADA $412.9B national (2022$)","<sup class='c'><a href='#t5'>[5]</a></sup>"],
+ ["Depression (all mental illness is higher)",2.4,1.8,3.1,0,"Greenberg $326B national (2018$), prevalence-adjusted","<sup class='c'><a href='#t6'>[6]</a></sup>"],
+ ["Road traffic crashes",2.2,1.6,2.7,0,"NHTSA $340B economic (2019$); comprehensive local equivalent ~$8.9B","<sup class='c'><a href='#t7'>[7]</a></sup>"],
+ ["Excessive alcohol",2.1,1.5,2.7,1,"CDC $249B national (2010$). Overlaps liver, traffic, violence rows.","<sup class='c'><a href='#t8'>[8]</a></sup>"],
+ ["Cancer (medical only)",1.3,1.0,1.7,0,"~$208B national (2020$); productivity excluded","<sup class='c'><a href='#t9'>[9]</a></sup>"],
+ ["Obesity (medical)",1.3,0.9,1.6,1,"Ward $173B national (2019$). Overlaps CVD, diabetes rows.","<sup class='c'><a href='#t10'>[10]</a></sup>"],
+ ["Drug use & overdose",1.1,0.75,1.5,0,"Florence MO $18.5B × 16% tangible share, KC-apportioned; comprehensive ~$6B","<sup class='c'><a href='#t11'>[11]</a></sup>"],
+ ["Interpersonal violence",1.0,0.6,1.4,0,"~190 homicides × $1.94M tangible + ~11.5K aggravated assaults + justice costs; comprehensive ~$3.5B","<sup class='c'><a href='#t12'>[12]</a><a href='#t13'>[13]</a></sup>"],
+ ["Elderly falls (medical)",0.32,0.24,0.42,0,"CDC state tables, MO+KS county shares (2014$)","<sup class='c'><a href='#t14'>[14]</a></sup>"],
+ ["Food insecurity (excess health costs)",0.3,0.15,0.5,0,"~175K food-insecure × $1,863/person/yr excess health spending (Berkowitz, verified)","<sup class='c'><a href='#t15'>[15]</a><a href='#t16'>[16]</a></sup>"]
+];
+/* tractability: cost per QALY of the best locally-feasible intervention.
+   [cause, intervention, lo, pt|null, hi, label, tooltip note, saving?] */
+var QALY=[
+ ["Elderly falls","CAPABLE, plus Otago through senior centers",null,null,null,"cost-saving",
+  "~$3,000 per participant against $22,120 in average two-year Medicare savings (CMMI demonstration), and $867/month Medicaid savings in a dual-eligible study. Otago cut fall rates 32–39% at $393/person delivery cost.",true],
+ ["Drug use &amp; overdose","Naloxone distribution",48,438,14000,"$438 <span style='opacity:.7'>[48–14,000]</span>",
+  "Coffin &amp; Sullivan 2013 base case $438/QALY (95% CI $48–$1,706), $14,000/QALY worst case. Separately, people in medication treatment for opioid use disorder die at a half to a third the rate of those out of it.",false],
+ ["Tobacco control","Quitline counseling plus free medications",369,849,2426,"$849 <span style='opacity:.7'>[369–2,426]</span>",
+  "CPSTF economic review, 2013$: counseling plus medications $849/QALY (IQI $369–$2,426); counseling alone $2,358/QALY (IQI $1,761–$3,156), on 77 randomized trials.",false],
+ ["Cancer","Multicomponent colorectal screening",1651,null,3817,"$1,651–3,817",
+  "CPSTF economic review, 2016$. Cessation spillover from the tobacco row reaches this one as well.",false],
+ ["Cardiovascular / hypertension","Self-measured blood pressure monitoring",2800,null,10800,"$2,800–10,800",
+  "CPSTF, 2014$. Team-based hypertension care is the next rung at $15,202/QALY (2020$), with a median health-system ROI of −80%: cost-effective, not self-funding.",false],
+ ["Infant &amp; maternal health","Nurse-Family Partnership",14642,14642,71877,"$14,642",
+  "Wu et al. 2017, offered to all first-time mothers; the confidence interval spans cost-saving to $71,877/QALY. Targeted to high-risk mothers the net benefit is $2,764/child.",false],
+ ["Mental illness","Collaborative care for depression",21478,null,49500,"$21,478–49,500",
+  "Systematic review of 8 RCTs. The intervention is well-proven; it is simply an order of magnitude dearer per QALY than the top of this ladder.",false]
+];
+/* neglectedness: annual dollars visible against each problem. [label, $M/yr, scope, note, zero?] */
+var MONEY=[
+ ["Missouri opioid settlement flow",60,"statewide, ~$900M over ~15 years","50+ Missouri jurisdictions spent nothing in 2025; Jackson County left ~$4M unspent.",false],
+ ["Health Forward Foundation",50.3,"metro philanthropy, FY2023 expenses","$905.3M in assets. The current purpose framework names no disease areas.",false],
+ ["Missouri 988 and crisis services",40.8,"statewide, proposed FY2027","~$18.5M for 988 plus ~$22.3M for crisis services, from general revenue; the dedicated telecom-fee bill stalled. Crisis response, not prevention.",false],
+ ["Jackson County COMBAT",30,"county, quarter-cent sales tax","Anti-drug and anti-violence tax; $4.8M of it went to violence-prevention grants in 2024.",false],
+ ["KCMO Dept. of Community Safety",20,"city","Violence prevention and response.",false],
+ ["Missouri tobacco control",5.4,"statewide","Against a CDC-recommended $72.9M: 7.4%, rank 39 of 50. The most extreme funding gap in the study.",false],
+ ["KCMO Vision Zero",4,"city, FY2026-27 budget","Earlier reporting cited $8M for FY2025-26; unreconciled.",false],
+ ["KC overdose philanthropy",3,"metro, 990-verified","Dedicated local philanthropic dollars, separate from the settlement flow.",false],
+ ["Elderly falls prevention",0,"metro","No dedicated Kansas City falls-prevention nonprofit or funder exists. Verified absence from a systematic sweep.",true],
+ ["Musculoskeletal disease",0,"metro","Nothing to fund: no proven population-scale intervention exists to pay for.",true]
+];
+/* state public health spending per capita, FY2023 */
+var FLOOR=[["Kansas",31.78,"the other half of this metro"],["Indiana",15.16,"rank 49 of 50"],["Missouri",6.67,"rank 50 of 50, last"]];
 var tip=$('#tip');
 function showTip(html,x,y){tip.innerHTML=html;tip.style.display='block';
   var w=tip.offsetWidth,h=tip.offsetHeight;
@@ -410,6 +683,113 @@ function attachTip(el,html){
   el.addEventListener('focus',function(){var r=el.getBoundingClientRect();showTip(html,r.left+60,r.top+r.height)});
   el.addEventListener('blur',hideTip);
 }
+/* league chart: stacked YLL/YLD, ordered by burden */
+(function(){
+  var host=$('#league-chart'), max=Math.max.apply(null,LEAGUE.map(function(d){return d[3]}));
+  LEAGUE.forEach(function(d){
+    var name=d[0],pt=d[1],lo=d[2],hi=d[3],yld=d[4],ratio=d[5],conf=d[6],note=d[7];
+    var row=document.createElement('div');row.className='crow';row.setAttribute('role','listitem');row.tabIndex=0;
+    var wPt=pt/max*100,wLo=lo/max*100,wHi=hi/max*100;
+    var yllW=(1-yld)*wPt, yldW=yld*wPt;
+    row.innerHTML='<div class="nm">'+name+'<span class="conf">'+conf+' confidence</span></div>'+
+      '<div class="barzone"><div class="bar" style="width:'+wPt+'%">'+
+      (yllW>0.6?'<div class="seg yll" style="flex:'+((1-yld)*100)+'"></div>':'')+
+      (yldW>0.6?'<div class="seg yld" style="flex:'+(yld*100)+'"></div>':'')+
+      '</div><div class="whisker" style="left:'+wLo+'%;width:'+(wHi-wLo)+'%"></div></div>'+
+      '<div class="end">'+pt+'K<span class="ratio'+(ratio>=1.3?' hot':'')+'">'+ratio.toFixed(2)+'\u00d7 US</span></div>';
+    attachTip(row,'<b>'+name+'</b><div class="trow"><span>DALYs/yr</span><span>'+pt+'K ['+lo+'\u2013'+hi+'K]</span></div>'+
+      '<div class="trow"><span>YLL (death)</span><span>'+Math.round(pt*(1-yld))+'K</span></div>'+
+      '<div class="trow"><span>YLD (disability)</span><span>'+Math.round(pt*yld)+'K</span></div>'+
+      '<div class="trow"><span>KC vs US rate</span><span>'+ratio.toFixed(2)+'\u00d7</span></div>'+
+      '<div style="margin-top:5px;color:var(--ink-soft)">'+note+'</div>');
+    host.appendChild(row);
+  });
+  var t='<div class="tscroll"><table><thead><tr><th>Problem</th><th>DALYs/yr (K)</th><th>80% CI</th><th>YLL K</th><th>YLD K</th><th>KC/US</th><th>Confidence</th></tr></thead><tbody>';
+  LEAGUE.forEach(function(d){t+='<tr><td>'+d[0]+'</td><td>'+d[1]+'</td><td>'+d[2]+'\u2013'+d[3]+'</td><td>'+Math.round(d[1]*(1-d[4]))+'</td><td>'+Math.round(d[1]*d[4])+'</td><td>'+d[5].toFixed(2)+'</td><td>'+d[6]+'</td></tr>'});
+  $('#league-table').innerHTML=t+'</tbody></table></div>';
+})();
+/* distribution: excess YPLL vs the healthiest county in the metro */
+(function(){
+  var host=$('#gap-chart'), max=GAP[0][1];
+  GAP.forEach(function(d){
+    var row=document.createElement('div');row.className='sbar-row';row.tabIndex=0;row.setAttribute('role','listitem');
+    row.innerHTML='<div class="nm">'+d[0]+'<small>'+d[3].split(' \u00b7 ')[0]+'</small></div>'+
+      '<div class="sbarzone"><div class="sbar" style="width:'+(d[1]/max*100)+'%"></div></div>'+
+      '<div class="end">'+d[1].toLocaleString()+'<small>excess YPLL/yr</small></div>';
+    attachTip(row,'<b>'+d[0]+'</b><div class="trow"><span>Excess YPLL-75/yr vs Johnson Co.</span><span>'+d[1].toLocaleString()+'</span></div><div style="margin-top:5px;color:var(--ink-soft)">'+d[3]+'</div>');
+    host.appendChild(row);
+  });
+  var tot=document.createElement('div');tot.className='sbar-row';
+  tot.innerHTML='<div class="nm"><b>Total</b><small>vs the US-average benchmark the core nets \u22122,058 (about zero)</small></div><div class="sbarzone"></div><div class="end"><b>62,160</b><small>years, every year</small></div>';
+  host.appendChild(tot);
+})();
+/* economic damages */
+(function(){
+  var host=$('#econ-chart'), max=Math.max.apply(null,ECON.map(function(d){return d[3]}));
+  ECON.forEach(function(d){
+    var row=document.createElement('div');row.className='sbar-row';row.tabIndex=0;row.setAttribute('role','listitem');
+    var wPt=d[1]/max*100,wLo=d[2]/max*100,wHi=d[3]/max*100;
+    row.innerHTML='<div class="nm">'+d[0]+(d[6]||'')+(d[4]?'<small>overlaps disease rows</small>':'')+'</div>'+
+      '<div class="sbarzone"><div class="sbar'+(d[4]?' olap':'')+'" style="width:'+wPt+'%"></div>'+
+      '<div class="whisker" style="left:'+wLo+'%;width:'+(wHi-wLo)+'%"></div></div>'+
+      '<div class="end">$'+d[1].toFixed(d[1]<1?2:1)+'B<small>['+d[2]+'\u2013'+d[3]+']</small></div>';
+    attachTip(row,'<b>'+d[0]+'</b><div class="trow"><span>Tangible $/yr</span><span>$'+d[1]+'B [$'+d[2]+'\u2013'+d[3]+'B]</span></div><div style="margin-top:5px;color:var(--ink-soft)">'+d[5]+'</div>');
+    host.appendChild(row);
+  });
+})();
+/* cost-per-QALY ladder, log axis $100 to $100,000 */
+(function(){
+  var host=$('#qaly-chart');
+  var LO=100, HI=100000, L0=Math.log10(LO), SPAN=Math.log10(HI)-L0;
+  function pos(v){return Math.max(0,Math.min(100,(Math.log10(v)-L0)/SPAN*100))}
+  var ax=document.createElement('div');ax.className='qaxis';
+  var ticks=[100,1000,10000,100000].map(function(v,i){
+    var mid=(i>0&&i<3)?' class="mid"':'';
+    return '<span'+mid+' style="left:'+pos(v)+'%">$'+(v>=1000?(v/1000)+'K':v)+'</span>';
+  }).join('');
+  ax.innerHTML='<div>Cheaper per QALY &rarr;</div><div class="ax">'+ticks+'</div><div></div>';
+  host.appendChild(ax);
+  QALY.forEach(function(d){
+    var name=d[0],iv=d[1],lo=d[2],pt=d[3],hi=d[4],label=d[5],note=d[6],saving=d[7];
+    var row=document.createElement('div');row.className='qrow';row.tabIndex=0;row.setAttribute('role','listitem');
+    var grids=[100,1000,10000,100000].map(function(v){return '<div class="qgrid" style="left:'+pos(v)+'%"></div>'}).join('');
+    var marks=saving
+      ? '<span class="qsave">saves more than it costs</span>'
+      : '<div class="qband" style="left:'+pos(lo)+'%;width:'+(pos(hi)-pos(lo))+'%"></div>'+
+        (pt!==null?'<div class="qdot" style="left:'+pos(pt)+'%"></div>':'');
+    row.innerHTML='<div class="nm">'+name+'<small>'+iv+'</small></div>'+
+      '<div class="qzone">'+grids+marks+'</div>'+
+      '<div class="end">'+label+'</div>';
+    attachTip(row,'<b>'+name+'</b><div class="trow"><span>Intervention</span><span>'+iv+'</span></div>'+
+      '<div style="margin-top:5px;color:var(--ink-soft)">'+note+'</div>');
+    host.appendChild(row);
+  });
+})();
+/* the local money map */
+(function(){
+  var host=$('#money-chart'), max=Math.max.apply(null,MONEY.map(function(d){return d[1]}));
+  MONEY.forEach(function(d){
+    var row=document.createElement('div');row.className='sbar-row';row.tabIndex=0;row.setAttribute('role','listitem');
+    row.innerHTML='<div class="nm">'+d[0]+'<small>'+d[2]+'</small></div>'+
+      '<div class="sbarzone"><div class="sbar'+(d[4]?' zero':'')+'" style="width:'+(d[4]?0:d[1]/max*100)+'%"></div></div>'+
+      '<div class="end">'+(d[4]?'$0':'$'+d[1]+'M')+'<small>'+(d[4]?'nothing exists':'per year')+'</small></div>';
+    attachTip(row,'<b>'+d[0]+'</b><div class="trow"><span>Annual dollars</span><span>'+(d[4]?'$0':'$'+d[1]+'M')+'</span></div>'+
+      '<div class="trow"><span>Scope</span><span>'+d[2]+'</span></div>'+
+      '<div style="margin-top:5px;color:var(--ink-soft)">'+d[3]+'</div>');
+    host.appendChild(row);
+  });
+})();
+/* state public health floor */
+(function(){
+  var host=$('#floor-chart'), max=FLOOR[0][1];
+  FLOOR.forEach(function(d){
+    var row=document.createElement('div');row.className='sbar-row';row.setAttribute('role','listitem');
+    row.innerHTML='<div class="nm">'+d[0]+'<small>'+d[2]+'</small></div>'+
+      '<div class="sbarzone"><div class="sbar" style="width:'+(d[1]/max*100)+'%"></div></div>'+
+      '<div class="end">$'+d[1].toFixed(2)+'<small>per capita/yr</small></div>';
+    host.appendChild(row);
+  });
+})();
 /* marginal chart (View A order) */
 (function(){
   var host=$('#marg-chart');
