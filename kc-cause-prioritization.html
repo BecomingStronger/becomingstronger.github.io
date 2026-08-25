@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Kansas City Cause Prioritization · Becoming Stronger</title>
-<meta name="description" content="Where would a marginal dollar do the most good in Kansas City? Fifteen problems scored on impact, tractability, and neglectedness, with a Monte Carlo over the uncertainty and sliders to disagree with me.">
+<meta name="description" content="Where would a marginal dollar do the most good in Kansas City? Fifteen problems scored on impact, tractability, and neglectedness, with a Monte Carlo over the uncertainty and the evidence behind every score.">
 <meta property="og:type" content="website">
 <meta property="og:url" content="https://becomingstronger.github.io/kc-cause-prioritization.html">
 <meta property="og:title" content="Kansas City Cause Prioritization">
@@ -103,31 +103,20 @@ section .secsub{font-size:.92rem;color:var(--ink-soft);margin:0 0 20px;max-width
 .rrow:hover .rdot{box-shadow:0 0 0 2px var(--paper-2)}
 .rrow .end{font-size:.82rem;font-variant-numeric:tabular-nums;text-align:right;color:var(--ink-soft)}
 .rgrid{position:absolute;top:0;bottom:0;width:1px;background:var(--line)}
-/* explorer */
-.controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin:0 0 12px}
-.reset-btn{font-size:.85rem;border:1px solid var(--line-strong);padding:8px 14px;color:var(--ink-soft)}
-.reset-btn:hover{color:var(--terra);border-color:var(--terra)}
-.ctl-note{font-size:.8rem;color:var(--ink-soft)}
+/* per-problem evidence */
 .explorer{border:1px solid var(--line-strong)}
 .xrow{border-bottom:1px solid var(--line);padding:10px 14px}
 .xrow:last-child{border-bottom:none}
 .xtop{display:grid;grid-template-columns:34px minmax(140px,1fr) 90px 170px 170px 74px;gap:12px;align-items:center}
 .xrank{font-family:"Raleway",sans-serif;font-weight:700;font-size:1.05rem;text-align:center;border:1px solid var(--line-strong);padding:4px 0;font-variant-numeric:tabular-nums}
-.xrank.up{border-color:var(--leaf);color:var(--leaf)}
-.xrank.dn{border-color:var(--terra);color:var(--terra)}
 .xnm{font-size:.88rem;font-weight:500}
 .xnm button{font-size:.74rem;color:var(--leaf-deep);display:block;padding:0;margin-top:2px}
 [data-theme="dark"] .xnm button{color:var(--leaf)}
 .xnm button:hover{color:var(--gold)}
 .xI{font-size:.82rem;font-variant-numeric:tabular-nums;color:var(--ink-soft)}
 .xI b{color:var(--ink);font-weight:600}
-.sld label{display:flex;justify-content:space-between;font-size:.72rem;color:var(--ink-soft)}
-.sld label output{font-variant-numeric:tabular-nums;font-weight:600;color:var(--ink)}
-.sld input[type=range]{width:100%;height:20px;margin:0;-webkit-appearance:none;appearance:none;background:transparent}
-.sld input[type=range]::-webkit-slider-runnable-track{height:4px;background:var(--paper-2);border:1px solid var(--line)}
-.sld input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:14px;height:14px;background:var(--s1);border:none;margin-top:-6px;cursor:pointer}
-.sld input[type=range]::-moz-range-track{height:4px;background:var(--paper-2);border:1px solid var(--line)}
-.sld input[type=range]::-moz-range-thumb{width:14px;height:14px;background:var(--s1);border:none;border-radius:0;cursor:pointer}
+.xTN{font-size:.82rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.xTN b{color:var(--ink);font-weight:600}
 .xscore{font-size:.85rem;font-variant-numeric:tabular-nums;text-align:right}
 .xscore small{display:block;font-size:.7rem;color:var(--ink-soft)}
 .xcap{display:none;margin:10px 0 2px;padding:12px 14px;border:1px solid var(--line);background:var(--paper-2);font-size:.85rem;max-width:900px}
@@ -159,8 +148,13 @@ footer{border-top:1px solid var(--line);margin-top:64px;padding:22px 0 30px;font
 footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-between}
 @media(prefers-reduced-motion:reduce){*{transition:none!important}}
 @media(max-width:820px){
-  .xtop{grid-template-columns:30px minmax(110px,1fr) 84px 66px;grid-auto-rows:auto}
-  .xtop .sld{grid-column:span 2}
+  .xtop{grid-template-columns:34px repeat(3,1fr);grid-auto-rows:auto;gap:10px 12px;align-items:start}
+  .xtop>.xrank{grid-area:1/1}
+  .xtop>.xnm{grid-area:1/2/2/4}
+  .xtop>.xscore{grid-area:1/4}
+  .xtop>.xI{grid-area:2/1/3/3}
+  .xtop>.xTN:nth-child(4){grid-area:2/3}
+  .xtop>.xTN:nth-child(5){grid-area:2/4}
 }
 @media(max-width:640px){
   .mrow,.rrow{grid-template-columns:minmax(110px,150px) 1fr 78px;gap:8px;padding:8px 10px}
@@ -192,7 +186,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 <div class="wrap head">
   <p class="eyebrow">Interactive analysis · August 2026</p>
   <h1>Where Would a Marginal Dollar Do the Most Good in Kansas City?</h1>
-  <p class="sub">Fifteen problems from my <a href="kc-impact-analysis.html">KC burden-of-disease analysis</a>, rank-ordered by the effective altruism framework: impact × tractability × neglectedness. Tractability comes from verified intervention cost-effectiveness and Missouri's actual legal room to act. Neglectedness comes from mapping who currently funds what, in dollars. A 10,000-draw Monte Carlo over the uncertainty turns the ranking into rank <em>intervals</em>, and the explorer below lets you disagree with any score I made and watch the ranking respond.</p>
+  <p class="sub">Fifteen problems from my <a href="kc-impact-analysis.html">KC burden-of-disease analysis</a>, rank-ordered by the effective altruism framework: impact × tractability × neglectedness. Tractability comes from verified intervention cost-effectiveness and Missouri's actual legal room to act. Neglectedness comes from mapping who currently funds what, in dollars. A 10,000-draw Monte Carlo over the uncertainty turns the ranking into rank <em>intervals</em>, and every score below expands into the evidence and citations behind it.</p>
   <p class="method">The impact figures are measured; the T and N scores are structured judgment over verified evidence, which is exactly why they are adjustable. Every claim cites its source at the bottom of the page.</p>
   <div class="verdict">
     <div class="v"><p class="rk">1 · P(top 3) = 100%</p><h3>Tobacco control</h3><p>Quitlines at $849&ndash;2,358/QALY meet the most extreme neglect in the study: Missouri funds tobacco control at 7.4% of the CDC-recommended level.</p></div>
@@ -220,13 +214,9 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   <div class="rankstrip" id="rank-chart" role="list"></div>
 </section>
 
-<section id="explorer">
-  <h2>The explorer: disagree with me</h2>
-  <p class="secsub">Impact is measured (annual DALYs, fixed here). Tractability and neglectedness are 0&ndash;10 scores I assigned from the evidence in each capsule; drag them if you read the evidence differently and the ranking recomputes live using the factor-product score (log<sub>10</sub> I + T/2 + N/2). "Evidence" expands each problem's reasoning with citations.</p>
-  <div class="controls">
-    <button class="reset-btn" id="reset">Reset to study scores</button>
-    <span class="ctl-note" id="edited-note"></span>
-  </div>
+<section id="evidence">
+  <h2>The scores, problem by problem</h2>
+  <p class="secsub">Impact is measured (annual DALYs). Tractability and neglectedness are 0&ndash;10 scores I assigned from the evidence in each capsule, and the order here is the factor-product score (log<sub>10</sub> I + T/2 + N/2). "Evidence" expands each problem's reasoning with citations.</p>
   <div class="explorer" id="xp"></div>
   <details class="tblv"><summary>Data table (study values)</summary><div id="xp-table"></div></details>
 </section>
@@ -254,7 +244,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
     <p><b>Impact</b> carries over from the <a href="kc-impact-analysis.html">companion burden analysis</a>: WHO Global Health Estimates 2021 US cause rates, localized with county death certificates and CDC PLACES prevalence, with 80% CIs.</p>
     <p><b>Tractability</b> (0&ndash;10) anchors to the best locally-feasible intervention's verified cost-effectiveness on a log scale ($500/DALY ≈ 9, $5K ≈ 7, $50K ≈ 5, nothing proven ≈ 1&ndash;2), adjusted for evidence strength (CPSTF- or RCT-verified beats contested beats absent), Missouri's legal room to act, and KC-specific precedent.</p>
     <p><b>Neglectedness</b> (0&ndash;10) is scored at the prevention margin: annual local dollars aimed at reducing the problem, not treating it, per DALY of burden, from verified budgets (city, county COMBAT tax, settlement flows, HUD awards) and philanthropy (990-verified), benchmarked against national funding-versus-burden residuals. Treatment spending is reported but does not count as crowding for prevention.</p>
-    <p><b>The Monte Carlo</b> draws every factor from a triangular distribution over its range, 10,000 times (fixed seed), and records each problem's rank per draw. The full simulation is a <a href="https://github.com/BecomingStronger/becomingstronger.github.io/blob/main/tools/kc-itn-simulation.py" target="_blank" rel="noopener">60-line stdlib Python script</a> that reproduces every number in the table above. Two scoring views run in parallel: marginal DALYs per $10M (the headline) and the factor product (the explorer). Where they disagree, the disagreement is the finding: falls leads the factor product but its modest burden caps absolute gains; musculoskeletal disease scores high on burden-times-neglect but has no deployable intervention, making it a research bet, not a program bet.</p>
+    <p><b>The Monte Carlo</b> draws every factor from a triangular distribution over its range, 10,000 times (fixed seed), and records each problem's rank per draw. The full simulation is a <a href="https://github.com/BecomingStronger/becomingstronger.github.io/blob/main/tools/kc-itn-simulation.py" target="_blank" rel="noopener">60-line stdlib Python script</a> that reproduces every number in the table above. Two scoring views run in parallel: marginal DALYs per $10M (the headline) and the factor product (the per-problem list above). Where they disagree, the disagreement is the finding: falls leads the factor product but its modest burden caps absolute gains; musculoskeletal disease scores high on burden-times-neglect but has no deployable intervention, making it a research bet, not a program bet.</p>
     <p><b>Post-vetting update (Aug 15).</b> A follow-on pass vetting KC's actual charities fed back into three neglectedness scores: falls down (delivery infrastructure exists after all, small and deficit-funded), tobacco up (no local giving vehicle exists at all), overdose up slightly (the metro's joint federal harm-reduction grant lapsed in May). Re-running the Monte Carlo: the headline View A ranking is unchanged in every number; View B's only change is falls and tobacco swapping #1 and #2. Everything stays inside the published rank intervals. For a donor, note the asymmetry the scores can't hold: tobacco ranks #1 but has nothing to fund without building the channel, while falls has a starving, fundable vehicle today.</p>
 <p><b>What this is not.</b> Local institutions' own priorities entered only as crowdedness data, never as conclusions. The T and N scores are my judgment over the verified evidence, stated openly and adjustable above. A state-level actor's ranking would differ (alcohol and tobacco taxes jump); so would a researcher's (musculoskeletal jumps).</p>
   </div>
@@ -403,52 +393,27 @@ function attachTip(el,html){
     host.appendChild(row);
   });
 })();
-/* explorer */
-var state=D.map(function(d){return {t:d[3][1],n:d[4][1]}});
-function score(i){return Math.log10(D[i][2][0]*1000)+state[i].t/2+state[i].n/2}
-var BASE_RANK=(function(){
-  var r={};D.map(function(d,i){return [i,Math.log10(d[2][0]*1000)+d[3][1]/2+d[4][1]/2]})
-    .sort(function(a,b){return b[1]-a[1]})
-    .forEach(function(p,rank){r[p[0]]=rank+1});
-  return r;
-})();
-function buildExplorer(){
-  var host=$('#xp');host.innerHTML='';
-  var order=D.map(function(_,i){return i}).sort(function(a,b){return score(b)-score(a)});
-  order.forEach(function(i,rank){
-    var d=D[i], base=BASE_RANK[i];
-    var row=document.createElement('div');row.className='xrow';row.dataset.i=i;
-    var delta=(rank+1)-base;
+/* per-problem evidence */
+function fscore(d){return Math.log10(d[2][0]*1000)+d[3][1]/2+d[4][1]/2}
+;(function(){
+  var host=$('#xp');
+  D.map(function(d,i){return [i,d]}).sort(function(a,b){return fscore(b[1])-fscore(a[1])}).forEach(function(p,rank){
+    var i=p[0], d=p[1];
+    var row=document.createElement('div');row.className='xrow';
     row.innerHTML='<div class="xtop">'+
-      '<div class="xrank'+(delta<-0?' up':delta>0?' dn':'')+'" title="study rank '+base+'">'+(rank+1)+'</div>'+
+      '<div class="xrank">'+(rank+1)+'</div>'+
       '<div class="xnm">'+d[1]+'<button data-cap="'+i+'">Evidence &amp; citations</button></div>'+
-      '<div class="xI"><b>'+d[2][0]+'K</b> DALYs/yr<br>['+d[2][1]+'–'+d[2][2]+']</div>'+
-      '<div class="sld"><label>Tractability <output>'+state[i].t.toFixed(1)+'</output></label>'+
-      '<input type="range" min="0" max="10" step="0.5" value="'+state[i].t+'" data-i="'+i+'" data-f="t" aria-label="Tractability score for '+d[1]+'"></div>'+
-      '<div class="sld"><label>Neglectedness <output>'+state[i].n.toFixed(1)+'</output></label>'+
-      '<input type="range" min="0" max="10" step="0.5" value="'+state[i].n+'" data-i="'+i+'" data-f="n" aria-label="Neglectedness score for '+d[1]+'"></div>'+
-      '<div class="xscore">'+score(i).toFixed(2)+'<small>factor score</small></div>'+
+      '<div class="xI"><b>'+d[2][0]+'K</b> DALYs/yr<br>['+d[2][1]+'\u2013'+d[2][2]+']</div>'+
+      '<div class="xTN">Tractability<br><b>'+d[3][1].toFixed(1)+'</b> / 10</div>'+
+      '<div class="xTN">Neglectedness<br><b>'+d[4][1].toFixed(1)+'</b> / 10</div>'+
+      '<div class="xscore">'+fscore(d).toFixed(2)+'<small>factor score</small></div>'+
       '</div><div class="xcap" id="cap-'+i+'">'+d[9]+'</div>';
     host.appendChild(row);
-  });
-  var edited=state.some(function(s,i){return s.t!==D[i][3][1]||s.n!==D[i][4][1]});
-  $('#edited-note').textContent=edited?'Showing your adjusted scores; rank chips compare against the study ranking.':'Showing the study scores.';
-  host.querySelectorAll('input[type=range]').forEach(function(inp){
-    inp.addEventListener('input',function(){
-      var i=+inp.dataset.i;state[i][inp.dataset.f]=+inp.value;
-      var open=[].map.call(host.querySelectorAll('.xcap.open'),function(c){return c.id});
-      buildExplorer();
-      open.forEach(function(id){var c=document.getElementById(id);if(c)c.classList.add('open')});
-    });
   });
   host.querySelectorAll('button[data-cap]').forEach(function(b){
     b.addEventListener('click',function(){document.getElementById('cap-'+b.dataset.cap).classList.toggle('open')});
   });
-}
-$('#reset').addEventListener('click',function(){
-  state=D.map(function(d){return {t:d[3][1],n:d[4][1]}});buildExplorer();
-});
-buildExplorer();
+})();
 /* study table */
 (function(){
   var t='<table><thead><tr><th>Problem</th><th>I (DALYs K)</th><th>T</th><th>N</th><th>DALYs/$10M</th><th>Rank A (10–90%)</th><th>Rank B</th></tr></thead><tbody>';
