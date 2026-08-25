@@ -317,7 +317,7 @@ footer a{color:var(--md-sys-color-primary);cursor:pointer}
       <a data-tab="portfolio">Portfolio</a>
       <a data-tab="calendar">Book a meeting</a>
       <a data-tab="events">Events</a>
-      <a data-tab="dating">Dating Document</a>
+      <a data-tab="dating" href="/dating/">Dating Document</a>
     </nav>
     <div class="nav-right">
       <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
@@ -548,11 +548,23 @@ footer a{color:var(--md-sys-color-primary);cursor:pointer}
 var PAGES=['home','about','blog','portfolio','calendar','events','dating'];
 var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar:'Book a meeting · Becoming Stronger',events:'Events · Becoming Stronger',portfolio:'Portfolio · Becoming Stronger',
   blog:'Blog · Becoming Stronger',dating:'Dating Document · Becoming Stronger'};
+/* The dating document is the one tab with a real URL of its own (dating/,
+   which carries its own link-preview card). Keep the address bar on that URL
+   while the tab is up, so what Alex copies is what previews. */
+var ROOT=location.pathname.replace(/(?:dating\/)?(?:index\.html)?$/,'');
+function syncUrl(id){
+  if(!history.replaceState)return;
+  var want=(id==='dating')?ROOT+'dating/'+location.search
+          :ROOT+location.search+(id==='home'?'':'#'+id);
+  if(location.pathname+location.search+location.hash!==want)
+    history.replaceState(null,'',want);
+}
 function showTab(id){
   if(PAGES.indexOf(id)<0)id='home';
   document.querySelectorAll('.page').forEach(function(p){p.classList.toggle('active',p.id===id)});
   document.querySelectorAll('.nav-links a').forEach(function(a){a.classList.toggle('active',a.dataset.tab===id)});
   document.title=titles[id]||titles.home;
+  syncUrl(id);
   window.scrollTo(0,0);
   gcSend(id);
 }
