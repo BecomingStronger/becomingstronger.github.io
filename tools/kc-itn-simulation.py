@@ -50,9 +50,9 @@ random.seed(42)  # published numbers use this seed
 
 # name, I=(pt,lo,hi) kDALYs/yr, T=(lo,pt,hi), N=(lo,pt,hi), M=(lo,pt,hi)
 PROBLEMS = [
-    ("Tobacco control (chronic respiratory lever)", (34, 28, 41), (5.5, 6.5, 7.5), (7.5, 8.5, 9.5), (1200, 2800, 6000)),
-    ("Drug use & overdose",                         (41, 32, 51), (7.0, 8.0, 8.8), (5.0, 6.0, 7.0), (700, 1800, 4000)),
-    ("Elderly falls",                               (13, 11, 17), (6.0, 7.0, 8.0), (8.5, 9.5, 10.0), (500, 1200, 2600)),
+    ("Tobacco control (chronic respiratory lever)", (34, 28, 41), (5.5, 6.5, 7.5), (8.0, 9.0, 10.0), (1200, 2800, 6000)),
+    ("Drug use & overdose",                         (41, 32, 51), (7.0, 8.0, 8.8), (5.5, 6.5, 7.5), (700, 1800, 4000)),
+    ("Elderly falls",                               (13, 11, 17), (6.0, 7.0, 8.0), (8.0, 9.0, 9.5), (500, 1200, 2600)),
     ("Cardiovascular / hypertension",               (99, 84, 116), (5.5, 6.5, 7.5), (5.0, 6.0, 7.0), (400, 900, 2000)),
     ("Road traffic injuries",                       (16, 13, 19), (4.5, 6.0, 7.0), (5.0, 6.0, 7.0), (200, 700, 1800)),
     ("Infant & maternal",                           (15, 12, 19), (5.0, 6.0, 7.0), (7.0, 8.0, 9.0), (250, 650, 1300)),
