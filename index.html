@@ -2,6 +2,10 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<!-- Relative paths resolve against the document URL, and the dating tab
+     rewrites that to /dating/ while it is up. Without this, the tab's own
+     lazy-loaded photos would resolve to /dating/images/... and 404. -->
+<base href="/">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Becoming Stronger</title>
 <meta name="description" content="Personal site: about, blog, the dating document, and a calendar to schedule time with me.">
@@ -551,11 +555,11 @@ var titles={home:'Becoming Stronger',about:'About · Becoming Stronger',calendar
 /* The dating document is the one tab with a real URL of its own (dating/,
    which carries its own link-preview card). Keep the address bar on that URL
    while the tab is up, so what Alex copies is what previews. */
-var ROOT=location.pathname.replace(/(?:dating\/)?(?:index\.html)?$/,'');
+var CANON=history.replaceState&&/^\/(?:index\.html)?$|^\/dating\/$/.test(location.pathname);
 function syncUrl(id){
-  if(!history.replaceState)return;
-  var want=(id==='dating')?ROOT+'dating/'+location.search
-          :ROOT+location.search+(id==='home'?'':'#'+id);
+  if(!CANON)return;
+  var want=(id==='dating')?'/dating/'+location.search
+          :'/'+location.search+(id==='home'?'':'#'+id);
   if(location.pathname+location.search+location.hash!==want)
     history.replaceState(null,'',want);
 }
