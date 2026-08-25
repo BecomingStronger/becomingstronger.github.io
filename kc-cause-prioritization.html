@@ -46,6 +46,29 @@ a{color:var(--leaf-deep);text-decoration:none}
 [data-theme="dark"] a{color:var(--leaf)}
 a:hover{text-decoration:underline}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+/* two-column shell: sticky outline on the left, document on the right */
+.shell{display:grid;grid-template-columns:236px minmax(0,1fr);gap:0 48px;max-width:1400px;margin:0 auto;padding:0 24px}
+.shell>.head{grid-column:2;grid-row:1}
+.shell>.toc{grid-column:1;grid-row:1/span 2}
+.shell>.doc{grid-column:2;grid-row:2;min-width:0}
+.toc{position:sticky;top:74px;margin-top:60px;align-self:start;max-height:calc(100vh - 104px);overflow-y:auto;overscroll-behavior:contain;border-left:1px solid var(--line)}
+.toc>summary{display:none}
+.toc h2{font-size:.68rem;text-transform:uppercase;letter-spacing:.09em;color:var(--ink-soft);font-weight:600;margin:0 0 8px;padding-left:15px}
+.toc a{display:block;font-size:.82rem;line-height:1.3;color:var(--ink-soft);padding:6px 8px 6px 15px;border-left:2px solid transparent;margin-left:-1px;text-decoration:none}
+.toc a:hover{color:var(--ink);background:var(--paper-2)}
+.toc a.on{color:var(--ink);border-left-color:var(--s1);font-weight:600}
+.toc a.lv3{padding-left:28px;font-size:.775rem}
+.toc a.lv3.on{border-left-color:var(--s2)}
+h2[id],h3[id],section[id]{scroll-margin-top:74px}
+@media(max-width:1180px){
+  .shell{display:block;max-width:var(--maxw)}
+  .toc{position:static;max-height:none;border:1px solid var(--line-strong);margin:0 0 30px}
+  .toc>summary{display:block;cursor:pointer;padding:11px 15px;font-size:.8rem;letter-spacing:.06em;text-transform:uppercase;color:var(--ink-soft);font-weight:600}
+  .toc[open]>summary{border-bottom:1px solid var(--line)}
+  .toc h2{display:none}
+  .toc nav{padding:8px 0}
+}
+@media(prefers-reduced-motion:no-preference){html{scroll-behavior:smooth}}
 button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
 header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
 .nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:14px}
@@ -70,6 +93,7 @@ header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-botto
 .v h3{font-size:1.05rem;margin:0 0 6px}
 .v p{font-size:.8rem;color:var(--ink-soft);margin:0}
 section{margin:56px 0 0}
+#tldr{margin-top:14px}
 section h2{font-size:1.5rem;margin:0 0 6px}
 section h3{font-size:1.12rem;margin:40px 0 6px;padding-top:18px;border-top:1px solid var(--line)}
 section h3:first-of-type{border-top:none;padding-top:0}
@@ -268,9 +292,23 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   </div>
 </header>
 
-<div class="wrap head">
+<div class="shell">
+
+<div class="head">
   <p class="eyebrow">Interactive analysis · August 2026</p>
   <h1>Where Would a Marginal Dollar Do the Most Good in Kansas City?</h1>
+</div>
+
+<details class="toc" id="toc" open>
+  <summary>Outline</summary>
+  <h2>On this page</h2>
+  <nav id="toc-nav" aria-label="Page outline"></nav>
+</details>
+
+<div class="doc">
+
+<section id="tldr">
+  <h2>TL;DR</h2>
   <p class="sub">Fifteen problems in the Kansas City metro, rank-ordered by the effective altruism framework: impact × tractability × neglectedness. <a href="#impact">Impact</a> is measured, in annual disability-adjusted life years built from county death certificates and CDC prevalence data. <a href="#tractability">Tractability</a> comes from verified intervention cost-effectiveness and Missouri's actual legal room to act. <a href="#neglectedness">Neglectedness</a> comes from mapping who currently funds what, in dollars. Each factor gets its own section below, a 10,000-draw Monte Carlo over the uncertainty turns the ranking into rank <em>intervals</em>, and every score expands into the evidence and citations behind it.</p>
   <p class="method">The impact figures are measured; the tractability and neglectedness scores are structured judgment over verified evidence, and each one states its reasoning where it is scored. Every claim cites its source at the bottom of the page.</p>
   <div class="verdict">
@@ -279,24 +317,30 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
     <div class="v"><p class="rk">3 · P(top 3) = 65%</p><h3>Elderly falls</h3><p>Cost-saving interventions, an evidence-based local program running at a deficit with no funder behind it, and the least-funded cause of death in America relative to its mortality.</p></div>
     <div class="v"><p class="rk">4 · P(top 3) = 28%</p><h3>Hypertension control</h3><p>$2,800&ndash;15,000/QALY levers against the region's single largest burden, deliverable through safety-net clinics with no policy fight.</p></div>
   </div>
-</div>
 
-<div class="wrap">
-
-<section id="marginal">
-  <h2>The headline metric: DALYs averted per marginal $10M/yr</h2>
+  <h3 id="marginal">The headline metric: DALYs averted per marginal $10M/yr</h3>
   <p class="secsub">One number that integrates all three ITN factors: if an additional $10M/yr showed up in Kansas City, how many disability-adjusted life years would it buy against each problem, through the best verified locally-feasible intervention, at current levels of crowding? Whiskers are the 10th&ndash;90th percentile of the Monte Carlo.</p>
   <div class="legend-row">
     <span class="key"><span class="sw" style="background:var(--s1)"></span>Central estimate</span>
     <span class="key"><span class="whisk"></span>10&ndash;90% interval</span>
   </div>
   <div class="rowchart" id="marg-chart" role="list"></div>
-</section>
 
-<section id="stability">
-  <h2>How stable is the ranking?</h2>
+  <h3 id="stability">How stable is the ranking?</h3>
   <p class="secsub">Each dot is a problem's median rank across 10,000 Monte Carlo draws; the line is its 10th&ndash;90th percentile rank range. Tight lines mean the ranking is confident; long lines mean reasonable people can land in different places. Violence has the longest line in the study.</p>
   <div class="rankstrip" id="rank-chart" role="list"></div>
+</section>
+
+<section id="ea">
+  <h2>An Intro to Effective Altruism</h2>
+  <div class="prose">
+    <p>Effective Altruism (or "EA") is a philosophy that tries to answer the question "How can we do the most good?"</p>
+    <p>Having good intentions does not mean you are doing good. In fact, lots of charities cause active harm without even realizing it. Furthermore, every time you decide to do one thing, you are actively choosing to not do everything else. This is called your "opportunity cost"; failure to do a better thing has a cost in all the good you could be doing and are choosing not to.</p>
+    <p>Having data is the only way to even begin getting around these problems. It is not a guarantee that you will make the right decision, but it's the only way you will ever be able to move from a worse decision to a better one.</p>
+    <p>Now, to be clear: that does not mean your life should be entirely in the service of doing the Most Good. The good life involves many different things, and I believe this is only one of them. I recommend treating EA as more of a tool. Use the tool to do good as far as you feel comfortable, and then stop. The most effective form of good is the one you will sustain, after all.</p>
+    <p>As for how EA approaches doing good, we first start with asking the question "What exactly are the most important problems?" We do not take for granted that we already know the answer to this. We grade all problems using Impact (how much of a burden the problem is, usually measured in Disability Adjusted Life Years), Tractability (how easy it is to start making headway on the problem), and Neglectedness (how few resources, usually measured in money, are currently going toward the problem). The higher a problem scores on any of these three metrics, the higher the priority it is, indicating where a marginal dollar will go the furthest. The cool thing about these metrics is that they change over time in response to our changing circumstances; as we start fixing a problem, its impact goes down. As we start picking the low hanging fruit, its tractability goes down. As we funnel more money and resources to the problem, its neglectedness goes down.</p>
+    <p>Ultimately, the best thing you can do is donate to developing nations. Malaria nets, unconditional cash transfers, deworming, etc. These are all extremely cheap, thoroughly researched, and do an outsized amount of good. Attempting to give money to people in first world nations tends to not go very far; we are already so wealthy, and our problems are extremely complex. But for those times when there is money earmarked for local charity, I want that money to go where it can do the most good.</p>
+  </div>
 </section>
 
 <section id="impact">
@@ -522,6 +566,7 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
   </ol>
 </section>
 
+</div>
 </div>
 
 <div id="tip" role="status" aria-live="polite"></div>
@@ -887,6 +932,52 @@ function fscore(d){return FAC.reduce(function(a,f){return a+f.pts(d)},0)}
       '<td>'+d[6][0]+' ('+d[6][1]+'–'+d[6][2]+')</td><td>'+d[8][0]+'</td></tr>';
   });
   $('#xp-table').innerHTML=t+'</tbody></table></div>';
+})();
+/* outline: built from the document so it cannot drift out of sync */
+(function(){
+  var nav=$('#toc-nav'), toc=$('#toc');
+  if(!nav) return;
+  var slug=function(t){return t.toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'')};
+  var items=[];
+  document.querySelectorAll('.doc > section[id]').forEach(function(sec){
+    var h2=sec.querySelector(':scope > h2');
+    if(!h2) return;
+    items.push({id:sec.id, text:h2.textContent.trim(), lv:2, el:h2});
+    sec.querySelectorAll(':scope > h3').forEach(function(h3){
+      if(!h3.id) h3.id='s-'+slug(h3.textContent);
+      items.push({id:h3.id, text:h3.textContent.trim(), lv:3, el:h3});
+    });
+  });
+  nav.innerHTML=items.map(function(it){
+    return '<a href="#'+it.id+'"'+(it.lv===3?' class="lv3"':'')+'>'+it.text+'</a>';
+  }).join('');
+  var links={};
+  nav.querySelectorAll('a').forEach(function(a){links[a.getAttribute('href').slice(1)]=a});
+  /* scrollspy: highlight the heading most recently passed */
+  var marks=items.map(function(it){return it.el});
+  var current=null;
+  function spy(){
+    var y=window.scrollY+90, best=null;
+    for(var i=0;i<marks.length;i++){
+      if(marks[i].getBoundingClientRect().top+window.scrollY<=y) best=items[i].id; else break;
+    }
+    if(best===current) return;
+    if(current&&links[current]) links[current].classList.remove('on');
+    current=best;
+    if(current&&links[current]){
+      links[current].classList.add('on');
+      var a=links[current], r=a.getBoundingClientRect(), t=toc.getBoundingClientRect();
+      if(r.top<t.top||r.bottom>t.bottom) a.scrollIntoView({block:'nearest'});
+    }
+  }
+  var tick=false;
+  addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){spy();tick=false})},{passive:true});
+  spy();
+  /* collapsed by default on narrow screens, always open beside the document */
+  var narrow=matchMedia('(max-width:1180px)');
+  var sync=function(){toc.open=!narrow.matches};
+  narrow.addEventListener('change',sync); sync();
+  nav.addEventListener('click',function(e){if(e.target.tagName==='A'&&narrow.matches)toc.open=false});
 })();
 /* theme toggle */
 function setTheme(t,save){
