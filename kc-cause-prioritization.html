@@ -974,9 +974,20 @@ function fscore(d){return FAC.reduce(function(a,f){return a+f.pts(d)},0)}
     current=best;
     if(current&&links[current]){
       links[current].classList.add('on');
-      var a=links[current], r=a.getBoundingClientRect(), t=toc.getBoundingClientRect();
-      if(r.top<t.top||r.bottom>t.bottom) a.scrollIntoView({block:'nearest'});
+      keepVisible(links[current]);
     }
+  }
+  /* Scroll only the outline's own container. scrollIntoView would scroll every
+     scrollable ancestor including the document, which drags the reader back up
+     to the outline whenever it is not a sticky sidebar. */
+  function keepVisible(a){
+    if(!toc.open) return;
+    var box = nav.scrollHeight > nav.clientHeight + 1 ? nav
+            : (toc.scrollHeight > toc.clientHeight + 1 ? toc : null);
+    if(!box) return;
+    var ar=a.getBoundingClientRect(), br=box.getBoundingClientRect();
+    if(ar.top < br.top) box.scrollTop += ar.top - br.top;
+    else if(ar.bottom > br.bottom) box.scrollTop += ar.bottom - br.bottom;
   }
   var tick=false;
   addEventListener('scroll',function(){if(tick)return;tick=true;requestAnimationFrame(function(){spy();tick=false})},{passive:true});
