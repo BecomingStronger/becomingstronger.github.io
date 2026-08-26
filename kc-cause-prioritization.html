@@ -334,18 +334,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
     <div class="v"><p class="rk">3 · P(top 3) = 65%</p><h3>Elderly falls</h3><p>Cost-saving interventions, an evidence-based local program running at a deficit with no funder behind it, and the least-funded cause of death in America relative to its mortality.</p></div>
     <div class="v"><p class="rk">4 · P(top 3) = 28%</p><h3>Hypertension control</h3><p>$2,800&ndash;15,000/QALY levers against the region's single largest burden, deliverable through safety-net clinics with no policy fight.</p></div>
   </div>
-
-  <h3 id="marginal">The headline metric: DALYs averted per marginal $10M/yr</h3>
-  <p class="secsub">One number that integrates all three ITN factors: if an additional $10M/yr showed up in Kansas City, how many disability-adjusted life years would it buy against each problem, through the best verified locally-feasible intervention, at current levels of crowding? Whiskers are the 10th&ndash;90th percentile of the Monte Carlo.</p>
-  <div class="legend-row">
-    <span class="key"><span class="sw" style="background:var(--s1)"></span>Central estimate</span>
-    <span class="key"><span class="whisk"></span>10&ndash;90% interval</span>
-  </div>
-  <div class="rowchart" id="marg-chart" role="list"></div>
-
-  <h3 id="stability">How stable is the ranking?</h3>
-  <p class="secsub">Each dot is a problem's median rank across 10,000 Monte Carlo draws; the line is its 10th&ndash;90th percentile rank range. Tight lines mean the ranking is confident; long lines mean reasonable people can land in different places. Violence has the longest line in the study.</p>
-  <div class="rankstrip" id="rank-chart" role="list"></div>
 </section>
 
 <section id="ea">
@@ -484,13 +472,6 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
 </section>
 
 
-<section id="portfolio-sketch">
-  <h2>What a marginal $10M/yr would buy</h2>
-  <div class="prose">
-    <p>A sketch, not a plan. Splitting $10M across the top four: roughly $3M for a quitline and cessation surge (media plus free nicotine replacement, Missouri-side), $3M for naloxone saturation, low-barrier medication access, and settlement-deployment advocacy, $2M for falls programs (CAPABLE and Otago through senior centers and Medicaid waivers), and $2M for self-measured blood pressure and team-based hypertension care through the safety-net clinics. Central estimate on the model's own numbers: <b>1,500&ndash;2,500 DALYs averted per year at scale</b>, with the falls and cessation lines partly cost-saving to Medicare and Medicaid. Every line is deliverable by organizations that already exist here, without a single preempted policy fight.</p>
-  </div>
-</section>
-
 <section id="method">
   <h2>Method</h2>
   <div class="prose">
@@ -505,6 +486,10 @@ footer .wrap{display:flex;flex-wrap:wrap;gap:6px 24px;justify-content:space-betw
     <p><b>Post-vetting update.</b> A follow-on pass vetting Kansas City's actual charities fed back into three neglectedness scores, each moved by half a point, the granularity the whole scale is scored at: falls 9.5 to 9.0 (delivery infrastructure exists after all, small and deficit-funded), tobacco 8.5 to 9.0 (no local giving vehicle exists at all for the top cause), overdose 6.0 to 6.5 (the metro's joint federal harm-reduction grant lapsed in May). Re-running the <a href="https://github.com/BecomingStronger/becomingstronger.github.io/blob/main/tools/kc-itn-simulation.py" target="_blank" rel="noopener">simulation</a>: View A is unchanged in every number, which is expected rather than reassuring, since View A ranks by marginal DALYs per $10M and never reads N at all. View B's only change is tobacco and falls swapping first and second, and every median stays inside the previously published rank intervals. For a donor, note the asymmetry the scores cannot hold: tobacco now ranks first in both views but has nothing to fund without building the channel, while falls has a starving, fundable vehicle today.</p>
 <p><b>What this is not.</b> Local institutions' own priorities entered only as crowdedness data, never as conclusions. The cost-per-QALY figures are not inflation-harmonized across sources, so they support comparisons by order of magnitude, not by digit. The T and N scores are my judgment over the verified evidence, with the reasoning for each one stated in full above so it can be argued with specifically. A state-level actor's ranking would differ (alcohol and tobacco taxes jump); so would a researcher's (musculoskeletal jumps).</p>
   </div>
+
+  <h3 id="stability">How stable is the ranking?</h3>
+  <p class="secsub">Each dot is a problem's median rank across 10,000 Monte Carlo draws; the line is its 10th&ndash;90th percentile rank range. Tight lines mean the ranking is confident; long lines mean reasonable people can land in different places. Violence has the longest line in the study.</p>
+  <div class="rankstrip" id="rank-chart" role="list"></div>
 </section>
 
 <section id="sources">
@@ -849,25 +834,6 @@ function attachTip(el,html){
     row.innerHTML='<div class="nm">'+d[0]+'<small>'+d[2]+'</small></div>'+
       '<div class="sbarzone"><div class="sbar" style="width:'+(d[1]/max*100)+'%"></div></div>'+
       '<div class="end">$'+d[1].toFixed(2)+'<small>per capita/yr</small></div>';
-    host.appendChild(row);
-  });
-})();
-/* marginal chart (View A order) */
-(function(){
-  var host=$('#marg-chart');
-  var sorted=D.slice().sort(function(a,b){return b[5][1]-a[5][1]});
-  var max=Math.max.apply(null,D.map(function(d){return d[5][2]}));
-  sorted.forEach(function(d){
-    var m=d[5];
-    var row=document.createElement('div');row.className='mrow';row.tabIndex=0;row.setAttribute('role','listitem');
-    row.innerHTML='<div class="nm">'+d[1]+'</div>'+
-      '<div class="barzone"><div class="mbar" style="width:'+(m[1]/max*100)+'%"></div>'+
-      '<div class="whisker" style="left:'+(m[0]/max*100)+'%;width:'+((m[2]-m[0])/max*100)+'%"></div></div>'+
-      '<div class="end">'+m[1].toLocaleString()+'<small>['+m[0].toLocaleString()+'–'+m[2].toLocaleString()+']</small></div>';
-    attachTip(row,'<b>'+d[1]+'</b><div class="trow"><span>DALYs/$10M/yr</span><span>'+m[1].toLocaleString()+' ['+m[0].toLocaleString()+'–'+m[2].toLocaleString()+']</span></div>'+
-      '<div class="trow"><span>Burden</span><span>'+d[2][0]+'K DALYs/yr</span></div>'+
-      '<div class="trow"><span>T / N scores</span><span>'+d[3][1]+' / '+d[4][1]+'</span></div>'+
-      (d[7]?'<div class="trow"><span>P(top 3)</span><span>'+d[7]+'%</span></div>':''));
     host.appendChild(row);
   });
 })();
