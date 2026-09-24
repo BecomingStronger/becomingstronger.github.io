@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>How Bad Would Y2K Have Been? · Becoming Stronger</title>
+<meta name="description" content="A quantified counterfactual for the Millennium Bug: what the remediation bought, what actually broke, and a 50% confidence interval on the damage of doing nothing.">
+<meta property="og:type" content="article">
+<meta property="og:url" content="https://becomingstronger.github.io/y2k-counterfactual.html">
+<meta property="og:title" content="How Bad Would Y2K Have Been?">
+<meta property="og:description" content="The world spent $300-600bn preventing the Millennium Bug. My estimate of the damage from doing nothing: ~$400bn and ~1,800 deaths. The net value of the program is genuinely ambiguous, and nobody ever checked.">
+<meta name="theme-color" id="meta-theme" content="#FBF8F0">
+<script data-goatcounter="https://baes-theorem.goatcounter.com/count" async src="//gc.zgo.at/count.js"></script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<script>
+(function(){var t=null;try{t=localStorage.getItem('bs-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);
+document.addEventListener('DOMContentLoaded',function(){
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+});})();
+</script>
+<style>
+:root{
+  --paper:#FBF8F0;--paper-2:#F2EDDE;--ink:#1E2B22;--ink-soft:#4A5A4E;
+  --leaf:#3C6E47;--leaf-deep:#24492F;--gold:#E0A526;--terra:#C4623C;
+  --line:rgba(30,43,34,.16);--line-strong:rgba(30,43,34,.28);--maxw:820px;
+  /* chart steps validated against #FBF8F0; raw site tokens fail the contrast/chroma floors */
+  --s1:#2E7845;--s2:#A97710;
+}
+html{color-scheme:light}
+html[data-theme="dark"]{color-scheme:dark;
+  --paper:#000000;--paper-2:#0E0E0E;--ink:#EFE9DB;--ink-soft:#A9B4A6;
+  --leaf:#6CB27E;--leaf-deep:#2E5A3B;--gold:#E4B04A;--terra:#D97B52;
+  --line:rgba(239,233,219,.14);--line-strong:rgba(239,233,219,.26);
+  /* re-stepped for the dark surface (#0E0E0E) */
+  --s1:#5CA96F;--s2:#C56A40;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;line-height:1.65;-webkit-font-smoothing:antialiased}
+h1,h2,h3,h4{font-family:"Raleway",sans-serif;font-weight:600;line-height:1.15;letter-spacing:-.01em}
+a{color:var(--leaf-deep);text-decoration:none;border-bottom:1px solid var(--line-strong)}
+a:hover{border-bottom-color:var(--gold)}
+[data-theme="dark"] a{color:var(--leaf)}
+.wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
+.wrap-wide{max-width:1080px;margin:0 auto;padding:0 24px}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer;padding:0}
+
+header.nav{position:sticky;top:0;z-index:50;background:var(--paper);border-bottom:1px solid var(--line)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;height:62px;gap:14px;max-width:1080px;margin:0 auto;padding:0 24px}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Raleway",sans-serif;font-weight:600;font-size:1.05rem;color:var(--ink);border:none}
+.nav-right{display:flex;align-items:center;gap:14px}
+.backlink{font-size:.9rem;font-weight:500;color:var(--ink-soft);border:none}
+.backlink:hover{color:var(--leaf-deep)}
+.theme-toggle{border:1px solid var(--line-strong);width:36px;height:36px;
+  display:inline-flex;align-items:center;justify-content:center;color:var(--ink-soft)}
+.theme-toggle:hover{color:var(--gold);border-color:var(--gold)}
+.theme-toggle .icon-sun{display:none}
+[data-theme="dark"] .theme-toggle .icon-sun{display:block}
+[data-theme="dark"] .theme-toggle .icon-moon{display:none}
+
+.head{padding:56px 0 6px}
+.eyebrow{font-size:.76rem;font-weight:600;letter-spacing:.16em;text-transform:uppercase;color:var(--leaf);margin:0 0 14px}
+.head h1{font-size:clamp(2rem,5vw,3.1rem);margin:0 0 18px}
+.head .sub{font-size:1.14rem;color:var(--ink-soft);margin:0 0 18px}
+.head .method{font-size:.86rem;color:var(--ink-soft);margin:0;padding-top:14px;border-top:1px solid var(--line)}
+
+article{padding:10px 0 40px}
+article h2{font-size:1.5rem;margin:52px 0 6px;padding-top:22px;border-top:1px solid var(--line-strong)}
+article h2 .num{color:var(--leaf);font-variant-numeric:tabular-nums;margin-right:10px}
+article h3{font-size:1.12rem;margin:32px 0 4px}
+article p{margin:14px 0}
+article ul{margin:14px 0;padding-left:22px}
+article li{margin:7px 0}
+strong{font-weight:600}
+.lede{font-size:1.07rem}
+
+/* callout */
+.callout{border:1px solid var(--line-strong);border-left:4px solid var(--gold);background:var(--paper-2);padding:16px 18px;margin:26px 0}
+.callout p{margin:8px 0}
+.callout p:first-child{margin-top:0}
+.callout p:last-child{margin-bottom:0}
+.callout .lbl{font-size:.74rem;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);display:block;margin-bottom:6px}
+
+/* key numbers panel */
+.keys{border:1px solid var(--line-strong);margin:34px 0 8px}
+.keys>header{padding:13px 18px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.keys>header h2{margin:0;padding:0;border:none;font-size:1.06rem}
+.keys>header p{margin:4px 0 0;font-size:.84rem;color:var(--ink-soft)}
+.krow{padding:20px 18px;border-bottom:1px solid var(--line)}
+.krow:last-child{border-bottom:none}
+.krow .kt{font-size:.78rem;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-soft);margin:0 0 3px}
+.krow .kv{font-family:"Raleway",sans-serif;font-size:1.5rem;font-weight:700;margin:0 0 2px;font-variant-numeric:tabular-nums}
+.krow .kc{font-size:.9rem;color:var(--ink-soft);margin:0 0 16px}
+
+/* interval bars */
+.ivwrap{position:relative;height:56px;margin-top:26px}
+.ivaxis{position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--line-strong)}
+.ivtick{position:absolute;bottom:0;transform:translateX(-50%);font-size:.72rem;color:var(--ink-soft);font-variant-numeric:tabular-nums;padding-top:5px;white-space:nowrap}
+.ivtick::before{content:"";position:absolute;left:50%;top:-5px;width:1px;height:5px;background:var(--line-strong)}
+.ivtick.t0{transform:none}
+.ivtick.t0::before{left:0}
+.ivtick.t100{transform:translateX(-100%)}
+.ivtick.t100::before{left:auto;right:0}
+.ivband{position:absolute;top:14px;height:16px;background:var(--s1);opacity:.30}
+.ivmed{position:absolute;top:8px;width:3px;height:28px;background:var(--s1);z-index:3}
+.ivmedlbl{position:absolute;top:-6px;z-index:2;transform:translateX(-50%);font-size:.74rem;font-weight:600;color:var(--s1);white-space:nowrap}
+.ivref{position:absolute;top:10px;height:24px;border-left:1px dashed var(--s2);border-right:1px dashed var(--s2);background:repeating-linear-gradient(45deg,transparent,transparent 5px,var(--s2) 5px,var(--s2) 6px);opacity:.42}
+.ivreflbl{position:absolute;top:-22px;font-size:.74rem;font-weight:600;color:var(--s2);white-space:nowrap}
+.ivlegend{font-size:.78rem;color:var(--ink-soft);margin:14px 0 0;display:flex;flex-wrap:wrap;gap:16px}
+.ivlegend span{display:inline-flex;align-items:center;gap:7px}
+.ivlegend i{width:13px;height:11px;display:inline-block}
+.sw-band{background:var(--s1);opacity:.30}
+.sw-med{background:var(--s1);width:2px!important;height:14px!important}
+.sw-ref{background:repeating-linear-gradient(45deg,transparent,transparent 4px,var(--s2) 4px,var(--s2) 5px);border-left:1px dashed var(--s2);border-right:1px dashed var(--s2);opacity:.6}
+
+/* pathway chart */
+.paths{border:1px solid var(--line-strong);margin:26px 0}
+.paths>header{padding:13px 16px;border-bottom:1px solid var(--line);background:var(--paper-2)}
+.paths>header b{font-size:.95rem}
+.paths>header p{margin:3px 0 0;font-size:.82rem;color:var(--ink-soft)}
+.prow{display:grid;grid-template-columns:172px 1fr;gap:14px;align-items:center;padding:13px 16px;border-bottom:1px solid var(--line)}
+.prow:last-child{border-bottom:none}
+.plabel b{font-size:.9rem;display:block}
+.plabel span{font-size:.78rem;color:var(--ink-soft);font-variant-numeric:tabular-nums}
+.ptrack{position:relative;height:26px}
+.ptrack .ivband{top:5px;height:15px}
+.ptrack .ivmed{top:1px;height:23px}
+.pscale{display:grid;grid-template-columns:172px 1fr;gap:14px;padding:0 16px 12px}
+.pscale .sc{position:relative;height:18px;border-top:1px solid var(--line-strong)}
+@media(max-width:620px){
+  .prow,.pscale{grid-template-columns:1fr;gap:6px}
+  .pscale{padding-top:4px}
+}
+
+/* tables */
+.tscroll{overflow-x:auto;border:1px solid var(--line-strong);margin:26px 0}
+table{border-collapse:collapse;width:100%;min-width:560px;font-size:.88rem}
+th,td{border-bottom:1px solid var(--line);padding:10px 13px;text-align:left;vertical-align:top}
+thead th{font-family:"Raleway",sans-serif;font-weight:600;background:var(--paper-2);font-size:.84rem;border-bottom:1px solid var(--line-strong)}
+tbody tr:last-child td{border-bottom:none}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+.verdict{display:inline-block;font-size:.7rem;font-weight:600;letter-spacing:.05em;text-transform:uppercase;border:1px solid var(--line-strong);padding:1px 6px;white-space:nowrap}
+.verdict.miss{border-color:var(--terra);color:var(--terra)}
+.verdict.hit{border-color:var(--leaf);color:var(--leaf)}
+
+/* sources */
+.sources{margin:46px 0 0;padding-top:22px;border-top:1px solid var(--line-strong)}
+.sources h2{margin-top:0;padding-top:0;border:none}
+.sources p{font-size:.85rem;color:var(--ink-soft);line-height:1.8}
+.sources .sgroup{font-weight:600;color:var(--ink)}
+
+footer.foot{border-top:1px solid var(--line);padding:26px 0 60px;margin-top:40px}
+footer.foot p{font-size:.84rem;color:var(--ink-soft);margin:0}
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-in">
+    <a class="brand" href="index.html">
+      <svg width="30" height="26" viewBox="0 0 280 243" aria-hidden="true">
+        <path fill="#1C3A25" stroke="#1C3A25" stroke-width="9" stroke-linejoin="miter" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/>
+        <path fill="#2E5A3B" stroke="#2E5A3B" stroke-width="9" stroke-linejoin="miter" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/>
+        <path fill="#437A50" stroke="#437A50" stroke-width="9" stroke-linejoin="miter" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/>
+      </svg>
+      Becoming Stronger
+    </a>
+    <div class="nav-right">
+      <a class="backlink" href="index.html#portfolio">&larr; Portfolio</a>
+      <button class="theme-toggle" id="theme-toggle" aria-label="Toggle dark mode">
+        <svg class="icon-moon" width="16" height="16" viewBox="0 0 24 24" fill="none"><path d="M20.5 14.5A8.5 8.5 0 0 1 9.5 3.5a8.5 8.5 0 1 0 11 11Z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>
+        <svg class="icon-sun" width="16" height="16" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="4.4" stroke="currentColor" stroke-width="1.8"/><path d="M12 2.5v2.4M12 19.1v2.4M2.5 12h2.4M19.1 12h2.4M5.3 5.3l1.7 1.7M17 17l1.7 1.7M18.7 5.3 17 7M7 17l-1.7 1.7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="head">
+    <p class="eyebrow">Research &middot; September 2026</p>
+    <h1>How bad would Y2K actually have been?</h1>
+    <p class="sub">The world spent somewhere between $300 and $600 billion preventing the Millennium Bug, and then spent twenty-six years arguing about whether it needed to. Nobody ever wrote down the counterfactual. So I did.</p>
+    <p class="method">Method: seven parallel research agents working primary sources (OMB, GAO, NERC, NRC, FDA, the Senate Special Committee, the Federal Reserve), then a hand-built pathway model calibrated against measured infrastructure failures with published mortality studies. Every figure below is traced to a primary document or explicitly flagged as unverified. Search-engine summaries were treated as zero evidence.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+<section class="keys">
+  <header>
+    <h2>The answer, up front</h2>
+    <p>Counterfactual: near-zero remediation. No awareness campaign from 1993, no programs, no testing, no contingency planning, no extra rollover staffing. Log scales.</p>
+  </header>
+
+  <div class="krow">
+    <p class="kt">Global direct economic damage, first 12 months</p>
+    <p class="kv">~$400 billion</p>
+    <p class="kc">50% CI: $150bn to $900bn (1999 USD). About 1.2% of 1999 world GDP.</p>
+    <div class="ivwrap">
+      <div class="ivref" style="left:48.6%;width:18.8%"></div>
+      <div class="ivreflbl" style="left:48.6%">actually spent: $300-600bn</div>
+      <div class="ivband" style="left:29.8%;width:48.5%"></div>
+      <div class="ivmed" style="left:56.4%"></div>
+      <div class="ivmedlbl" style="left:56.4%">$400bn</div>
+      <div class="ivaxis"></div>
+      <div class="ivtick t0" style="left:0%">$50bn</div>
+      <div class="ivtick" style="left:18.8%">$100bn</div>
+      <div class="ivtick" style="left:62.4%">$500bn</div>
+      <div class="ivtick" style="left:81.2%">$1tn</div>
+      <div class="ivtick t100" style="left:100%">$2tn</div>
+    </div>
+    <p class="ivlegend">
+      <span><i class="sw-band"></i> 50% credible interval</span>
+      <span><i class="sw-med"></i> median estimate</span>
+      <span><i class="sw-ref"></i> what was actually spent preventing it</span>
+    </p>
+  </div>
+
+  <div class="krow">
+    <p class="kt">Global excess deaths, first 12 months</p>
+    <p class="kv">~1,800</p>
+    <p class="kc">50% CI: 300 to 9,000. Actual documented Y2K deaths in the real, remediated world: zero.</p>
+    <div class="ivwrap">
+      <div class="ivband" style="left:15.9%;width:49.2%"></div>
+      <div class="ivmed" style="left:41.8%"></div>
+      <div class="ivmedlbl" style="left:41.8%">1,800</div>
+      <div class="ivaxis"></div>
+      <div class="ivtick t0" style="left:0%">100</div>
+      <div class="ivtick" style="left:33.3%">1,000</div>
+      <div class="ivtick" style="left:66.7%">10,000</div>
+      <div class="ivtick t100" style="left:100%">100,000</div>
+    </div>
+    <p class="ivlegend"><span>The right tail runs past 100,000 and is driven by two scenarios, neither inside the 50% interval: a multi-week winter grid failure, and a false nuclear early-warning signal.</span></p>
+  </div>
+</section>
+
+<article>
+
+<p class="lede">The finding that should bother everyone is not that Y2K was a hoax. It wasn't. The finding is that the median damage from doing nothing and the actual cost of the prevention program land in the same range, which makes the program's net value genuinely ambiguous, and in twenty-six years nobody has done the arithmetic that would settle it.</p>
+
+<h2><span class="num">1</span> What was actually done</h2>
+
+<p>US federal government spend was <strong>$8.38 billion</strong> across FY1996 to FY2000, the terminal figure in OMB's eleventh and final Quarterly Report to Congress. That report's footnote 2 matters more than the number: it explicitly excludes "the costs of upgrades or replacements that would otherwise occur as part of the normal systems life cycle." The federal figure is genuinely incremental.</p>
+
+<p>US economy-wide spend was <strong>about $100 billion</strong>, or $365 per resident, peaking near $30 billion a year in 1998 and 1999, per the Commerce Department's Economics and Statistics Administration. Unlike OMB, Commerce does not separate incremental from accelerated spend. It names the problem and declines to quantify it: some of the spending "may involve 'shifting forward' new, productive software and hardware investments which would have occurred eventually." That unquantified share is the biggest hole in every cost-benefit claim anyone has ever made about Y2K, including mine.</p>
+
+<p>Globally, Gartner's <strong>$300bn to $600bn</strong> range is the most-cited figure and checks out against two independent primary sources. Capers Jones of Software Productivity Research put it at over $1.6 trillion, and the Senate report explains the divergence precisely: Jones included over $300 billion for litigation and damages, Gartner did not. Hold that thought.</p>
+
+<h3>The institutions</h3>
+
+<p>Executive Order 13073 created the President's Council on Year 2000 Conversion under John Koskinen in February 1998, running 25-plus sector working groups with 250-plus partner organizations. Two statutes did the legal work. The Year 2000 Information and Readiness Disclosure Act shielded good-faith readiness disclosures so firms would share status instead of lawyering up. The Y2K Act capped punitive damages in Y2K civil actions.</p>
+
+<h3>What the regulators actually concluded</h3>
+
+<p>These documents are the most useful thing in the whole file, because they contain the regulators' own risk language rather than press paraphrase.</p>
+
+<ul>
+<li><strong>Medical devices.</strong> FDA and the VA ran a joint clearinghouse. Of 4,288 manufacturers reporting, 61% said their products use no date at all and 8% reported date problems covering 1,035 noncompliant products. GAO's independent audit of manufacturer websites found 4,053 noncompliant products, roughly four times FDA's own count. FDA defined 90 "potentially high-risk" device types including programmable implanted infusion pumps and radiation therapy systems. GAO's standing criticism throughout: FDA never required manufacturers to submit actual test results.</li>
+<li><strong>Nuclear power.</strong> By late October 1999, 101 of 103 US plants were ready, and at the two laggards the <em>safety</em> systems were already done; only items like turbine vibration monitors were open. The sentence that reframes the entire nuclear question comes from GAO: "Probably the most serious external risks faced by a nuclear power plant are the potential instability of the electric power grid and the loss of off-site electric power... NRC studies show that a major contributor to reactor core damage occurrences is a station blackout event." The nuclear risk ran through the grid, not through reactor software.</li>
+<li><strong>Electric power.</strong> NERC's November 1998 survey found the industry 44% complete. Their own two-tier risk statement: a "probable scenario" of "10% to 15% loss of generation, the loss of wire-based voice and data communications, and the partial loss of EMS/SCADA systems," and a "credible worst-case scenario" of "area blackout caused by the long-term loss of generating and control facilities, and the loss of fuel supplies." Area blackout. Not national, not interconnection-wide. That is the regulator's own ceiling, and it sits far below the public imagination of the time.</li>
+<li><strong>Aviation.</strong> FAA started from a baseline so bad that GAO titled a 1998 report "Limited Progress on Year 2000 Issue Increases Risk Dramatically," then declared 100% compliance by June 1999. GAO found that 13 of the 21 mission-critical systems FAA itself flagged as highest-risk were never included in any end-to-end test, and the broadest field test ran only in low-traffic conditions without the radar backup channel engaged.</li>
+<li><strong>Nuclear weapons.</strong> The US and Russia jointly operated the Center for Year 2000 Strategic Stability at Peterson AFB from mid-December 1999 to mid-January 2000, with Russian officers watching shared missile-launch early-warning data. Deputy Defense Secretary John Hamre's stated reason: "It is possible that Russian computer screens could go blank."</li>
+</ul>
+
+<div class="callout">
+<span class="lbl">Revealed preference</span>
+<p>The Federal Reserve's own behavior is the cleanest instrument available. Currency in circulation ran $535.7bn in August 1999, $595.97bn in December, and back to $566.1bn by February 2000: a real precautionary build of about $60 billion. The Fed also stood up a Special Liquidity Facility and a Standby Financing Facility that auctioned <strong>$481 billion in repo-call options</strong>.</p>
+<p>None were exercised. Peak daily borrowing on the liquidity facility was $1.2 billion. The central bank built a half-trillion-dollar backstop and the market used roughly a quarter of one percent of it.</p>
+</div>
+
+<h2><span class="num">2</span> What actually broke</h2>
+
+<p>The catalogue of verified rollover failures is short, and its severity distribution is the single most important fact in this analysis.</p>
+
+<div class="tscroll">
+<table>
+<thead><tr><th>Failure</th><th>Consequence</th><th>Duration</th></tr></thead>
+<tbody>
+<tr><td>NRO satellite ground station, Fort Belvoir</td><td>Degraded intelligence processing, ran on backup</td><td class="num">~2 days</td></tr>
+<tr><td>Medicare claims processing</td><td>50,475 claims from 872 submitters dated 1900 or 2099, all originating in providers' own unpatched systems</td><td class="num">Reprocessed</td></tr>
+<tr><td>FAA Low Level Wind Shear Alert System</td><td>Failed at 8 sites. GAO noted it "could have affected aviation operations if weather conditions had been severe"</td><td class="num">~2 hours</td></tr>
+<tr><td>FAA Kavouras weather display</td><td>Reported the year as 2010, rejected National Weather Service data, broke 13 flight service stations</td><td class="num">Hours</td></tr>
+<tr><td>Japanese nuclear plants (four sites)</td><td>Radiation and meteorological monitoring, control-rod position display, prefectural data feeds</td><td class="num">10 min to 5 hrs</td></tr>
+<tr><td>Sheffield NHS pathology lab</td><td>Down's syndrome screening miscalculated maternal age. 150+ women given wrong risk results, 4 affected births, 2 terminations</td><td class="num">~5 months</td></tr>
+<tr><td>Delaware racetrack slot machines</td><td>Offline</td><td class="num">One evening</td></tr>
+</tbody>
+</table>
+</div>
+
+<p>Notice the pattern. Every verified failure produced <strong>wrong output or lost monitoring</strong>. Not one produced loss of control of a physical process. The Sheffield case is the most serious documented harm anywhere in the record, and its mechanism is date arithmetic handing a clinician a wrong number, not a machine misbehaving. Koskinen's own contemporaneous tally was "about 90 glitches and failures around the world."</p>
+
+<p><strong>No Y2K-attributable death has ever been documented, anywhere.</strong> That survived deliberate adversarial searching.</p>
+
+<h3>The counter-evidence, which is real</h3>
+
+<p>Martyn Thomas, who led Deloitte's international Y2K practice, lists control-system defects found <em>in testing</em>: the UK Rapier missile system would have failed to fire; a Swedish reactor's computers shut the reactor down when clocks were advanced to 1 January 2000; BP Exploration found an oil-platform error its consultants said justified the entire program; the US Coast Guard found bugs that would have caused loss of ship steering control and fire-system failure. These are genuine existence proofs that safety-critical software carried real date defects, and they are the strongest argument <em>for</em> the remediation program, because testing is exactly what found them.</p>
+
+<p>But read the Swedish reactor case carefully. The failure mode was an unplanned <strong>safe shutdown</strong>. That is fail-safe design working as designed, and it generalizes. Safety-critical systems are overwhelmingly built to fail toward the safe state, so a date bug in one produces an outage rather than a catastrophe. Which means the loss-of-life pathway does not run through spectacular single-system failures. It runs through aggregate loss of service.</p>
+
+<h2><span class="num">3</span> The natural experiments</h2>
+
+<h3>Low-spend countries</h3>
+
+<p>The skeptics' favourite argument, and the data is messier than either side admits. Gartner sorted countries into four tiers by predicted share of organizations suffering at least one mission-critical failure. Tier 1 at 15% included the US and UK. Tier 4, at <strong>66%</strong>, included China and Russia. That is a falsifiable prediction from the era's most-cited authority, and it was wrong everywhere.</p>
+
+<p>But the Meta Group spending table in the same Senate report undercuts the simple story. <strong>Russia's estimated remediation cost was 7.3% of 1996 GDP, the highest share in the entire twenty-country table</strong>, above the US at 2.5%. Italy came in at 2.8%, essentially identical to the US. South Korea at 4.7%. Only <strong>China, at 0.5% of GDP, genuinely matches the "spent nothing and shrugged" story.</strong> Italy, the country skeptics name most often, was not actually a low-spend country by this measure, though it was far behind on execution.</p>
+
+<p>The two camps agree on the fact and disagree on the mechanism, and neither has tested their explanation. Thomas argues late starters free-rode on remediation tools and supply-chain fixes paid for by early movers. The economist John Quiggin rebuts this directly: free-riding "seems inconsistent with an account in which detailed checking of vast numbers of individual devices was crucial," and if it worked, Australia should have copied Italy. He also dismisses the "less computerized" defense as "absurd in relation to OECD countries like Italy." This is the crux of the entire debate and it remains unresolved in the literature.</p>
+
+<h3>The control group nobody measured</h3>
+
+<p>NFIB's 1998 survey found roughly <strong>40% of US small businesses were aware of their Y2K exposure and planned no action</strong>, covering an estimated 330,000 computer-dependent firms. A large, real, deliberately unremediated population. What happened to them?</p>
+
+<p>The President's Council's own final report admits it does not know: "The sheer number of these companies, over 23 million, and the absence of regular reporting relationships... also made it difficult to determine how many actually experienced Y2K difficulties after the date change." Nobody measured the control group. That is the central evidentiary failure of the entire episode.</p>
+
+<h3>Cambridge, and the GPS rollovers</h3>
+
+<p>Ross Anderson published the one bottom-up empirical study by a skeptic, two weeks before the rollover. He audited Cambridge University across medical departments, labs, catering, accommodation and an aerial photography unit: 7,000 employees, £300m turnover. Total spend was £20K central plus £47K on upgrades, with about £100K of noncompliant embedded systems found, "most of these were medical devices." His finding: "none of the bugs found so far would have had a serious impact on business operations even if they had been ignored until January 2000." His conclusion: "The average small business owner, who is doing absolutely nothing about the bug, appears to be acting quite rationally."</p>
+
+<p>The cleanest natural experiment is also the most underused. GPS week-number rollovers are real, unavoidable, date-related failures in a safety-critical global system, with a known population of non-compliant receivers and no possibility of a "the fix worked" explanation. The <strong>April 2019 rollover</strong> produced: Honeywell flight management software failures causing flight cancellations in China and a KLM delay, because technicians had not applied the patch; the NYCWiN municipal wireless network crashing; and Vaisala weather-balloon groundstations suspending launches for up to two weeks. That is what genuinely unremediated date rollover looks like in a modern system. Real, concrete, disruptive, bounded, fixed afterward.</p>
+
+<div class="callout">
+<span class="lbl">The confound that contaminates all of it</span>
+<p>A large share of critical infrastructure was not running normally at the moment of rollover, regardless of remediation status. In a peer-reviewed survey of New York City emergency department directors, <strong>87% of hospitals activated their disaster plan in advance, 74% ran a live mock Y2K drill, and 90% stood up an Incident Command System.</strong> Airlines cancelled a large share of New Year's flights. Gaseous diffusion plants planned to shut down entirely.</p>
+<p>So "nothing happened" at the highest-stakes institutions is evidence about remediation <em>plus</em> extraordinary manual fallback, combined. Public data cannot separate the two.</p>
+</div>
+
+<h2><span class="num">4</span> Who put a number on it, and how they scored</h2>
+
+<p>This calibrates how much to trust anyone's counterfactual, mine included.</p>
+
+<div class="tscroll">
+<table>
+<thead><tr><th>Forecaster</th><th>The prediction</th><th>What happened</th><th>Verdict</th></tr></thead>
+<tbody>
+<tr>
+  <td><strong>Ed Yardeni</strong><br><span style="color:var(--ink-soft);font-size:.82rem">Chief economist, Deutsche Bank Securities</span></td>
+  <td>"I believe there is a 70% chance of such a worldwide recession, which could last 12 months starting in January 2000" (March 1999). Severity benchmark: the 1974-75 oil-shock recession.</td>
+  <td>Recanted 3 January 2000: "As it appears now, there will be no global recession as a result of Y2K."</td>
+  <td><span class="verdict miss">Miss</span></td>
+</tr>
+<tr>
+  <td><strong>Capers Jones</strong><br><span style="color:var(--ink-soft);font-size:.82rem">Software Productivity Research</span></td>
+  <td>Over $300 billion in Y2K litigation and damages, included in his $1.6tn global total.</td>
+  <td>GAO counted <strong>18 cases</strong> invoking the Y2K Act, out of 42 total raising Y2K issues.</td>
+  <td><span class="verdict miss">Miss</span></td>
+</tr>
+<tr>
+  <td><strong>Gartner Group</strong></td>
+  <td>Country risk tiers: 15% of organizations failing in the US and UK, 66% in China and Russia.</td>
+  <td>No material difference in outcome by tier. China, the genuine low-spender, was fine.</td>
+  <td><span class="verdict miss">Miss</span></td>
+</tr>
+<tr>
+  <td><strong>NERC</strong></td>
+  <td>"Credible worst case": area blackout. "Probable": 10-15% generation loss, partial SCADA loss.</td>
+  <td>No grid impact. But the ceiling they named was already far below the public fear.</td>
+  <td><span class="verdict hit">Calibrated</span></td>
+</tr>
+<tr>
+  <td><strong>Ross Anderson</strong></td>
+  <td>"Lots of things may break, but few of them will actually matter much" (December 1999), from a bottom-up audit.</td>
+  <td>Correct, and correct for the stated reason, published before the event.</td>
+  <td><span class="verdict hit">Hit</span></td>
+</tr>
+</tbody>
+</table>
+</div>
+
+<p>Yardeni's 70% deserves a second look, because it is routinely misread. <strong>His forecast was conditional on the remediation that was actually happening.</strong> He was not forecasting the do-nothing world. He was forecasting ours, and he was badly wrong about it. That fact should pull any counterfactual estimate downward, hard, which is why his implied number sits near my 90th percentile rather than my median.</p>
+
+<h2><span class="num">5</span> The counterfactual</h2>
+
+<p>Two counterfactuals give wildly different answers, and conflating them is how the public argument stays stuck.</p>
+
+<ul>
+<li><strong>A: near-zero remediation.</strong> Nothing from 1993 onward. No campaign, no programs, no testing, no contingency planning, no extra staffing, no regulator pressure. This is the "how bad could it have been" reading, and it is what I estimate.</li>
+<li><strong>B: fix on failure.</strong> No large pre-emptive program, but normal IT staff, normal vendor patching, reactive repair. This is the actual policy alternative, and what Anderson, Anthony Finkelstein and Quiggin argue would have sufficed.</li>
+</ul>
+
+<p>Almost nobody serious argues A would have been fine. The live argument is about B.</p>
+
+<h3>Base rates</h3>
+
+<p>Converging estimates of the share of date-handling systems carrying a real defect: research cited by Thomas found ~5% of embedded systems failing compliance tests, manufacturing ~15%, sophisticated systems 50-80%. FDA found 8% of biomedical manufacturers reporting date problems, and GAO's independent audit found ~12% of products noncompliant. The President's Council noted that "over 70 percent of companies reported they had experienced Y2K glitches" <em>before</em> the rollover.</p>
+
+<p>Working figure: <strong>5% to 15% of date-handling systems carried a real defect</strong>, with severity heavily skewed toward wrong output rather than loss of control.</p>
+
+<p>For scale: the 2024 CrowdStrike outage hit about 8.5 million machines, roughly 1% of Windows endpoints, for one to two days, and cost $5.4 billion in direct losses to the US Fortune 500 alone. Counterfactual A is a five to fifteen times larger blast radius with a much longer manual-remediation tail, but with far less of it landing on systems whose failure stops a business cold.</p>
+
+<h3>The economic estimate</h3>
+
+<p>My median of $400bn sits between two anchors. Yardeni's implied number for a 1974-75-severity global recession is roughly 3% of GDP, about $1 trillion, and belongs near my 90th percentile given how the forecast scored. At the other end, IDC's own contemporaneous counterfactual was <strong>$237bn in global lost revenue avoided</strong> by $308bn of spend, meaning IDC scored the program as a $71bn net loss, from an interested party with every incentive to inflate the benefit.</p>
+
+<div class="callout">
+<span class="lbl">The uncomfortable arithmetic</span>
+<p>Under counterfactual A you <em>avoid</em> $300bn to $600bn in remediation. Against a median $400bn in damage, <strong>the median net cost of having done nothing is approximately zero.</strong> If the true damage sits toward my lower bound, doing nothing was cheaper.</p>
+<p>This is not a fringe position. It is what IDC concluded at the time, with their own numbers.</p>
+</div>
+
+<p>One caveat cuts the other way, and Finkelstein, the loudest skeptic, is the one who makes it: "I believe that most organisations that spent heavily on Y2K were justified in doing so! Not because of Y2K itself but rather because an organisation that does not know which are its business critical systems... is headed for trouble regardless of date." A meaningful share of the spend bought system inventories, documentation and legacy knowledge with independent value. Nobody has ever measured how much.</p>
+
+<h3>The mortality estimate</h3>
+
+<p>Built by pathway, because the pathways have very different evidence quality.</p>
+
+<section class="paths">
+  <header><b>Global excess deaths by pathway, counterfactual A</b><p>Bars show the 50% credible interval, the vertical rule shows the median. Log scale.</p></header>
+
+  <div class="prow">
+    <div class="plabel"><b>Healthcare delivery</b><span>100 to 3,000 &middot; med. 600</span></div>
+    <div class="ptrack"><div class="ivband" style="left:33.3%;width:49.3%"></div><div class="ivmed" style="left:59.3%"></div></div>
+  </div>
+  <div class="prow">
+    <div class="plabel"><b>Grid, heat, water</b><span>50 to 8,000 &middot; med. 700</span></div>
+    <div class="ptrack"><div class="ivband" style="left:23.3%;width:73.5%"></div><div class="ivmed" style="left:61.5%"></div></div>
+  </div>
+  <div class="prow">
+    <div class="plabel"><b>Secondary and behavioral</b><span>100 to 2,000 &middot; med. 400</span></div>
+    <div class="ptrack"><div class="ivband" style="left:33.3%;width:43.4%"></div><div class="ivmed" style="left:53.4%"></div></div>
+  </div>
+  <div class="prow">
+    <div class="plabel"><b>Transport</b><span>10 to 300 &middot; med. 50</span></div>
+    <div class="ptrack"><div class="ivband" style="left:0%;width:49.2%"></div><div class="ivmed" style="left:23.3%"></div></div>
+  </div>
+  <div class="pscale">
+    <div></div>
+    <div class="sc">
+      <div class="ivtick t0" style="left:0%;bottom:auto;top:0">10</div>
+      <div class="ivtick" style="left:33.3%;bottom:auto;top:0">100</div>
+      <div class="ivtick" style="left:66.7%;bottom:auto;top:0">1,000</div>
+      <div class="ivtick t100" style="left:100%;bottom:auto;top:0">10,000</div>
+    </div>
+  </div>
+</section>
+
+<p><strong>Healthcare</strong> is the best-identified pathway. Neprash, McGlave and Nikpay (<em>American Economic Journal: Economic Policy</em>, 2026) use a quasi-experimental event study of hospital ransomware attacks against Medicare claims and find hospital volume falls 17-25% in the attack week and <strong>in-hospital mortality rises 34-38% among patients already admitted</strong>. Applied to a US inpatient census of ~500,000 with ~2% baseline in-hospital mortality, a week of degradation at 30% of hospitals gives roughly 1,000 excess US deaths. Sheffield proves the mechanism reaches clinical decisions.</p>
+
+<p>But WannaCry is the negative control, and it matters: a real national NHS IT failure costing £92 million with 19,000 cancelled appointments, and the National Audit Office attributed <strong>no deaths</strong> to it. The pathway is real but not automatic.</p>
+
+<p><strong>Grid</strong> is the fattest tail and the weakest evidence. Rate anchors: Texas winter storm Uri, 11 million affected for ~3 days, produced about 700 excess deaths by excess-mortality methods against 246 officially counted, roughly 64 deaths per million per three-day winter outage. The 2003 Northeast blackout, 50 million affected for ~2 days in summer, produced about 90 excess New York City deaths. Hurricane Maria, 3.4 million people with a median 84-day outage, produced 2,975 to 4,645 excess deaths depending on method.</p>
+
+<p>A January rollover is the worst possible date for this, since winter outage kills faster per day than summer outage. If 100 million people in the northern hemisphere lost power for four days at ~15 deaths per million per day, that pathway alone gives ~6,000 deaths.</p>
+
+<p>So why is my median only 700? Because I put <strong>the probability of a multi-day outage affecting more than 10 million people in a developed country at roughly 20-30%</strong>, on four pieces of evidence: NERC's own credible worst case was <em>area</em> blackout, not systemic collapse; generation is overwhelmingly mechanical; protection relays are largely analog or use relative rather than absolute time; and grid operation is human-in-the-loop with manual fallback by design. The discriminating test is China, which genuinely under-invested at 0.5% of GDP and had no grid failure. That is a real test on exactly the pathway that dominates the estimate, and it came back negative.</p>
+
+<h3>The tail outside the interval</h3>
+
+<p>Two scenarios sit outside the 50% CI and deserve naming. A two-to-four-week grid failure in a cold region of 10 million-plus people gives tens of thousands of deaths on Maria-rate scaling; I put this in the low single-digit percent.</p>
+
+<p>And the one nobody talks about. The US and Russia thought a false nuclear early-warning signal credible enough to put Russian officers in a room in Colorado Springs for a month. Probability very low, magnitude in the millions. It is the single strongest argument that the program was worth the money regardless of the expected-value arithmetic, because you do not buy insurance against the median.</p>
+
+<h2><span class="num">6</span> What I actually think</h2>
+
+<p><strong>The defect was real and the engineering work was legitimate.</strong> Thomas is right that "it was a hoax" is an ignorant position. The Rapier missile system, the Coast Guard steering bugs, FDA's thousand-plus noncompliant device models and the Sheffield screening failure are not imaginary. Peter de Jager, who raised the alarm in 1993, holds up well: "We had a problem. For the most part, we fixed it. The notion that nothing happened is somewhat ludicrous."</p>
+
+<p><strong>The scale of the response was very probably larger than the risk justified, and this was knowable at the time.</strong> Anderson published a bottom-up audit saying so in December 1999, with data. Finkelstein named the incentive structure: IT managers using Y2K "as a loophole" to fund overdue legacy maintenance, consultants who "recognised that potential consequences of Y2K had been exaggerated but felt that, on balance, the panic was good for business," and a press for whom the story was "too good to check." Quiggin adds the mechanism that best explains the country pattern: in common-law jurisdictions, fix-on-failure carried personal blame risk while over-remediation carried none, which is why high-spend countries cluster in the English-speaking world rather than tracking actual exposure.</p>
+
+<p><strong>Nobody can settle this, because the control group was never measured.</strong> The President's Council said so in its own final report. Twenty-six years on, the two camps still agree on the facts and disagree on the mechanism, and neither has run the comparison that would discriminate between them. Australia spent roughly $12 billion and produced a seventeen-page self-congratulatory final report with no cost-benefit analysis. That is the actual scandal, and it is a procedural one.</p>
+
+<p>The transferable lesson is not "prepare more" or "panic less." It is Quiggin's: institutionalize adversarial forecast review and mandate ex-post program evaluation, so that next time a large preventive expenditure is proposed, somebody is paid to argue the other side and somebody is required to check the score afterward. Y2K produced neither. Koskinen saw the bill coming twenty years early:</p>
+
+<div class="callout">
+<p style="font-size:1.04rem">"Perhaps one thing about Y2K was that we did it too well... So when a new, urgent crisis arises, there is a risk that people might say, 'They said that last time about Y2K, but that really never was a problem.'"</p>
+<p style="font-size:.85rem;color:var(--ink-soft)">John Koskinen, chair of the President's Council on Year 2000 Conversion</p>
+</div>
+
+<h2><span class="num">7</span> Confidence and limits</h2>
+
+<p><strong>Verified at primary source:</strong> all OMB, GAO, Commerce, Senate, NERC, NRC, FDA and FAA figures above; Yardeni's 70% and his recantation; the GAO litigation count; Federal Reserve currency and liquidity-facility figures; the Neprash, Anderson &amp; Bell, Kishore and GW Milken mortality studies; the Thomas, Finkelstein, Anderson and Quiggin retrospectives.</p>
+
+<p><strong>Could not verify, and did not rely on:</strong> Gartner's 10/35/55 failure-timing split; the "50 billion embedded chips" figure, which traces to no Gartner document and should be treated as folklore; Yardeni's alleged downward revision to 45%, likely a conflation with his 2019 tariff call; Lloyd's-specific Y2K exposure numbers; Japan's ministry-level incident counts.</p>
+
+<p><strong>The biggest weakness in my own estimate</strong> is the grid pathway, which dominates the tail and rests on a probability judgment rather than data. If you think NERC's credible worst case was optimistic, or that the China comparison is confounded by low computerization, the mortality median moves up by a factor of three to five and the interval widens with it.</p>
+
+<p><strong>Second weakness:</strong> every figure is in 1999 dollars, and the economic estimates mix direct-loss and direct-plus-indirect methods across analogues. Uri shows how much that matters: $4.3bn on a narrow value-of-lost-load basis, $80-130bn on the Dallas Fed's direct-plus-indirect basis, or $197-296bn on Perryman's full multiplier, for the identical storm. A fiftyfold spread from method alone.</p>
+
+<section class="sources">
+<h2>Sources</h2>
+<p><span class="sgroup">Primary government.</span> <a href="https://clintonwhitehouse4.archives.gov/non-html/media/pdf/11thy2k.pdf">OMB, 11th Quarterly Report on Y2K Conversion</a> (Dec 1999) &middot; <a href="https://web.archive.org/web/20201021174848/https://www.commerce.gov/sites/default/files/migrated/reports/y2k_1.pdf">Commerce ESA, <em>The Economics of Y2K and the Impact on the United States</em></a> (Nov 1999) &middot; <a href="https://www.govinfo.gov/content/pkg/GPO-CPRT-106sprt10/pdf/GPO-CPRT-106sprt10.pdf">Senate Special Committee, <em>Investigating the Impact of the Year 2000 Problem</em></a> (S.Prt. 106-10) &middot; <a href="https://www.gao.gov/assets/aimd-00-290.pdf">GAO/AIMD-00-290, Lessons Learned</a> &middot; <a href="https://www.gao.gov/products/t-aimd-00-26">GAO/T-AIMD-00-26, Biomedical Equipment</a> &middot; <a href="https://www.gao.gov/products/t-aimd-00-27">GAO/T-AIMD-00-27, Nuclear Power</a> &middot; <a href="https://www.gao.gov/products/aimd-99-114">GAO/AIMD-99-114, Electric Power</a> &middot; <a href="https://www.gao.gov/products/ggd-00-196r">GAO/GGD-00-196R, Y2K Act court cases</a> &middot; Federal Reserve series CURRCIR &middot; FRBNY, <em>Current Issues in Economics and Finance</em> 6(15), Dec 2000.</p>
+<p><span class="sgroup">Retrospectives.</span> <a href="https://www.theguardian.com/commentisfree/2019/dec/31/millennium-bug-face-fears-y2k-it-systems">Martyn Thomas, <em>The Guardian</em></a> (Dec 2019) &middot; <a href="https://www.gresham.ac.uk/watch-now/what-really-happened-y2k">Thomas, Gresham College lecture</a> (Apr 2017) &middot; Anthony Finkelstein, <em>Computing &amp; Control Engineering Journal</em> 11(4), 2000 &middot; <a href="https://www.cl.cam.ac.uk/archive/rja14/Papers/y2k.html">Ross Anderson, <em>The Millennium Bug: Reasons Not to Panic</em></a> (Dec 1999) &middot; John Quiggin, <em>The Y2K Scare: Causes, Costs and Cures</em>, University of Queensland (2004) &middot; Kevin Kliesen, <em>FRB St Louis Review</em> 85, 2003.</p>
+<p><span class="sgroup">Calibration studies.</span> Neprash, McGlave &amp; Nikpay, <em>AEJ: Economic Policy</em> 18(1), 2026 &middot; Anderson &amp; Bell, <em>Epidemiology</em> 23(2), 2012 &middot; Kishore et al., <em>NEJM</em>, 2018 &middot; Santos-Burgoa et al., GW Milken Institute, 2018 &middot; Texas DSHS final report, Dec 2021 &middot; FRB Dallas (Golding, Kumar &amp; Mertens), Apr 2021 &middot; Parametrix CrowdStrike report, 2024 &middot; UK DHSC WannaCry cost report, Oct 2018.</p>
+</section>
+
+</article>
+</div>
+
+<footer class="foot"><div class="wrap">
+  <p>Researched and written by Alex Hedtke, September 2026. Estimates are my own and the method is above so you can disagree with a specific number. <a href="index.html#portfolio">More work &rarr;</a></p>
+</div></footer>
+
+<script>
+function setTheme(t,save){
+  document.documentElement.setAttribute('data-theme',t);
+  var m=document.getElementById('meta-theme');
+  if(m)m.setAttribute('content',t==='dark'?'#000000':'#FBF8F0');
+  if(save){try{localStorage.setItem('bs-theme',t)}catch(e){}}
+}
+document.getElementById('theme-toggle').addEventListener('click',function(){
+  setTheme(document.documentElement.getAttribute('data-theme')==='dark'?'light':'dark',true);
+});
+matchMedia('(prefers-color-scheme: dark)').addEventListener('change',function(e){
+  var saved=null;try{saved=localStorage.getItem('bs-theme')}catch(err){}
+  if(saved!=='dark'&&saved!=='light')setTheme(e.matches?'dark':'light',false);
+});
+</script>
+</body>
+</html>
