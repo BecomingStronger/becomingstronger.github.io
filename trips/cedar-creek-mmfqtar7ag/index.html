@@ -72,7 +72,7 @@ a { color: inherit; }
 .mk .tap { position: absolute; left: -30px; top: 4px; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); }
 .mk .tap .ms { font-size: 16px; }
 .mk .tapi { display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; padding: 2px 8px 2px 5px; border-radius: 999px; background: var(--blue); color: #fff; font-size: 11.5px; font-weight: 500; text-shadow: none; vertical-align: 1px; }
-.mk .tapi .ms { font-size: 14px; }
+.mk .dot.tapdot { left: -8px; top: -8px; width: 16px; height: 16px; background: var(--blue); border: 2.5px solid #fff; }
 .mk .sidei { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; border: 1.5px dashed #111; background: rgba(225,255,79,.92); color: #111; font-size: 11px; font-weight: 600; text-shadow: none; vertical-align: 1px; }
 .mk .sidei[hidden] { display: none; }
 .stag { display: inline-block; margin-left: 8px; padding: 1px 8px; border-radius: 999px; border: 1.5px dashed rgba(255,255,255,.85); font-style: normal; font-size: 11px; font-weight: 500; vertical-align: 2px; white-space: nowrap; }
@@ -170,7 +170,7 @@ a { color: inherit; }
     <div class="legend" aria-label="Legend">
       <div><span class="sw" style="background:#3f6b33"></span>National Forest, camping allowed</div>
       <div><span class="sw" style="background:#a9ab9f"></span>Private land, stay on the trail</div>
-      <div><span class="sw" style="background:var(--blue);border-radius:999px"></span>Tap water</div>
+      <div><span class="sw" style="width:12px;height:12px;margin:0 3px;border-radius:50%;background:var(--blue);border:2px solid #fff;box-shadow:0 0 0 1px rgba(0,0,0,.2)"></span>Tap water</div>
       <div><span class="sw" style="background:var(--lime);border:1px solid #9bb000"></span>Selected trip</div>
       <div><svg class="sw" viewBox="0 0 18 11" aria-hidden="true"><rect width="18" height="11" rx="3" fill="#2f3a24"/><g fill="#E1FF4F"><circle cx="3.5" cy="5.5" r="2.2"/><circle cx="9" cy="5.5" r="2.2"/><circle cx="14.5" cy="5.5" r="2.2"/></g></svg>Side trip, day packs</div>
       <div><span class="sw" style="background:#fff;border:1px solid #bbb"></span>Other trips</div>
@@ -290,7 +290,7 @@ TRIPS.forEach((t) => {
   };
 });
 const markers = MS.map((m) => {
-  const html = `<div class="mk"><div class="halo"></div><div class="dot"></div><div class="num">${m.n}</div><div class="lab ${m.side}">${esc(m.name.replace(" Recreation Area", "").replace(" Road bridge", " Rd").replace("Overlook above Cedar Creek", "Overlook"))}${m.tap ? '<span class="tapi" title="Tap water"><span class="ms">water_drop</span>Tap water</span>' : ""}${m.sideTrip ? '<span class="sidei">Side trip</span>' : ""}</div></div>`;
+  const html = `<div class="mk"><div class="halo"></div><div class="dot${m.tap ? " tapdot" : ""}"${m.tap ? ' title="Tap water"' : ""}></div><div class="num">${m.n}</div><div class="lab ${m.side}">${esc(m.name.replace(" Recreation Area", "").replace(" Road bridge", " Rd").replace("Overlook above Cedar Creek", "Overlook"))}${m.sideTrip ? '<span class="sidei">Side trip</span>' : ""}</div></div>`;
   const mk = L.marker(wpt[m.key], { icon: L.divIcon({ className: "", html, iconSize: [0, 0] }), keyboard: false, title: m.name });
   mk.on("click", () => focusMilestone(m));
   return mk;
@@ -310,7 +310,7 @@ function selectTrip(i, fit = true) {
   $("#chips").innerHTML = (t.rec ? '<span class="chip rec">Recommended</span>' : "") +
     '<span class="chip"><i style="background:#f2c500"></i>Easy to moderate (USFS)</span>' +
     `<span class="chip"><i style="background:#b9d400"></i>${gain.toLocaleString()} ft gain</span>` +
-    '<span class="chip"><i style="background:#e5372b"></i>Tap water at 2 stops</span>';
+    '<span class="chip"><i style="background:var(--blue)"></i>Tap water at 2 stops</span>';
   $("#dayshd").textContent = `Backpacking, ${days.length === 2 ? "2 days" : (new Set(days.map((d) => d.name.split(":")[0].replace(" evening", ""))).size + " days")}`;
   $("#days").innerHTML = days.map((d, j) => {
     const [day, what] = d.name.replace(/ \([\d.]+ mi\)$/, "").split(": ");
