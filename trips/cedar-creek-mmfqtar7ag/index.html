@@ -33,7 +33,7 @@ a { color: inherit; }
 /* layout */
 .app { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(380px, 520px); height: 100vh; height: 100dvh; }
 .mapcol { position: relative; min-height: 0; }
-#map { position: absolute; inset: 0; background: #cfcfcf; }
+#map { position: absolute; inset: 0; background: #59654c; }
 .panel { overflow-y: auto; padding: 22px 22px 40px; display: flex; flex-direction: column; gap: 12px; }
 
 /* top bar over the map */
@@ -59,12 +59,7 @@ a { color: inherit; }
 
 /* leaflet tweaks */
 .leaflet-container { font-family: Outfit, system-ui, sans-serif; }
-.imagery { filter: contrast(1.12) saturate(1.2); }
-/* Blend on the layer container (Leaflet puts className there). Layer opacity isolates
-   its tiles, so a per-tile blend renders as a grey film over the imagery. */
-.relief { mix-blend-mode: multiply; }
-/* close the subpixel seams between tiles that the blend makes visible */
-.relief img.leaflet-tile, .imagery img.leaflet-tile { width: 256.6px !important; height: 256.6px !important; }
+.imagery { filter: contrast(1.1) saturate(1.15); }
 .leaflet-control-attribution { font-size: 10px; background: rgba(240,240,240,.75) !important; border-radius: 8px 0 0 0; }
 .leaflet-control-zoom { display: none; }
 .mk { position: relative; }
@@ -76,7 +71,8 @@ a { color: inherit; }
 .mk.dim { opacity: .45; }
 .mk .tap { position: absolute; left: -30px; top: 4px; width: 26px; height: 26px; border-radius: 50%; background: var(--blue); color: #fff; display: grid; place-items: center; border: 2px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.35); }
 .mk .tap .ms { font-size: 16px; }
-.mk .lab small { display: block; font-size: 11.5px; font-weight: 600; color: var(--blue); margin-top: -1px; }
+.mk .tapi { display: inline-flex; align-items: center; gap: 2px; margin-left: 6px; padding: 2px 8px 2px 5px; border-radius: 999px; background: var(--blue); color: #fff; font-size: 11.5px; font-weight: 500; text-shadow: none; vertical-align: 1px; }
+.mk .tapi .ms { font-size: 14px; }
 .cursor { width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 50%; background: var(--blue); border: 3px solid #fff; box-shadow: 0 1px 4px rgba(0,0,0,.4); }
 
 /* cards */
@@ -167,7 +163,7 @@ a { color: inherit; }
     <div class="legend" aria-label="Legend">
       <div><span class="sw" style="background:#3f6b33"></span>National Forest, camping allowed</div>
       <div><span class="sw" style="background:#a9ab9f"></span>Private land, stay on the trail</div>
-      <div><span class="sw" style="background:var(--blue);border-radius:50%;width:12px;height:12px;margin:0 3px"></span>Tap water</div>
+      <div><span class="sw" style="background:var(--blue);border-radius:999px"></span>Tap water</div>
       <div><span class="sw" style="background:var(--lime);border:1px solid #9bb000"></span>Selected trip</div>
       <div><span class="sw" style="background:#fff;border:1px solid #bbb"></span>Other trips</div>
     </div>
@@ -221,7 +217,7 @@ a { color: inherit; }
     <section class="card src">
       <b>Waterfalls:</b> none on these routes. The nearest candidate is Rock Bridge in Rock Bridge Memorial State Park, near Columbia, classed as a "waterfall natural bridge". It is a maybe for the drive home.<br><br>
       Sources: USFS <a href="https://fs.usda.gov/r09/marktwain/recreation/trails/cedar-creek-trail-system">Cedar Creek Trail System</a>, <a href="https://fs.usda.gov/r09/marktwain/recreation/pine-ridge-recreation-area">Pine Ridge</a> and <a href="https://www.fs.usda.gov/r09/marktwain/recreation/dry-fork-recreation-area">Dry Fork</a> pages and the trail brochure. MDC <a href="https://mdc.mo.gov/newsroom/mdc-sets-deer-turkey-hunting-dates-2026-2027-seasons">2026 to 2027 deer dates</a>. USGS GNIS for Devil's Backbone. Trip reports at compulsivehiker.com and rivrvlogr.com. AllTrails reviews are crowd-sourced and were used only for dated condition reports.
-      Miles are measured on OpenStreetMap trail data, elevation from USGS 3DEP. Map imagery and shaded relief: USGS National Map. Land ownership: USFS. Trails © OpenStreetMap contributors (ODbL). Design after TheTrail by RonDesignLab. Type: Outfit (OFL). Plan prepared October 6, 2026.
+      Miles are measured on OpenStreetMap trail data, elevation from USGS 3DEP. Map imagery: USGS National Map. Land ownership: USFS. Trails © OpenStreetMap contributors (ODbL). Design after TheTrail by RonDesignLab. Type: Outfit (OFL). Plan prepared October 6, 2026.
     </section>
   </main>
 </div>
@@ -265,7 +261,6 @@ const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&l
 const map = L.map("map", { zoomControl: false, zoomSnap: 0.25, attributionControl: true, maxBounds: [[38.67, -92.39], [38.93, -91.93]], maxBoundsViscosity: 0.8, minZoom: 11, maxZoom: 17 });
 map.attributionControl.setPrefix(false);
 L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSImageryOnly/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17, maxNativeZoom: 16, attribution: "Imagery: USGS National Map", className: "imagery" }).addTo(map);
-const relief = L.tileLayer("https://basemap.nationalmap.gov/arcgis/rest/services/USGSShadedReliefOnly/MapServer/tile/{z}/{y}/{x}", { maxZoom: 17, maxNativeZoom: 15, opacity: 0.55, className: "relief" }).addTo(map);
 L.geoJSON(DATA.private, { interactive: false, style: { stroke: false, fillColor: "#dcdcd6", fillOpacity: 0.2 } }).addTo(map);
 L.geoJSON(DATA.fs, { interactive: false, style: { color: "#ecf8be", weight: 1.2, opacity: 0.85, fill: false } }).addTo(map);
 map.attributionControl.addAttribution("Land: USFS · Trails © <a href=\"https://www.openstreetmap.org/copyright\">OpenStreetMap</a>");
@@ -282,7 +277,7 @@ TRIPS.forEach((t) => {
   };
 });
 const markers = MS.map((m) => {
-  const html = `<div class="mk"><div class="halo"></div><div class="dot"></div><div class="num">${m.n}</div>${m.tap ? '<div class="tap" title="Tap water"><span class="ms">water_drop</span></div>' : ""}<div class="lab ${m.side}">${esc(m.name.replace(" Recreation Area", "").replace(" Road bridge", " Rd").replace("Overlook above Cedar Creek", "Overlook"))}${m.tap ? '<small>Tap water</small>' : ""}</div></div>`;
+  const html = `<div class="mk"><div class="halo"></div><div class="dot"></div><div class="num">${m.n}</div><div class="lab ${m.side}">${esc(m.name.replace(" Recreation Area", "").replace(" Road bridge", " Rd").replace("Overlook above Cedar Creek", "Overlook"))}${m.tap ? '<span class="tapi" title="Tap water"><span class="ms">water_drop</span>Tap water</span>' : ""}</div></div>`;
   const mk = L.marker(wpt[m.key], { icon: L.divIcon({ className: "", html, iconSize: [0, 0] }), keyboard: false, title: m.name });
   mk.on("click", () => focusMilestone(m));
   return mk.addTo(map);
