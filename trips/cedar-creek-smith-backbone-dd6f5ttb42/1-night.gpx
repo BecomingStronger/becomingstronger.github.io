@@ -2,8 +2,7 @@
 <gpx version="1.1" creator="exobrain backpacking" xmlns="http://www.topografix.com/GPX/1/1">
 <metadata><name>Cedar Creek Smith Creek and Devil's Backbone (1 night)</name><desc>Trail geometry from OpenStreetMap contributors (ODbL).</desc></metadata>
 <wpt lat="38.8240898" lon="-92.1377923"><name>Smith Creek Trailhead</name></wpt>
-<wpt lat="38.8179933" lon="-92.1440028"><name>Rutherford Bridge</name></wpt>
-<wpt lat="38.8184400" lon="-92.1418500"><name>Camp on National Forest land</name></wpt>
+<wpt lat="38.8184400" lon="-92.1418500"><name>Camp</name></wpt>
 <wpt lat="38.8182489" lon="-92.1386117"><name>Overlook above Cedar Creek</name></wpt>
 <wpt lat="38.8141450" lon="-92.1115892"><name>Boydsville</name></wpt>
 <wpt lat="38.8044752" lon="-92.1516701"><name>Devil's Backbone</name></wpt>
