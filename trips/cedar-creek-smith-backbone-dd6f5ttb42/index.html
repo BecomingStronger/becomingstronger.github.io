@@ -8,7 +8,7 @@
 <meta name="description" content="One night on the Cedar Creek Trail, Mark Twain National Forest: Smith Creek Loop, Rutherford Bridge and Devil's Backbone, about 10 miles round trip.">
 <meta property="og:title" content="Smith Creek and Devil's Backbone: a one-night backpacking plan">
 <meta property="og:description" content="One night on the Cedar Creek Trail, Mark Twain National Forest: Smith Creek Loop, Rutherford Bridge and Devil's Backbone, about 10 miles round trip.">
-<meta property="og:image" content="https://becomingstronger.github.io/trips/cedar-creek-smith-backbone-dd6f5ttb42/og.jpg?v=9c270ca1">
+<meta property="og:image" content="https://becomingstronger.github.io/trips/cedar-creek-smith-backbone-dd6f5ttb42/og.jpg?v=ffa59a29">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
 <meta property="og:type" content="website">
@@ -325,7 +325,7 @@ function selectTrip(i, fit = true) {
   $("#days").innerHTML = days.map((d, j) => {
     const [day, what] = d.name.split(": ");
     const tag = d.optional ? "Optional side trip" : d.side ? "Side trip · day packs" : "";
-    return `<button class="row${d.side || d.optional ? " side" : ""}" data-j="${j}"><span>${esc(day)} · ${esc((what || "").replace(" side trip", ""))}${tag ? `<i class="stag">${tag}</i>` : ""}</span><b>${d.miles.toFixed(1)} mi</b><small>${d.side || d.optional ? "Out and back from camp · " : ""}${d.gain.toLocaleString()} ft gain · ${Math.round(d.min)} to ${Math.round(d.max)} ft</small></button>`;
+    return `<button class="row${d.side || d.optional ? " side" : ""}" data-j="${j}"><span>${esc(day)} · ${esc((what || "").replace(" side trip", ""))}${tag ? `<i class="stag">${tag}</i>` : ""}</span><b>${d.miles.toFixed(1)} mi</b><small>${d.side || d.optional ? `Round trip from camp, ${(d.miles / 2).toFixed(1)} mi each way · ` : ""}${d.gain.toLocaleString()} ft gain · ${Math.round(d.min)} to ${Math.round(d.max)} ft</small></button>`;
   }).join("");
   document.querySelectorAll("#days .row").forEach((r) => {
     const j = +r.dataset.j;
