@@ -558,7 +558,8 @@ class App {
       if (it.key === sel.id || it.pin) return true;
       const p = it.world.clone().project(this.camera);
       const d = Math.hypot((p.x - c.x) * innerWidth / 2, (p.y - c.y) * innerHeight / 2);
-      return d > R;
+      // dim labels (nebulae, comets, far rocks) start their text at the anchor, so give them more room
+      return d > (it.dim ? R * 1.6 : R);
     });
   }
 
