@@ -13,9 +13,10 @@ const SETTINGS = {
   starBrightness: 2.95,
 };
 
-// Pixel position of Calimport on toril-2023-1.png (9864 x 5626). The source map has no city dots,
-// so this is the river mouth on the Calimshan coast where the city sits on canon maps.
-const PINS = [{ id: "calimport", label: "Calimport", u: 3180 / 9864, v: 2130 / 5626 }];
+// Pixel position of Calimport on toril-2023-1.png (9864 x 5626). The source map has no city dots, so
+// this comes from the WotC 3E Faerun map, which puts the city on the south coast below the eastern end
+// of the Calim Desert. The desert and the Marching Mountains line the two maps up.
+const PINS = [{ id: "calimport", label: "Calimport", u: 3052 / 9864, v: 2080 / 5626 }];
 
 const STAR_LAYERS = [
   { count: 14000, size: 1.3, radius: 800, colors: ["#ffffff", "#fff8e7", "#ffe4b5"] },
@@ -117,7 +118,7 @@ export function mountGlobe(host, { onProgress, onReady, onError } = {}) {
     el.className = "pin";
     el.type = "button";
     el.innerHTML = `<span class="pin-dot"></span><span class="pin-label">${p.label}</span>`;
-    el.addEventListener("click", () => flyTo(p.id));
+    el.addEventListener("click", () => flyTo(p.id, 3.4));
     host.appendChild(el);
     return { ...p, el, pos: uvToVec(p.u, p.v) };
   });
