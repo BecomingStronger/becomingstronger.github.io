@@ -166,6 +166,8 @@ export class Editor {
 
   async detect() {
     try {
+      // only the local editor server has the API; a website copy skips the probe
+      if (!["127.0.0.1", "localhost"].includes(location.hostname)) throw new Error("no editor server");
       const r = await fetch("api/status", { cache: "no-store" });
       if (r.ok) { const j = await r.json(); this.server = !!j.edit; this.siteUrl = j.site_url; }
     } catch { /* a static copy: no editor server */ }
