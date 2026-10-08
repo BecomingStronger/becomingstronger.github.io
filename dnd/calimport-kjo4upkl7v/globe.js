@@ -13,10 +13,9 @@ const SETTINGS = {
   starBrightness: 2.95,
 };
 
-// Pixel position of Calimport on toril-2023-1.png (9864 x 5626). The source map has no city dots, so
-// this comes from the WotC 3E Faerun map, which puts the city on the south coast below the eastern end
-// of the Calim Desert. The desert and the Marching Mountains line the two maps up.
-const PINS = [{ id: "calimport", label: "Calimport", u: 3052 / 9864, v: 2080 / 5626 }];
+// Pixel position of Calimport on toril-2023-1.png (9864 x 5626). The surface is that map with the WotC
+// 3E Faerun map warped over it, and this is where the Faerun map's own Calimport dot lands after the warp.
+const PINS = [{ id: "calimport", label: "Calimport", u: 3025 / 9864, v: 2178.9 / 5626 }];
 
 const STAR_LAYERS = [
   { count: 14000, size: 1.3, radius: 800, colors: ["#ffffff", "#fff8e7", "#ffe4b5"] },
@@ -123,8 +122,12 @@ export function mountGlobe(host, { onProgress, onReady, onError } = {}) {
     return { ...p, el, pos: uvToVec(p.u, p.v) };
   });
 
-  const big = renderer.capabilities.maxTextureSize >= 8192 && window.innerWidth > 700;
-  const src = new URL(big ? "toril-8192.jpg" : "toril-4096.jpg", import.meta.url).href;
+  // 16k only on big screens with a GPU that takes it and memory to spare: the texture alone is
+  // about 0.7 GB of GPU memory with mipmaps. Phones get 4k.
+  const maxTex = renderer.capabilities.maxTextureSize, wide = window.innerWidth;
+  const size = maxTex >= 16384 && wide > 1200 && (navigator.deviceMemory ?? 8) >= 8 ? 16384
+    : maxTex >= 8192 && wide > 700 ? 8192 : 4096;
+  const src = new URL(`toril-${size}.jpg`, import.meta.url).href;
   const loader = new THREE.TextureLoader();
   // TextureLoader in r122 ignores progress, so fetch the bytes ourselves for a real progress bar.
   fetch(src).then(async (res) => {
