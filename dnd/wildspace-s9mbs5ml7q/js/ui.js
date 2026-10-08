@@ -234,7 +234,8 @@ export function layersHTML(app) {
     </div>
     <div class="blk credits"><h3>Credits</h3>
       <p>Maps of Toril: World Map of Toril by Adam Whitehead, <a href="https://atlasoficeandfireblog.wordpress.com/" target="_blank" rel="noopener">Atlas of Ice and Fire</a>. Faerûn from the Wizards of the Coast 3E map.</p>
-      <p>Planet surfaces: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a>, CC BY 4.0, recolored.</p>
+      <p>Planet surfaces and the Sun: <a href="https://www.solarsystemscope.com/textures/" target="_blank" rel="noopener">Solar System Scope</a>, CC BY 4.0, recolored.</p>
+      <p>Rocks, cliffs, the fort and the bark: <a href="https://polyhaven.com" target="_blank" rel="noopener">Poly Haven</a>, CC0. The skull: "High quality skull" by Mariano Coretti, <a href="https://commons.wikimedia.org/wiki/File:High_quality_skull.stl" target="_blank" rel="noopener">Wikimedia Commons</a>, CC BY-SA 4.0. The galleon outline: Lorc, <a href="https://game-icons.net" target="_blank" rel="noopener">game-icons.net</a>, CC BY 3.0.</p>
       <p>Facts: <em>Realmspace</em> (TSR, 1991) and the other books named on each item. Spelljammer and the Forgotten Realms belong to Wizards of the Coast.</p>
       <p>Made with three.js, Beer CSS, Inter and Material Symbols.</p>
     </div>`;
