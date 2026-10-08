@@ -1,0 +1,1433 @@
+{
+  "format": 1,
+  "title": "Wildspace Orrery",
+  "campaign": {
+    "date": {
+      "year": 1492,
+      "doy": 1
+    },
+    "home": "realmspace/toril"
+  },
+  "between": {
+    "name": {
+      "2e": "The Phlogiston",
+      "5e": "The Astral Sea"
+    },
+    "summary": {
+      "2e": "The rainbow-colored, flammable medium that fills the space between the crystal spheres. Currents in it (the Flow) carry ships between spheres.",
+      "5e": "The silvery plane between the wildspace systems. A ship moves through it when its captain concentrates on a destination."
+    },
+    "sources": [
+      {
+        "title": "Concordance of Arcane Space (Spelljammer: AD&D Adventures in Space)",
+        "pages": "9-11"
+      },
+      {
+        "title": "Astral Adventurer's Guide (Spelljammer: Adventures in Space)",
+        "pages": "4, 20-21"
+      }
+    ],
+    "bodies": []
+  },
+  "spheres": [
+    {
+      "id": "realmspace",
+      "name": "Realmspace",
+      "aka": [
+        "Sea of Night",
+        "Skyward Realms"
+      ],
+      "charted": true,
+      "map": {
+        "pos": [
+          -2.7,
+          -0.1,
+          0.6
+        ],
+        "size": 1.1
+      },
+      "shell_radius_mi": 3200000000,
+      "boundary": {
+        "2e": "shell",
+        "5e": "haze"
+      },
+      "calendar": "harptos",
+      "summary": "The crystal sphere around Toril's system. Glyphs hundreds of miles tall cover the inside of the shell, and the stars are openings to the quasi-elemental plane of Radiance.",
+      "facts": [
+        [
+          "Shell radius",
+          "3,200 million miles"
+        ],
+        [
+          "Primary",
+          "The Sun"
+        ],
+        [
+          "Planets",
+          "8"
+        ],
+        [
+          "Shell",
+          "Glyphs and wards hundreds of miles tall line the inside. Reading one releases a spell at 100 times normal power."
+        ],
+        [
+          "Portals",
+          "About 3,200 open at any time. The Wanderers, a line of cursed souls who walk the inside of the shell, chant them open."
+        ]
+      ],
+      "sources": [
+        {
+          "title": "Realmspace",
+          "pages": "3-5"
+        }
+      ],
+      "editions": [
+        "2e",
+        "5e"
+      ],
+      "bodies": [
+        {
+          "id": "sun",
+          "name": "The Sun",
+          "kind": "star",
+          "parent": null,
+          "element": "fire",
+          "shape": "sphere",
+          "size_class": "H",
+          "day_hours": 37,
+          "look": {
+            "color": "#fff3e0"
+          },
+          "summary": "The primary of Realmspace, at the exact center of the sphere. Creatures from the elemental plane of Fire live on it, and they attack any ship that comes within ten million miles.",
+          "facts": [
+            [
+              "Type",
+              "Spherical fire body"
+            ],
+            [
+              "Size",
+              "H"
+            ],
+            [
+              "Day",
+              "37 hours"
+            ],
+            [
+              "Satellites",
+              "8 planetoids"
+            ],
+            [
+              "Population",
+              "Creatures from the elemental plane of Fire"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "5-6"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "sargassos",
+          "name": "The Sargassos",
+          "kind": "sargasso",
+          "parent": "sun",
+          "orbit": {
+            "radius_mi": 40000000,
+            "period_days": 32.6,
+            "phase_deg": 0,
+            "approx": true
+          },
+          "field": {
+            "count": 12
+          },
+          "diameter_mi": 100000,
+          "look": {
+            "color": "#7d6bb3"
+          },
+          "summary": "Twelve magic-dead globes, each 100,000 miles across, on an orbit 40 million miles from the Sun. Helms and magic items stop inside them.",
+          "facts": [
+            [
+              "Count",
+              "12"
+            ],
+            [
+              "Diameter",
+              "100,000 miles each"
+            ],
+            [
+              "Orbit",
+              "40 million miles from the Sun"
+            ],
+            [
+              "Effect",
+              "Helms fade, then stop. The helmsman falls into spelljammer shock for four days."
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "6"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "anadia",
+          "name": "Anadia",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "B",
+          "orbit": {
+            "radius_mi": 50000000,
+            "period_days": 30,
+            "phase_deg": 215,
+            "incl_deg": 1.5
+          },
+          "day_hours": 12,
+          "look": {
+            "color": "#ff8f66",
+            "texture": "assets/textures/2k_mars.jpg",
+            "tint": [
+              1.12,
+              0.98,
+              0.66
+            ],
+            "keep": 0.2
+          },
+          "summary": "The innermost planet, small and amber-green, cut by canyons larger than the Great Rift. Halflings live at both poles. The hot equator belongs to umber hulks and other Anadian beasts.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "B"
+            ],
+            [
+              "Day",
+              "12 hours"
+            ],
+            [
+              "Year",
+              "30 days"
+            ],
+            [
+              "Distance from the Sun",
+              "50 million miles (12 hours of travel)"
+            ],
+            [
+              "Population",
+              "Halflings at the poles, umber hulks at the equator"
+            ],
+            [
+              "Other",
+              "Once used as a debris storage area"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "7"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "coliar",
+          "name": "Coliar",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "air",
+          "shape": "sphere",
+          "size_class": "G",
+          "orbit": {
+            "radius_mi": 100000000,
+            "period_days": 240,
+            "phase_deg": 32,
+            "incl_deg": -1.0
+          },
+          "day_hours": 30,
+          "look": {
+            "color": "#c3b5ff",
+            "texture": "assets/textures/2k_venus_atmosphere.jpg",
+            "tint": [
+              0.96,
+              0.98,
+              1.04
+            ],
+            "keep": 0
+          },
+          "summary": "A huge world of air. Floating islands of earth and water orbit its core, between 50 and 30,000 miles from the center. Avian humanoids and reptiles live on them.",
+          "facts": [
+            [
+              "Type",
+              "Spherical air body"
+            ],
+            [
+              "Size",
+              "G"
+            ],
+            [
+              "Day",
+              "30 hours"
+            ],
+            [
+              "Year",
+              "8 months"
+            ],
+            [
+              "Distance from the Sun",
+              "100 million miles (1 day of travel)"
+            ],
+            [
+              "Population",
+              "Avian humanoids, reptiles, avian life"
+            ],
+            [
+              "Elminster's Hideout",
+              "Floats about 100 miles above the core"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "12"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "toril",
+          "name": "Toril",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "E",
+          "orbit": {
+            "radius_mi": 200000000,
+            "period_days": 365,
+            "phase_deg": 306,
+            "incl_deg": 0
+          },
+          "day_hours": 24,
+          "look": {
+            "color": "#4fb3ff",
+            "texture": {
+              "4096": "/dnd/calimport-kjo4upkl7v/toril-4096.jpg",
+              "8192": "/dnd/calimport-kjo4upkl7v/toril-8192.jpg",
+              "16384": "/dnd/calimport-kjo4upkl7v/toril-16384.jpg"
+            },
+            "atmosphere": "#6db4ff"
+          },
+          "pins": [
+            {
+              "name": "Calimport",
+              "u": 0.306671,
+              "v": 0.387291,
+              "link": "/dnd/calimport-kjo4upkl7v/"
+            }
+          ],
+          "summary": "The third planet and the most populous world in Realmspace, with the widest variety of life. Selûne orbits it, and the Tears of Selûne trail behind the moon.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "E"
+            ],
+            [
+              "Day",
+              "24 hours"
+            ],
+            [
+              "Year",
+              "365 days"
+            ],
+            [
+              "Distance from the Sun",
+              "200 million miles (2 days of travel)"
+            ],
+            [
+              "Satellites",
+              "1 moon and an asteroid cluster"
+            ],
+            [
+              "Population",
+              "Humans and humanoid races"
+            ],
+            [
+              "Spelljamming ports",
+              "Chunming in Shou Lung, and Calimport, where ships must land on the water away from the city"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "18-19"
+            }
+          ],
+          "links": [
+            {
+              "label": "Calimport campaign page",
+              "url": "/dnd/calimport-kjo4upkl7v/"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "selune",
+          "name": "Selûne",
+          "kind": "moon",
+          "parent": "toril",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "D",
+          "orbit": {
+            "radius_mi": 183000,
+            "period_days": 30,
+            "phase_deg": 40,
+            "incl_deg": 12
+          },
+          "day_hours": 720,
+          "look": {
+            "color": "#d9d9e4",
+            "texture": "assets/textures/2k_moon.jpg"
+          },
+          "summary": "Toril's moon, 183,000 miles out. The same side always faces Toril. Its people worship Leira, and most of them are elves and humans.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "D"
+            ],
+            [
+              "Day",
+              "30 days"
+            ],
+            [
+              "Orbit",
+              "30 days, 183,000 miles from Toril"
+            ],
+            [
+              "Population",
+              "Mostly elves and humans"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "25-28"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "tears",
+          "name": "Tears of Selûne",
+          "kind": "asteroid-field",
+          "parent": "toril",
+          "element": "earth",
+          "shape": "cluster",
+          "size_class": "A",
+          "field": {
+            "follows": "selune",
+            "arc_deg": 75,
+            "count": 1300,
+            "spread": 0.05
+          },
+          "look": {
+            "color": "#e9eefc"
+          },
+          "summary": "A cluster of asteroids that trails behind Selûne on the same orbit, 183,000 miles from Toril. Elves and humans live here, with other spacefaring races.",
+          "facts": [
+            [
+              "Type",
+              "Asteroid cluster"
+            ],
+            [
+              "Size",
+              "A"
+            ],
+            [
+              "Orbit",
+              "30 days, 183,000 miles from Toril"
+            ],
+            [
+              "Population",
+              "Elves and humans, with a smattering of other spacefaring races"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "29-31"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "bral",
+          "name": "Rock of Bral",
+          "kind": "asteroid",
+          "parent": "toril",
+          "element": "earth",
+          "shape": "irregular",
+          "size_class": "A",
+          "orbit": {
+            "radius_mi": 183000,
+            "period_days": 30,
+            "phase_deg": 15,
+            "incl_deg": 12,
+            "approx": true
+          },
+          "look": {
+            "color": "#b8a58c"
+          },
+          "summary": "An asteroid in the Tears of Selûne and the site of the city of Bral, a port for spelljamming ships from many spheres.",
+          "facts": [
+            [
+              "Type",
+              "Irregular earth body"
+            ],
+            [
+              "Size",
+              "A"
+            ],
+            [
+              "Cluster",
+              "Tears of Selûne"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "49"
+            },
+            {
+              "title": "Faiths & Avatars (cited by the Forgotten Realms Wiki)",
+              "pages": "170"
+            }
+          ],
+          "editions": [
+            "2e"
+          ]
+        },
+        {
+          "id": "karpri",
+          "name": "Karpri",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "water",
+          "shape": "sphere",
+          "size_class": "D",
+          "orbit": {
+            "radius_mi": 300000000,
+            "period_days": 650,
+            "phase_deg": 172,
+            "incl_deg": 2.0
+          },
+          "day_hours": 1.2,
+          "look": {
+            "color": "#3ed6cf",
+            "texture": "proc:karpri"
+          },
+          "summary": "An ocean world. Pack ice hundreds of miles thick covers the poles, and mats of weed on the equator carry huge insects. Aquatic elves live in the seas.",
+          "facts": [
+            [
+              "Type",
+              "Spherical water body"
+            ],
+            [
+              "Size",
+              "D"
+            ],
+            [
+              "Day",
+              "1 hour, 12 minutes"
+            ],
+            [
+              "Year",
+              "650 days"
+            ],
+            [
+              "Distance from the Sun",
+              "300 million miles (3 days of travel)"
+            ],
+            [
+              "Population",
+              "Aquatic elves, huge insects, arctic predators"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "32"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "chandos",
+          "name": "Chandos",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "water",
+          "shape": "sphere",
+          "size_class": "F",
+          "orbit": {
+            "radius_mi": 400000000,
+            "period_days": 2010,
+            "phase_deg": 238,
+            "incl_deg": -1.6
+          },
+          "day_hours": 48,
+          "look": {
+            "color": "#7bd88f",
+            "texture": "proc:chandos"
+          },
+          "summary": "A water world. Rocks pile up in its seas into islands that do not stay stable. The people descend from the crews of two spelljammers that crashed here long ago.",
+          "facts": [
+            [
+              "Type",
+              "Spherical water body"
+            ],
+            [
+              "Size",
+              "F"
+            ],
+            [
+              "Day",
+              "48 hours"
+            ],
+            [
+              "Year",
+              "67 months"
+            ],
+            [
+              "Distance from the Sun",
+              "400 million miles (4 days of travel)"
+            ],
+            [
+              "Population",
+              "Humans, dwarves, orcs"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "36"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "glyth",
+          "name": "Glyth",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "E",
+          "orbit": {
+            "radius_mi": 1000000000,
+            "period_days": 10800,
+            "phase_deg": 13,
+            "incl_deg": 2.6
+          },
+          "day_hours": 30.5,
+          "look": {
+            "color": "#b6bfcc",
+            "texture": "assets/textures/2k_mercury.jpg",
+            "tint": [
+              0.86,
+              0.9,
+              0.98
+            ],
+            "keep": 0
+          },
+          "summary": "A harsh gray world with a ring and three moons. Mind flayers have held it for about a century, and most activity happens underground.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "E"
+            ],
+            [
+              "Day",
+              "30 hours, 30 minutes"
+            ],
+            [
+              "Year",
+              "360 months"
+            ],
+            [
+              "Distance from the Sun",
+              "1,000 million miles (10 days of travel)"
+            ],
+            [
+              "Satellites",
+              "3 moons and a ring"
+            ],
+            [
+              "Population",
+              "Mind flayers and many humanoid races"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "39-43"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "glyth-rings",
+          "name": "Rings of Glyth",
+          "kind": "ring",
+          "parent": "glyth",
+          "ring": {
+            "inner": 1.45,
+            "outer": 2.45,
+            "tilt_deg": 24
+          },
+          "look": {
+            "color": "#dfe5f0",
+            "texture": "assets/textures/2k_saturn_ring_alpha.png"
+          },
+          "summary": "A ring of small asteroids and ice balls around Glyth's equator. The mind flayers keep captive oortlings on it.",
+          "facts": [
+            [
+              "Type",
+              "Planetary ring"
+            ],
+            [
+              "Material",
+              "Small asteroids and ice balls"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "42"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "haven",
+          "name": "Haven",
+          "kind": "moon",
+          "parent": "glyth",
+          "element": "earth",
+          "shape": "irregular",
+          "size_class": "A",
+          "orbit": {
+            "radius_mi": 90000,
+            "period_days": 6,
+            "phase_deg": 120,
+            "incl_deg": 24,
+            "approx": true
+          },
+          "look": {
+            "color": "#a9a090"
+          },
+          "summary": "A hollowed asteroid between the first and second rings of Glyth. Warring mind flayer factions treat it as neutral ground.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "A"
+            ],
+            [
+              "Orbit",
+              "Between Glyth's first and second rings"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "42"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "mingabwe",
+          "name": "Mingabwe",
+          "kind": "moon",
+          "parent": "glyth",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "B",
+          "orbit": {
+            "radius_mi": 235000,
+            "period_days": 22,
+            "phase_deg": 300,
+            "incl_deg": 8,
+            "approx": true
+          },
+          "look": {
+            "color": "#cfd8e6"
+          },
+          "summary": "A bitterly cold moon of Glyth and a trading post for merchants who are not mind flayers.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "B"
+            ],
+            [
+              "Orbit",
+              "235,000 miles above Glyth"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "43"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "polluter",
+          "name": "Polluter",
+          "kind": "moon",
+          "parent": "mingabwe",
+          "element": "earth",
+          "shape": "irregular",
+          "size_class": "A",
+          "orbit": {
+            "radius_mi": 20000,
+            "period_days": 3,
+            "phase_deg": 60,
+            "approx": true
+          },
+          "look": {
+            "color": "#9b9488"
+          },
+          "summary": "A small, unmapped moon that orbits Mingabwe.",
+          "facts": [
+            [
+              "Type",
+              "Spherical earth body"
+            ],
+            [
+              "Size",
+              "A"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "43"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "garden",
+          "name": "Garden",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "earth",
+          "shape": "cluster",
+          "size_class": "A",
+          "orbit": {
+            "radius_mi": 1200000000,
+            "period_days": 30660,
+            "phase_deg": 117,
+            "incl_deg": -2.2
+          },
+          "day_hours": 128,
+          "look": {
+            "color": "#9be15d"
+          },
+          "summary": "Not one world but a chain of earth masses held together by one enormous plant, Yggdrasil's Child. It has twelve moons, and pirates have dens here.",
+          "facts": [
+            [
+              "Type",
+              "Cluster earth body"
+            ],
+            [
+              "Size",
+              "A"
+            ],
+            [
+              "Day",
+              "128 hours"
+            ],
+            [
+              "Year",
+              "1,022 months"
+            ],
+            [
+              "Distance from the Sun",
+              "1,200 million miles"
+            ],
+            [
+              "Satellites",
+              "12 moons"
+            ],
+            [
+              "Population",
+              "Yggdrasil's Child, non-sentient life, pirates"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "44"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "hcatha",
+          "name": "H'Catha",
+          "kind": "planet",
+          "parent": "sun",
+          "element": "water",
+          "shape": "disc",
+          "size_class": "C",
+          "orbit": {
+            "radius_mi": 1600000000,
+            "period_days": 60120,
+            "phase_deg": 270,
+            "incl_deg": 1.2
+          },
+          "look": {
+            "color": "#d6e2ff"
+          },
+          "summary": "A flat disc of water 300 miles thick with one mountain, the Spindle, at its center. The Spindle always points at the Sun. Beholders hold the world.",
+          "facts": [
+            [
+              "Type",
+              "Flat world water body"
+            ],
+            [
+              "Size",
+              "C"
+            ],
+            [
+              "Day",
+              "Infinite"
+            ],
+            [
+              "Year",
+              "2,004 months"
+            ],
+            [
+              "Distance from the Sun",
+              "1,600 million miles (16 days of travel)"
+            ],
+            [
+              "Satellites",
+              "2 moons"
+            ],
+            [
+              "Population",
+              "Beholders"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "47-50"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "turnbetl",
+          "name": "Turnbetl",
+          "kind": "moon",
+          "parent": "hcatha",
+          "element": "earth",
+          "shape": "sphere",
+          "size_class": "B",
+          "orbit": {
+            "peri_mi": 11500,
+            "apo_mi": 413000,
+            "period_days": 20,
+            "phase_deg": 200,
+            "argp_deg": 40,
+            "approx": true
+          },
+          "diameter_mi": 980,
+          "look": {
+            "color": "#e8b98a"
+          },
+          "summary": "The closer moon of H'Catha. Its atmosphere is made of highly unstable gases.",
+          "facts": [
+            [
+              "Size",
+              "980 miles"
+            ],
+            [
+              "Perigee",
+              "11,500 miles"
+            ],
+            [
+              "Apogee",
+              "413,000 miles"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "50"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "lumbe",
+          "name": "Lumbe",
+          "kind": "moon",
+          "parent": "hcatha",
+          "element": "earth",
+          "shape": "cylinder",
+          "size_class": "A",
+          "orbit": {
+            "peri_mi": 21500,
+            "apo_mi": 817000,
+            "period_days": 45,
+            "phase_deg": 20,
+            "argp_deg": 210,
+            "approx": true
+          },
+          "look": {
+            "color": "#aab4c4"
+          },
+          "summary": "The farthest moon of H'Catha: a metal cylinder 600 by 75 feet that tumbles like a baton. Behind two locked doors is an empty mage's laboratory.",
+          "facts": [
+            [
+              "Size",
+              "600 x 75 feet"
+            ],
+            [
+              "Perigee",
+              "21,500 miles"
+            ],
+            [
+              "Apogee",
+              "817,000 miles"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "50"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "kthoutek",
+          "name": "Comet K'Thoutek",
+          "kind": "comet",
+          "parent": "sun",
+          "orbit": {
+            "peri_mi": 15000000,
+            "apo_mi": 2000000000,
+            "period_days": 86565,
+            "phase_deg": 190,
+            "incl_deg": 90,
+            "node_deg": 35,
+            "argp_deg": 0
+          },
+          "diameter_mi": 300,
+          "look": {
+            "color": "#e8f0ff"
+          },
+          "summary": "A comet of iron and ice about 300 miles across. It travels at right angles to the planets' orbits and takes more than 237 years to go around the Sun. Toril's astrologers read great births in its appearances.",
+          "facts": [
+            [
+              "Diameter",
+              "About 300 miles"
+            ],
+            [
+              "Perihelion",
+              "15 million miles"
+            ],
+            [
+              "Aphelion",
+              "About 2,000 million miles"
+            ],
+            [
+              "Period",
+              "More than 237 years"
+            ],
+            [
+              "Visible",
+              "Only within 200 million miles of the Sun"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "53"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "skull",
+          "name": "Skull of the Void",
+          "kind": "structure",
+          "parent": "sun",
+          "shape": "skull",
+          "fixed": {
+            "r_mi": 3150000000,
+            "lon_deg": 62,
+            "lat_deg": 18,
+            "approx": true
+          },
+          "look": {
+            "color": "#efe6d2"
+          },
+          "summary": "A human skull of bone 12 miles high and 10 miles wide. It does not move and orbits nothing, about 50 million miles inside the shell. It repairs itself and makes its own air.",
+          "facts": [
+            [
+              "Size",
+              "12 miles high, 10 miles wide"
+            ],
+            [
+              "Position",
+              "Fixed, about 50 million miles from the shell"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "54"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "windlauer",
+          "name": "Caer Windlauer",
+          "kind": "structure",
+          "parent": "sun",
+          "shape": "castle",
+          "orbit": {
+            "peri_mi": 100000000,
+            "apo_mi": 300000000,
+            "period_days": 365,
+            "phase_deg": 75,
+            "incl_deg": 45,
+            "node_deg": 120,
+            "approx": true
+          },
+          "look": {
+            "color": "#cfe8c4"
+          },
+          "summary": "A castle with ten spires on 2,000 acres of land, sent into orbit around the Sun by a wish. Its orbit runs between Coliar's and Karpri's distances, at 45 degrees to Toril's.",
+          "facts": [
+            [
+              "Orbit",
+              "100 to 300 million miles from the Sun, tilted 45 degrees"
+            ],
+            [
+              "Grounds",
+              "About 2,000 acres, with a pond and streams that flow in a circle"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "55-56"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "galleon-nebula",
+          "name": "Galleon Nebula",
+          "kind": "nebula",
+          "parent": "sun",
+          "fixed": {
+            "r_mi": 2400000000,
+            "lon_deg": 150,
+            "lat_deg": 14,
+            "approx": true
+          },
+          "cloud": {
+            "shape": "galleon",
+            "length_mi": 2000000,
+            "colors": [
+              "#7fd3ff",
+              "#c58bff",
+              "#ff9ac8"
+            ]
+          },
+          "summary": "A nebula shaped like a multicolored galleon under sail, two million miles long and high. Through a spyglass its oars seem to row. Toril sees it mostly in autumn and early winter.",
+          "facts": [
+            [
+              "Size",
+              "2 million miles long and high, over 100,000 miles wide"
+            ],
+            [
+              "Seen from Toril",
+              "Autumn and early winter"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "56"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        },
+        {
+          "id": "color-spray-nebula",
+          "name": "Color Spray Nebula",
+          "kind": "nebula",
+          "parent": "sun",
+          "fixed": {
+            "r_mi": 2200000000,
+            "lon_deg": 330,
+            "lat_deg": -10,
+            "approx": true
+          },
+          "cloud": {
+            "shape": "fan",
+            "length_mi": 2000000,
+            "colors": [
+              "#ff6b8a",
+              "#ffd36b",
+              "#6bffb0",
+              "#6bb8ff",
+              "#b46bff"
+            ]
+          },
+          "summary": "A fan-shaped nebula that looks like a color spray spell, about two million miles long. Worshipers of Mystra take it as a sign of her favor. Toril sees it in spring and early summer.",
+          "facts": [
+            [
+              "Size",
+              "About 2 million miles long, 1 million wide at the open end"
+            ],
+            [
+              "Seen from Toril",
+              "Spring and early summer"
+            ]
+          ],
+          "sources": [
+            {
+              "title": "Realmspace",
+              "pages": "56"
+            }
+          ],
+          "editions": [
+            "2e",
+            "5e"
+          ]
+        }
+      ]
+    },
+    {
+      "id": "greyspace",
+      "name": "Greyspace",
+      "charted": false,
+      "map": {
+        "pos": [
+          0.7,
+          2.25,
+          -0.8
+        ],
+        "size": 0.9
+      },
+      "boundary": {
+        "2e": "shell",
+        "5e": "haze"
+      },
+      "summary": "The crystal sphere of the world of Oerth. Not charted on this map yet.",
+      "facts": [],
+      "sources": [
+        {
+          "title": "Concordance of Arcane Space (cited by the Forgotten Realms Wiki)",
+          "pages": "10-11"
+        }
+      ],
+      "editions": [
+        "2e",
+        "5e"
+      ],
+      "bodies": []
+    },
+    {
+      "id": "krynnspace",
+      "name": "Krynnspace",
+      "charted": false,
+      "map": {
+        "pos": [
+          2.5,
+          -1.45,
+          0.2
+        ],
+        "size": 0.85
+      },
+      "boundary": {
+        "2e": "shell",
+        "5e": "haze"
+      },
+      "summary": "The crystal sphere of the world of Krynn. Not charted on this map yet.",
+      "facts": [],
+      "sources": [
+        {
+          "title": "Concordance of Arcane Space (cited by the Forgotten Realms Wiki)",
+          "pages": "10-11"
+        }
+      ],
+      "editions": [
+        "2e",
+        "5e"
+      ],
+      "bodies": []
+    }
+  ],
+  "flows": [
+    {
+      "id": "realmspace-greyspace",
+      "from": "realmspace",
+      "to": "greyspace",
+      "direction": "two-way",
+      "days": null,
+      "summary": "A strong current between Realmspace and Greyspace makes travel fast and simple in both directions.",
+      "sources": [
+        {
+          "title": "Concordance of Arcane Space (cited by the Forgotten Realms Wiki)",
+          "pages": "10-11, 86, 88"
+        }
+      ],
+      "editions": [
+        "2e"
+      ]
+    },
+    {
+      "id": "greyspace-krynnspace",
+      "from": "greyspace",
+      "to": "krynnspace",
+      "direction": "one-way",
+      "days": null,
+      "summary": "A one-way current from Greyspace to Krynnspace. The fastest way from Realmspace to Krynnspace goes through Greyspace.",
+      "sources": [
+        {
+          "title": "Concordance of Arcane Space (cited by the Forgotten Realms Wiki)",
+          "pages": "10-11, 86, 88"
+        }
+      ],
+      "editions": [
+        "2e"
+      ]
+    },
+    {
+      "id": "krynnspace-realmspace",
+      "from": "krynnspace",
+      "to": "realmspace",
+      "direction": "one-way",
+      "days": 53,
+      "summary": "A one-way current from Krynnspace to Realmspace. The trip takes about 53 days.",
+      "sources": [
+        {
+          "title": "Into the Void (cited by the Forgotten Realms Wiki)",
+          "pages": "168"
+        }
+      ],
+      "editions": [
+        "2e"
+      ]
+    }
+  ]
+}

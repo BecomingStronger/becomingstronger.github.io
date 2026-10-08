@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Wildspace Orrery</title>
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="description" content="An interactive map of Realmspace and the crystal spheres around it, for 2e and 5e Spelljammer.">
+<meta name="theme-color" content="#000000">
+<link rel="icon" href="assets/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/beercss@5.0.3/dist/cdn/beer.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource-variable/inter@5.2.8/index.css">
+<link rel="stylesheet" href="css/app.css">
+<script type="module" src="https://cdn.jsdelivr.net/npm/beercss@5.0.3/dist/cdn/beer.min.js"></script>
+<script type="importmap">{"imports":{"three":"https://cdn.jsdelivr.net/npm/three@0.186.1/build/three.module.js","three/addons/":"https://cdn.jsdelivr.net/npm/three@0.186.1/examples/jsm/"}}</script>
+</head>
+<body class="dark">
+<canvas id="c" aria-label="3D map of the spheres. Drag to turn, scroll or pinch to zoom."></canvas>
+<div id="labels" aria-hidden="true"></div>
+<div id="loading" class="on"></div>
+
+<div class="ov tb">
+  <svg class="logo" viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="12.5" fill="none" stroke="currentColor" stroke-width="1.4"/><ellipse cx="16" cy="16" rx="12.5" ry="4.3" fill="none" stroke="currentColor" stroke-width="1.4"/><circle cx="16" cy="16" r="2.3" fill="currentColor"/><circle cx="25.6" cy="13.2" r="1.3" fill="currentColor"/></svg>
+  <a class="brand" data-act="go-between" id="brand">Wildspace Orrery</a>
+  <nav class="crumbs" id="crumbs" aria-label="Where you are"></nav>
+  <span class="grow"></span>
+  <div class="search" id="search">
+    <a class="ib sicon" title="Search (/)"><i>search</i></a>
+    <input type="search" placeholder="Find a world, moon or sphere" aria-label="Search">
+    <div class="results glass"></div>
+  </div>
+  <span class="seg" role="group" aria-label="Edition"><a data-edition="2e" class="on" title="2e: crystal spheres in the phlogiston">2E</a><a data-edition="5e" title="5e: wildspace systems in the Astral Sea">5E</a></span>
+  <a class="tlink editonly" id="editbtn" title="Edit mode"><i>edit</i><span>Edit</span></a>
+  <a class="tlink" id="sharebtn" title="Copy a link to this view"><i>share</i><span>Share</span></a>
+</div>
+
+<div class="ov editbar glass" id="editbar"></div>
+
+<div class="ov readout" id="readout"></div>
+<div class="ov hero" id="hero"><h1></h1><p></p></div>
+
+<div class="ov timearc" id="timearc">
+  <div class="trow">
+    <a class="live" data-t="campaign" title="Go to the campaign date"><span class="dot"></span><span>Campaign date</span></a>
+    <a class="tdate" data-t="campaign" title="The date on the map">1 Hammer 1492 DR</a>
+    <span class="tbtns"><a data-t="slower" title="Slower or reverse"><i>fast_rewind</i></a><a class="play" data-t="play" title="Play or pause (space)"><i>pause</i></a><a data-t="faster" title="Faster"><i>fast_forward</i></a></span>
+    <span class="rate">1 day / sec</span>
+    <span class="day">Day 1</span>
+  </div>
+  <svg viewBox="0 0 660 62" aria-hidden="true"><defs><linearGradient id="ag" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".22" stop-color="#fff" stop-opacity=".38"/><stop offset=".78" stop-color="#fff" stop-opacity=".38"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient></defs>
+    <path d="M4,8 Q330,70 656,8" stroke="url(#ag)" stroke-width="1.5" fill="none"/>
+    <circle class="knob" cx="330" cy="39" r="15" fill="rgba(61,220,151,.14)" stroke="rgba(255,255,255,.55)" stroke-width="1.2"/>
+    <circle class="knob core" cx="330" cy="39" r="7" fill="#3ddc97"/></svg>
+</div>
+<a class="ov pdate glass" id="pdate"><span class="dot"></span><span class="txt"></span><i>pause</i></a>
+
+<nav class="ov rail" id="rail" aria-label="View controls">
+  <a data-r="info" title="Information"><i>info</i></a><a data-r="layers" title="Layers"><i>layers</i></a><div class="gap"></div>
+  <a data-r="in" title="Zoom in"><i>add</i></a><a data-r="out" title="Zoom out"><i>remove</i></a><div class="gap"></div>
+  <a data-r="scale" title="Schematic or true distances"><i>straighten</i></a><a data-r="full" title="Full screen"><i>fullscreen</i></a>
+</nav>
+
+<div class="ov tiles glass" id="tiles">
+  <div class="cap">View</div>
+  <div class="row3"><a data-v="world"><i>public</i><span>World</span></a><a data-v="sphere"><i>orbit</i><span>Sphere</span></a><a data-v="between"><i>bubble_chart</i><span>Phlogiston</span></a></div>
+</div>
+
+<aside class="ov panel glass" id="panel" aria-label="Information">
+  <nav class="ptabs" id="ptabs"><a data-tab="info"><i>info</i>Info</a><a data-tab="bodies"><i>format_list_bulleted</i>Bodies</a><a data-tab="layers"><i>layers</i>Layers</a><a class="collapse" data-close title="Close"><i>keyboard_double_arrow_left</i></a></nav>
+  <div class="handle"></div>
+  <div class="pbody" id="panelbody"></div>
+</aside>
+
+<div class="ov card glass emptycard" id="emptycard"><i>travel_explore</i><h5>Uncharted</h5><p></p></div>
+<div class="ov card glass errorcard" id="errorcard"><i>error</i><h5>Something went wrong</h5><p></p></div>
+<div class="ov toast glass" id="toast" role="status"></div>
+
+<dialog id="confirm" class="glass">
+  <h5></h5><p></p>
+  <nav class="right-align"><button class="border cancel">Cancel</button><button class="ok"><span>Delete</span></button></nav>
+</dialog>
+
+<noscript><p class="noscript">The orrery needs JavaScript.</p></noscript>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
