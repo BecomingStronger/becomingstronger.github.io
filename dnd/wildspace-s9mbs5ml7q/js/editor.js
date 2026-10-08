@@ -7,6 +7,17 @@ import { esc, toast, confirmDialog } from "./ui.js";
 import * as H from "./harptos.js";
 
 const DRAFT = "wildspace-orrery-draft";
+const MODELS = [
+  ["", "None (drawn from the kind and shape)"],
+  ["assets/models/skull.glb", "Skull"],
+  ["assets/models/windlauer.glb", "Castle on floating land"],
+  ["assets/models/garden.glb", "Chain of earth masses"],
+  ["assets/models/bral.glb", "Asteroid with a city"],
+  ["assets/models/rock_a.glb", "Rock A"],
+  ["assets/models/rock_b.glb", "Rock B"],
+  ["assets/models/rock_c.glb", "Rock C"],
+  ["assets/models/rock_d.glb", "Rock D"],
+];
 const TEXTURES = [
   ["", "Painted from the color"],
   ["assets/textures/2k_mars.jpg", "Rocky, red-brown (Mars)"],
@@ -97,6 +108,9 @@ function bodySpec(app, sphereId, obj) {
     { key: "look.texture", label: "Surface", type: "texture", when: (o) => ["planet", "moon", "other"].includes(o.kind) && (!o.shape || o.shape === "sphere") },
     { key: "look.atmosphere", label: "Atmosphere glow (#hex, blank for none)", type: "text", when: (o) => ["planet", "moon"].includes(o.kind) },
     { key: "look.scale", label: "Draw size (1 is normal)", type: "number", step: 0.1 },
+    { key: "look.model", label: "3D model", type: "model", when: (o) => !["ring", "asteroid-field", "nebula", "comet", "sargasso", "star"].includes(o.kind) },
+    { key: "look.moonlets", label: "Small moons around it", type: "number", when: (o) => ["planet", "moon", "asteroid", "other"].includes(o.kind) },
+    { key: "look.islands.count", label: "Floating islands around it", type: "number", when: (o) => ["planet", "moon"].includes(o.kind) },
     ...infoFields(),
   ];
 }
@@ -104,6 +118,7 @@ function bodySpec(app, sphereId, obj) {
 function infoFields() {
   return [
     { type: "section", label: "Information" },
+    { key: "wiki", label: "Forgotten Realms Wiki page", type: "wiki", help: "The page title, for example Rock of Bral, or Glyth#Haven for a section. Check looks it up on the wiki." },
     { key: "summary", label: "Description", type: "textarea" },
     { key: "facts", label: "Facts", type: "rows", cols: ["Label", "Value"] },
     { key: "sources", label: "Sources", type: "rows", cols: ["Book", "Pages"], obj: ["title", "pages"] },
@@ -145,6 +160,7 @@ function flowSpec(app) {
     { key: "days", label: "Travel time (days)", type: "number" },
     { key: "bend", label: "Curve (-1 to 1)", type: "number", step: 0.1 },
     { type: "section", label: "Information" },
+    { key: "wiki", label: "Forgotten Realms Wiki page", type: "wiki" },
     { key: "summary", label: "Description", type: "textarea" },
     { key: "sources", label: "Sources", type: "rows", cols: ["Book", "Pages"], obj: ["title", "pages"] },
     { type: "section", label: "Visibility" },
@@ -362,6 +378,8 @@ export class Editor {
         if (add) { readInto(form, work, fields); const k = add.dataset.addrow; const f = fields.find((x) => x.key === k); const cur = rowsValue(get(work, k), f); cur.push(f.obj ? Object.fromEntries(f.obj.map((x) => [x, ""])) : ["", ""]); set(work, k, cur); draw(); return; }
         const rm = e.target.closest("[data-rmrow]");
         if (rm) { readInto(form, work, fields); const [k, i] = rm.dataset.rmrow.split("|"); const cur = rowsValue(get(work, k), fields.find((x) => x.key === k)); cur.splice(Number(i), 1); set(work, k, cur); draw(); return; }
+        const wk = e.target.closest("[data-wikicheck]");
+        if (wk) { readInto(form, work, fields); checkWiki(form, wk.dataset.wikicheck, get(work, wk.dataset.wikicheck) || get(work, "name")); return; }
         const place = e.target.closest("[data-place]");
         if (place) {
           readInto(form, work, fields);
@@ -448,6 +466,25 @@ export class Editor {
   }
 }
 
+// Look a page up on the Forgotten Realms Wiki and put the exact title (after redirects) in the field.
+async function checkWiki(form, key, title) {
+  const msg = form.querySelector(".wikimsg"), input = form.querySelector(`[data-k="${CSS.escape(key)}"]`);
+  if (!title) { msg.textContent = "Type a page title first."; return; }
+  const [page, anchor] = String(title).replace(/^https?:\/\/forgottenrealms\.fandom\.com\/wiki\//, "").split("#");
+  msg.textContent = "Looking it up…";
+  try {
+    const q = new URLSearchParams({ action: "query", titles: decodeURIComponent(page.replace(/_/g, " ")), redirects: "1", format: "json", formatversion: "2", origin: "*" });
+    const d = await (await fetch(`https://forgottenrealms.fandom.com/api.php?${q}`)).json();
+    const p = d.query?.pages?.[0];
+    if (!p || p.missing) { msg.innerHTML = `No page with that title. <a href="https://forgottenrealms.fandom.com/wiki/Special:Search?query=${encodeURIComponent(page)}" target="_blank" rel="noopener">Search the wiki</a>`; return; }
+    input.value = p.title + (anchor ? `#${anchor}` : "");
+    input.dispatchEvent(new Event("input", { bubbles: true }));
+    msg.innerHTML = `Found: <a href="https://forgottenrealms.fandom.com/wiki/${encodeURIComponent(p.title.replace(/ /g, "_"))}" target="_blank" rel="noopener">${esc(p.title)}</a>`;
+  } catch {
+    msg.textContent = "The wiki did not answer. Check the title by hand.";
+  }
+}
+
 // ---------- form fields ----------
 function rowsValue(v, f) { return Array.isArray(v) ? v.map((r) => (f?.obj ? { ...r } : [...r])) : []; }
 
@@ -475,6 +512,14 @@ function fieldHTML(f, o) {
       return `<div class="field label suffix border small"><select data-k="${k}" data-texture="1">${opts.map(([val, lab]) => `<option value="${esc(val)}" ${(tiers ? val === "__tiers" : val === cur) ? "selected" : ""}>${esc(lab)}</option>`).join("")}${!known && cur ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ""}</select><label>${esc(f.label)}</label><i>arrow_drop_down</i></div>
         <div class="field label border small"><input type="text" data-k="${k}" data-texture-url="1" value="${esc(tiers ? "" : cur)}" placeholder=" "><label>Or a picture URL (equirectangular)</label></div>`;
     }
+    case "model": {
+      const cur = typeof v === "string" ? v : "";
+      const known = MODELS.some(([val]) => val === cur);
+      return `<div class="field label suffix border small"><select data-k="${k}" data-model="1">${MODELS.map(([val, lab]) => `<option value="${esc(val)}" ${val === cur ? "selected" : ""}>${esc(lab)}</option>`).join("")}${!known && cur ? `<option value="${esc(cur)}" selected>${esc(cur)}</option>` : ""}</select><label>${esc(f.label)}</label><i>arrow_drop_down</i></div>
+        <div class="field label border small"><input type="text" data-k="${k}" data-model-url="1" value="${esc(known ? "" : cur)}" placeholder=" "><label>Or a model URL (.glb, radius 1)</label></div>`;
+    }
+    case "wiki":
+      return `<div class="wikirow"><div class="field label border small"><input type="text" data-k="${k}" value="${esc(v ?? "")}" placeholder=" "><label>${esc(f.label)}</label>${help}</div><button type="button" class="border small" data-wikicheck="${k}"><i>travel_explore</i><span>Check</span></button></div><div class="wikimsg"></div>`;
     case "color": {
       const cur = /^#[0-9a-f]{6}$/i.test(v || "") ? v : "#9fb0c8";
       return `<label class="colorrow"><input type="color" data-k="${k}" value="${cur}"><span>${esc(f.label)}</span></label>`;
@@ -509,7 +554,10 @@ function readInto(form, o, fields) {
     else if (f.type === "list") set(o, f.key, els[0].value.split(",").map((x) => x.trim()).filter(Boolean));
     else if (f.type === "editions") set(o, f.key, els.filter((e) => e.checked).map((e) => e.dataset.edVal));
     else if (f.type === "vec3") set(o, f.key, [0, 1, 2].map((i) => Number(els.find((e) => e.dataset.i == i)?.value || 0)));
-    else if (f.type === "texture") {
+    else if (f.type === "model") {
+      const sel = els.find((e) => e.dataset.model), url = els.find((e) => e.dataset.modelUrl);
+      set(o, f.key, url?.value.trim() || sel?.value || "");
+    } else if (f.type === "texture") {
       const sel = els.find((e) => e.dataset.texture), url = els.find((e) => e.dataset.textureUrl);
       if (sel?.value === "__tiers") continue;
       set(o, f.key, url?.value.trim() || sel?.value || "");

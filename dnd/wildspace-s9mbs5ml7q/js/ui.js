@@ -85,6 +85,17 @@ export function miles(n) {
 }
 const sourceText = (s) => `${esc(s.title)}${s.pages ? `, p. ${esc(s.pages)}` : ""}`;
 
+// The Forgotten Realms Wiki page for an entity: a page title ("Glyth#Haven" for a section) or a
+// full URL. Without one, a wiki search for the name, so every entity links somewhere useful.
+export function wikiURL(wiki, name) {
+  const base = "https://forgottenrealms.fandom.com/wiki/";
+  if (!wiki) return name ? `${base}Special:Search?query=${encodeURIComponent(name)}` : "";
+  if (/^https?:/.test(wiki)) return wiki;
+  const [page, anchor] = wiki.split("#");
+  const enc = (x) => encodeURIComponent(x.trim().replace(/ /g, "_"));
+  return base + enc(page) + (anchor ? `#${enc(anchor)}` : "");
+}
+
 export function kindLine(b, atlas, sphereId) {
   const k = KINDS[b.kind]?.label || b.kind;
   const el = b.element && b.element !== "other" ? `${b.element[0].toUpperCase()}${b.element.slice(1)} body` : "";
@@ -109,7 +120,7 @@ export function infoHTML(app, sel) {
     if (inn.length) facts.push(["Currents in", [...new Set(inn)].join(", ")]);
     return block({
       kind: `${kind} · ${s.charted ? "charted" : "uncharted"}${s.secret ? " · secret" : ""}`, dot: s.charted ? "#9db4ff" : "rgba(220,228,255,.55)",
-      title: s.name, aka: s.aka, summary: s.summary, facts, sources: s.sources, links: s.links, dm: edit ? s.dm : "",
+      title: s.name, aka: s.aka, summary: s.summary, wiki: wikiURL(s.wiki, s.name), wikiExact: !!s.wiki, facts, sources: s.sources, links: s.links, dm: edit ? s.dm : "",
       actions: [
         app.state.view === "sphere" && app.state.sphereId === s.id ? ["frame", "center_focus_strong", "Show whole sphere"] : ["enter", "login", "Enter sphere"],
         edit ? ["edit", "edit", "Edit", "border"] : null,
@@ -124,7 +135,7 @@ export function infoHTML(app, sel) {
     if (f.days) facts.push(["Travel time", `About ${f.days} days`]);
     return block({
       kind: `Current in the ${edition === "5e" ? "Astral Sea" : "phlogiston"}`, dot: "#e6f0ff",
-      title: f.direction === "two-way" ? `${A} ⇄ ${B}` : `${A} → ${B}`, summary: f.summary, facts, sources: f.sources, dm: edit ? f.dm : "",
+      title: f.direction === "two-way" ? `${A} ⇄ ${B}` : `${A} → ${B}`, summary: f.summary, wiki: wikiURL(f.wiki, "flow phlogiston"), wikiExact: !!f.wiki, facts, sources: f.sources, dm: edit ? f.dm : "",
       actions: [edit ? ["edit", "edit", "Edit", "border"] : null],
     });
   }
@@ -145,6 +156,7 @@ export function infoHTML(app, sel) {
   return block({
     kind: kindLine(b, atlas, sel.sphere) + (b.secret ? " · secret" : ""), dot: b.look?.color || "#9fb0c8",
     title: b.name, summary: b.summary, facts, sources: b.sources, links: b.links, dm: edit ? b.dm : "",
+    wiki: wikiURL(b.wiki, b.name), wikiExact: !!b.wiki,
     related: related.map((r) => ({ id: r.id, name: r.name, icon: KINDS[r.kind]?.icon || "circle" })),
     actions: [
       sel.sphere ? ["fly", "my_location", "Fly to"] : null,
@@ -158,17 +170,18 @@ function emptyInfo(app) {
   const { atlas, edition, view, sphereId } = app.state;
   if (view === "sphere") {
     const s = atlas.spheres(edition, true).find((x) => x.id === sphereId);
-    return block({ kind: edition === "5e" ? "Wildspace system" : "Crystal sphere", dot: "#9db4ff", title: s?.name, summary: s?.summary, facts: s?.facts, sources: s?.sources, actions: [] });
+    return block({ kind: edition === "5e" ? "Wildspace system" : "Crystal sphere", dot: "#9db4ff", title: s?.name, summary: s?.summary, facts: s?.facts, sources: s?.sources, wiki: wikiURL(s?.wiki, s?.name), wikiExact: !!s?.wiki, actions: [] });
   }
   const between = atlas.data.between;
-  return block({ kind: "Between the spheres", dot: "#e6f0ff", title: between.name?.[edition] || "Between the spheres", summary: between.summary?.[edition], sources: between.sources, actions: [] });
+  return block({ kind: "Between the spheres", dot: "#e6f0ff", title: between.name?.[edition] || "Between the spheres", summary: between.summary?.[edition], sources: between.sources, wiki: wikiURL(between.wiki?.[edition], between.name?.[edition]), wikiExact: !!between.wiki?.[edition], actions: [] });
 }
 
 function block(o) {
   const facts = (o.facts || []).filter((f) => f && f[1]);
   return `
   <div class="blk head"><div class="kind"><span class="dot" style="background:${esc(o.dot)}"></span>${esc(o.kind)}</div>
-    <h2>${esc(o.title)}</h2>${o.aka?.length ? `<div class="aka">Also: ${o.aka.map(esc).join(", ")}</div>` : ""}</div>
+    <h2>${esc(o.title)}</h2>${o.aka?.length ? `<div class="aka">Also: ${o.aka.map(esc).join(", ")}</div>` : ""}
+    ${o.wiki ? `<a class="wiki" href="${esc(o.wiki)}" target="_blank" rel="noopener"><i>menu_book</i><span>${o.wikiExact ? "Forgotten Realms Wiki" : "Search the Forgotten Realms Wiki"}</span><i class="ext">open_in_new</i></a>` : ""}</div>
   ${o.summary ? `<div class="blk"><h3>Description</h3><p>${esc(o.summary)}</p></div>` : ""}
   ${facts.length ? `<div class="blk"><h3>Facts</h3><dl class="facts">${facts.map(([k, v]) => `<dt>${esc(k)}</dt><dd>${esc(v)}</dd>`).join("")}</dl></div>` : ""}
   ${o.dm ? `<div class="blk dm"><h3><i>visibility_off</i>DM notes</h3><p>${esc(o.dm)}</p></div>` : ""}

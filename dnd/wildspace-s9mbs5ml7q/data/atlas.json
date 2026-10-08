@@ -27,7 +27,11 @@
         "pages": "4, 20-21"
       }
     ],
-    "bodies": []
+    "bodies": [],
+    "wiki": {
+      "2e": "Phlogiston",
+      "5e": "Astral Plane"
+    }
   },
   "spheres": [
     {
@@ -130,7 +134,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "The sun"
         },
         {
           "id": "sargassos",
@@ -178,7 +183,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Sargasso (wildspace)"
         },
         {
           "id": "anadia",
@@ -203,7 +209,8 @@
               0.98,
               0.66
             ],
-            "keep": 0.2
+            "keep": 0.2,
+            "atmosphere": "#ffb48a"
           },
           "summary": "The innermost planet, small and amber-green, cut by canyons larger than the Great Rift. Halflings live at both poles. The hot equator belongs to umber hulks and other Anadian beasts.",
           "facts": [
@@ -245,7 +252,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Anadia"
         },
         {
           "id": "coliar",
@@ -270,7 +278,12 @@
               0.98,
               1.04
             ],
-            "keep": 0
+            "keep": 0,
+            "islands": {
+              "count": 46,
+              "color": "#9fb08a"
+            },
+            "atmosphere": "#d8ccff"
           },
           "summary": "A huge world of air. Floating islands of earth and water orbit its core, between 50 and 30,000 miles from the center. Avian humanoids and reptiles live on them.",
           "facts": [
@@ -312,7 +325,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Coliar"
         },
         {
           "id": "toril",
@@ -396,7 +410,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Toril"
         },
         {
           "id": "selune",
@@ -449,7 +464,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Selûne (moon)"
         },
         {
           "id": "tears",
@@ -463,7 +479,9 @@
             "follows": "selune",
             "arc_deg": 75,
             "count": 1300,
-            "spread": 0.05
+            "spread": 0.05,
+            "rocks": 460,
+            "lights": 26
           },
           "look": {
             "color": "#e9eefc"
@@ -496,7 +514,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Tears of Selûne"
         },
         {
           "id": "bral",
@@ -504,17 +523,18 @@
           "kind": "asteroid",
           "parent": "toril",
           "element": "earth",
-          "shape": "irregular",
+          "shape": "city",
           "size_class": "A",
           "orbit": {
             "radius_mi": 183000,
             "period_days": 30,
-            "phase_deg": 15,
+            "phase_deg": 345,
             "incl_deg": 12,
             "approx": true
           },
           "look": {
-            "color": "#b8a58c"
+            "color": "#b8a58c",
+            "model": "assets/models/bral.glb"
           },
           "summary": "An asteroid in the Tears of Selûne and the site of the city of Bral, a port for spelljamming ships from many spheres.",
           "facts": [
@@ -543,7 +563,8 @@
           ],
           "editions": [
             "2e"
-          ]
+          ],
+          "wiki": "Rock of Bral"
         },
         {
           "id": "karpri",
@@ -562,7 +583,8 @@
           "day_hours": 1.2,
           "look": {
             "color": "#3ed6cf",
-            "texture": "proc:karpri"
+            "texture": "proc:karpri",
+            "atmosphere": "#7fd8ff"
           },
           "summary": "An ocean world. Pack ice hundreds of miles thick covers the poles, and mats of weed on the equator carry huge insects. Aquatic elves live in the seas.",
           "facts": [
@@ -600,7 +622,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Karpri"
         },
         {
           "id": "chandos",
@@ -619,7 +642,8 @@
           "day_hours": 48,
           "look": {
             "color": "#7bd88f",
-            "texture": "proc:chandos"
+            "texture": "proc:chandos",
+            "atmosphere": "#8fe3c8"
           },
           "summary": "A water world. Rocks pile up in its seas into islands that do not stay stable. The people descend from the crews of two spelljammers that crashed here long ago.",
           "facts": [
@@ -657,7 +681,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Chandos"
         },
         {
           "id": "glyth",
@@ -724,7 +749,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Glyth"
         },
         {
           "id": "glyth-rings",
@@ -760,7 +786,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Glyth#The Rings of Glyth"
         },
         {
           "id": "haven",
@@ -804,7 +831,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Haven"
         },
         {
           "id": "mingabwe",
@@ -822,7 +850,14 @@
             "approx": true
           },
           "look": {
-            "color": "#cfd8e6"
+            "color": "#cfd8e6",
+            "texture": "assets/textures/2k_moon.jpg",
+            "tint": [
+              0.92,
+              0.98,
+              1.12
+            ],
+            "keep": 0
           },
           "summary": "A bitterly cold moon of Glyth and a trading post for merchants who are not mind flayers.",
           "facts": [
@@ -848,7 +883,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Mingabwe"
         },
         {
           "id": "polluter",
@@ -887,7 +923,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Polluter"
         },
         {
           "id": "garden",
@@ -905,7 +942,9 @@
           },
           "day_hours": 128,
           "look": {
-            "color": "#9be15d"
+            "color": "#9be15d",
+            "model": "assets/models/garden.glb",
+            "moonlets": 12
           },
           "summary": "Not one world but a chain of earth masses held together by one enormous plant, Yggdrasil's Child. It has twelve moons, and pirates have dens here.",
           "facts": [
@@ -947,7 +986,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Garden"
         },
         {
           "id": "hcatha",
@@ -1006,7 +1046,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "H'Catha"
         },
         {
           "id": "turnbetl",
@@ -1026,7 +1067,15 @@
           },
           "diameter_mi": 980,
           "look": {
-            "color": "#e8b98a"
+            "color": "#e8b98a",
+            "atmosphere": "#ffb066",
+            "texture": "assets/textures/2k_moon.jpg",
+            "tint": [
+              1.25,
+              0.92,
+              0.62
+            ],
+            "keep": 0
           },
           "summary": "The closer moon of H'Catha. Its atmosphere is made of highly unstable gases.",
           "facts": [
@@ -1052,7 +1101,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Turnbetl"
         },
         {
           "id": "lumbe",
@@ -1097,7 +1147,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Lumbe"
         },
         {
           "id": "kthoutek",
@@ -1149,7 +1200,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "K'Thoutek"
         },
         {
           "id": "skull",
@@ -1164,7 +1216,8 @@
             "approx": true
           },
           "look": {
-            "color": "#efe6d2"
+            "color": "#efe6d2",
+            "model": "assets/models/skull.glb"
           },
           "summary": "A human skull of bone 12 miles high and 10 miles wide. It does not move and orbits nothing, about 50 million miles inside the shell. It repairs itself and makes its own air.",
           "facts": [
@@ -1186,7 +1239,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Skull of the Void"
         },
         {
           "id": "windlauer",
@@ -1204,7 +1258,8 @@
             "approx": true
           },
           "look": {
-            "color": "#cfe8c4"
+            "color": "#cfe8c4",
+            "model": "assets/models/windlauer.glb"
           },
           "summary": "A castle with ten spires on 2,000 acres of land, sent into orbit around the Sun by a wish. Its orbit runs between Coliar's and Karpri's distances, at 45 degrees to Toril's.",
           "facts": [
@@ -1226,7 +1281,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Caer Windlauer"
         },
         {
           "id": "galleon-nebula",
@@ -1268,7 +1324,8 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Galleon Nebula"
         },
         {
           "id": "color-spray-nebula",
@@ -1312,9 +1369,11 @@
           "editions": [
             "2e",
             "5e"
-          ]
+          ],
+          "wiki": "Color Spray Nebula"
         }
-      ]
+      ],
+      "wiki": "Realmspace"
     },
     {
       "id": "greyspace",
@@ -1344,7 +1403,8 @@
         "2e",
         "5e"
       ],
-      "bodies": []
+      "bodies": [],
+      "wiki": "Greyspace"
     },
     {
       "id": "krynnspace",
@@ -1374,7 +1434,8 @@
         "2e",
         "5e"
       ],
-      "bodies": []
+      "bodies": [],
+      "wiki": "Krynnspace"
     }
   ],
   "flows": [
@@ -1393,7 +1454,8 @@
       ],
       "editions": [
         "2e"
-      ]
+      ],
+      "wiki": "Phlogiston#Stable Configurations in the Flow"
     },
     {
       "id": "greyspace-krynnspace",
@@ -1410,7 +1472,8 @@
       ],
       "editions": [
         "2e"
-      ]
+      ],
+      "wiki": "Phlogiston#Stable Configurations in the Flow"
     },
     {
       "id": "krynnspace-realmspace",
@@ -1427,7 +1490,8 @@
       ],
       "editions": [
         "2e"
-      ]
+      ],
+      "wiki": "Phlogiston#Stable Configurations in the Flow"
     }
   ]
 }

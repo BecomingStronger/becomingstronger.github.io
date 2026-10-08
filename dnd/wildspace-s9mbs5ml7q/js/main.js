@@ -11,6 +11,9 @@ import * as H from "./harptos.js";
 
 const $ = (s) => document.querySelector(s);
 const phone = () => innerWidth < 760;
+// ?embed: the orrery inside another page (the Calimport campaign page). It waits for a click
+// before it takes the mouse wheel and touch, so the host page still scrolls past it.
+const EMBED = new URLSearchParams(location.search).has("embed");
 
 class App {
   async init() {
@@ -28,9 +31,14 @@ class App {
     this.controls = new OrbitControls(this.camera, $("#c"));
     Object.assign(this.controls, { enableDamping: !this.reducedMotion, dampingFactor: 0.08, rotateSpeed: 0.55, zoomSpeed: 0.9, minDistance: 0.08 });
     this.controls.addEventListener("start", () => { if (this.fly) this.fly = null; });
+    if (EMBED) {
+      document.body.classList.add("embed");
+      this.controls.enabled = false;
+      $("#embedhint span").textContent = matchMedia("(pointer: coarse)").matches ? "Tap to explore the map" : "Click to explore the map";
+    }
     this.labels = new Labels($("#labels"));
     this.editor = new Editor(this);
-    this.clock = new THREE.Clock();
+    this.lastFrame = performance.now();
     this.t = 0;
 
     let atlas;
@@ -83,12 +91,12 @@ class App {
     const st = this.state;
     if (params.get("e") && ["2e", "5e"].includes(params.get("e")) && params.get("e") !== st.edition) { st.edition = params.get("e"); this.viewDirty = true; }
     if (params.get("d") && !isNaN(Number(params.get("d")))) st.day = Number(params.get("d"));
-    if (!parts.length && first && st.atlas.data.campaign?.start === "home") parts.push(...st.atlas.data.campaign.home.split("/"));
+    if (!parts.length && first && (EMBED || st.atlas.data.campaign?.start === "home")) parts.push(...(st.atlas.data.campaign?.home || "realmspace/toril").split("/"));
     if (parts[0] === "@flow") { await this.showBetween(); this.select({ type: "flow", id: parts[1] }, { fly: !first, noHash: true }); }
     else if (parts[0] === "@body") { await this.showBetween(); this.select({ type: "body", id: parts[1] }, { fly: !first, noHash: true }); }
     else if (parts[0] && st.atlas.sphere(parts[0])) {
       await this.showSphere(parts[0]);
-      if (parts[1]) this.select({ type: "body", id: parts[1], sphere: parts[0] }, { fly: true, instant: first, noHash: true });
+      if (parts[1]) this.select({ type: "body", id: parts[1], sphere: parts[0] }, { fly: true, instant: first, noHash: true, noPanel: EMBED && first });
       else { st.selected = null; this.renderPanel(); }
     } else await this.showBetween();
     this.renderChrome();
@@ -104,6 +112,19 @@ class App {
     if (st.edition !== "2e") q.set("e", st.edition);
     const h = path + (q.toString() ? `?${q}` : "");
     if (location.hash !== h) { this.writingHash = true; history.replaceState(null, "", h + ""); this.writingHash = false; }
+    this.updateFullLink();
+  }
+
+  updateFullLink() {
+    const a = $("#fullbtn");
+    if (a) a.href = location.pathname + location.hash;
+  }
+
+  activate() {
+    if (this.active) return;
+    this.active = true;
+    this.controls.enabled = true;
+    document.body.classList.add("active");
   }
 
   shareURL() {
@@ -193,14 +214,19 @@ class App {
     const b = this.view.nodes.get(id)?.b;
     const r = this.view.bodyRadius(id);
     const portrait = Math.max(1, (innerHeight / innerWidth) * 0.95);
-    const dist = (b?.kind === "star" ? r * 16 : b?.kind === "nebula" ? 6 : b?.kind === "asteroid-field" ? 3 : Math.max(r * 6.5, 0.6)) * portrait;
+    const node = this.view.nodes.get(id);
+    const field = node?.fieldOf && node.parent;
+    let target = w;
+    if (field) target = this.view.fieldAnchor(id) || w;
+    const dist = (b?.kind === "star" ? r * 16 : b?.kind === "nebula" ? 6 : field ? node.parent.r * 2.6 : Math.max(r * 6.5, 0.12)) * portrait;
     const cur = this.camera.position.clone().sub(this.controls.target).normalize();
-    const sun = w.clone().negate().normalize();
-    const dir = w.lengthSq() > 1e-6 && b?.kind !== "star" ? sun.multiplyScalar(0.8).add(cur.multiplyScalar(0.35)).normalize() : cur;
+    const sun = target.clone().negate().normalize();
+    let dir = target.lengthSq() > 1e-6 && b?.kind !== "star" ? sun.clone().multiplyScalar(0.8).add(cur.multiplyScalar(0.35)).normalize() : cur;
+    if (b?.shape === "disc") dir = new THREE.Vector3().crossVectors(sun, new THREE.Vector3(0, 1, 0)).normalize().multiplyScalar(0.85).add(sun.multiplyScalar(0.45)).normalize();
     dir.y = Math.max(dir.y, 0.22);
     dir.normalize();
     this.view.facePin?.(id, dir);
-    this.flyTo(w, w.clone().addScaledVector(dir, dist), instant, id);
+    this.flyTo(target, target.clone().addScaledVector(dir, dist), instant, field ? null : id);
     if (b?.look?.texture && typeof b.look.texture === "object") this.view.sharpen(id);
   }
 
@@ -216,9 +242,10 @@ class App {
         this.flyTo(it.world, it.world.clone().addScaledVector(dir, Math.max(it.r * 7, 4)), opts.instant);
       }
     }
-    if (sel) this.openPanel("info");
+    if (sel && !opts.noPanel) this.openPanel("info");
     this.renderPanel();
     if (!opts.noHash) this.writeHash();
+    this.updateFullLink();
     this.renderChrome();
   }
 
@@ -298,6 +325,10 @@ class App {
   bind() {
     const st = this.state;
     document.addEventListener("click", async (e) => {
+      if (EMBED) {  // links to the site itself leave the frame; wiki links already open a new tab
+        const a = e.target.closest("a[href]");
+        if (a && !a.target && a.origin === location.origin && !a.getAttribute("href").startsWith("#")) a.target = "_top";
+      }
       const el = e.target.closest("[data-act]");
       if (!el) return;
       const [act, arg] = el.dataset.act.split(/:(.*)/s);
@@ -372,7 +403,10 @@ class App {
     // canvas clicks (not drags)
     const cv = $("#c");
     let down = null;
-    cv.addEventListener("pointerdown", (e) => { down = { x: e.clientX, y: e.clientY, t: performance.now() }; });
+    cv.addEventListener("pointerdown", (e) => {
+      if (EMBED && !this.active) { this.activate(); down = null; return; }
+      down = { x: e.clientX, y: e.clientY, t: performance.now() };
+    });
     cv.addEventListener("pointerup", (e) => {
       if (!down || Math.hypot(e.clientX - down.x, e.clientY - down.y) > 5) { down = null; return; }
       down = null;
@@ -518,7 +552,8 @@ class App {
   loop() {
     const tick = () => {
       requestAnimationFrame(tick);
-      const dt = Math.min(this.clock.getDelta(), 0.1);
+      const now = performance.now(), dt = Math.min((now - this.lastFrame) / 1000, 0.1);
+      this.lastFrame = now;
       this.t += dt;
       const st = this.state;
       if (st.playing) st.day += st.rate * dt;

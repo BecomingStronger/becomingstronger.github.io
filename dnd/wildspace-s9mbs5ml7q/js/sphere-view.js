@@ -3,7 +3,7 @@
 import * as THREE from "three";
 import * as O from "./orbits.js";
 import { starfield, OrbitLine, hashStr, radialTex, sprite, TAU } from "./gfx.js";
-import { buildBody, ringMesh, fieldPoints } from "./bodies.js";
+import { buildBody, ringMesh, fieldPoints, fieldRocks } from "./bodies.js";
 
 const V = () => new THREE.Vector3();
 
@@ -93,8 +93,9 @@ export class SphereView {
           const arc = (b.field.arc_deg || 70) / 360;
           const mapped = (d) => this.mapRel(O.positionAt({ ...leadEl, M0: 0, P: 0 }, 0, V()).applyAxisAngle(this.orbitNormal(leadEl), -d * arc * TAU), parent, sat);
           node.fieldOf = { lead: b.field.follows, el: leadEl };
-          node.points = fieldPoints(b, mapped, hashStr(b.id));
+          node.points = fieldPoints(b, mapped, hashStr(b.id), 0.7);
           node.group.add(node.points);
+          node.group.add(fieldRocks(b, mapped, hashStr(b.id), parent.r * 0.022));
         }
       } else if (b.kind === "asteroid-field" && parent) {
         const el = b.orbit ? O.elements(b.orbit) : { a: 1, e: 0, i: 0, node: 0, argp: 0, P: 0, M0: 0 };
@@ -188,15 +189,18 @@ export class SphereView {
         n.world.copy(pw).add(this.mapRel(O.fixedPosition(b.fixed), p, n.sat));
       } else n.world.copy(pw);
       n.group.position.copy(n.world);
-      if (n.update) n.update({ world: n.world, camera: cam });
-      if (n.billboard) n.group.quaternion.copy(cam.quaternion);
-      if (n.mesh && n.locked && p) {
-        n.mesh.lookAt(p.world);
-      } else if (n.mesh && n.spin) {
-        n.angle += Math.max(-0.15, Math.min(0.15, rate * n.spin)) * dtReal;
-        n.mesh.rotation.y = n.angle;
+      if (n.update) n.update({ world: n.world, camera: cam, t: this.app.t, dtReal });
+      const pv = n.pivot || n.mesh;
+      if (pv && !n.noSpin) {
+        if (n.faceCenter) pv.lookAt(0, 0, 0);
+        else if (n.locked && p) pv.lookAt(p.world);
+        else if (n.spin) {
+          n.angle += Math.max(-0.15, Math.min(0.15, rate * n.spin)) * dtReal;
+          pv.rotation.y = n.angle;
+        }
+        if (n.slowTurn) pv.rotation.y += n.slowTurn * dtReal;
+        if (n.tumble) { pv.rotation.x += n.tumble * dtReal; pv.rotation.z += n.tumble * 0.6 * dtReal; }
       }
-      if (n.tumble && n.mesh) { n.mesh.rotation.x += 0.4 * dtReal * Math.sign(rate || 0); n.mesh.rotation.z += 0.25 * dtReal * Math.sign(rate || 0); }
     }
   }
 
@@ -253,6 +257,14 @@ export class SphereView {
     n.mesh.rotation.y = n.angle;
   }
 
+  // The middle of an asteroid trail, behind the body it follows.
+  fieldAnchor(id) {
+    const n = this.nodes.get(id), lead = n?.fieldOf && this.nodes.get(n.fieldOf.lead);
+    if (!lead) return null;
+    const rel = lead.world.clone().sub(n.parent.world).applyAxisAngle(this.orbitNormal(lead.el), -0.55);
+    return n.parent.world.clone().add(rel);
+  }
+
   bodyWorld(id) { return this.nodes.get(id)?.world || null; }
   bodyRadius(id) { return this.nodes.get(id)?.r || 0.5; }
   frameDistance() {
@@ -268,7 +280,7 @@ export class SphereView {
     n.sharp = true;
     const { bodyTexture } = await import("./gfx.js");
     const tex = await bodyTexture(n.b.look, this.app.renderer, { maxTier: 16384 });
-    if (tex && n.mesh?.material) { n.mesh.material.map = tex; n.mesh.material.needsUpdate = true; }
+    if (tex && n.surface?.material) { n.surface.material.map = tex; n.surface.material.needsUpdate = true; }
   }
 }
 
