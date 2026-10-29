@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Shared document</title>
+<link rel="icon" href="/favicon.svg">
+<style>
+html,body{margin:0;height:100%;background:#2b2b2b;font-family:-apple-system,system-ui,sans-serif}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:10px 16px;background:#111;color:#eee;font-size:14px;min-height:30px}
+.bar a{color:#fff;background:#1a3d7c;padding:6px 12px;text-decoration:none;white-space:nowrap}
+.bar a[hidden]{display:none}
+iframe{display:block;width:100%;height:calc(100% - 50px);border:0;background:#2b2b2b}
+.msg{color:#eee;padding:24px}
+</style></head>
+<body>
+<div class="bar"><span id="t">Shared document</span><span><a id="open" hidden target="_blank" rel="noopener">Open</a> <a id="dl" hidden>Download PDF</a></span></div>
+<div id="msg" class="msg">Decrypting…</div>
+<iframe id="f" hidden title="Document"></iframe>
+<script>
+(async () => {
+  const msg = document.getElementById('msg');
+  try {
+    const b64 = location.hash.slice(1).replace(/-/g, '+').replace(/_/g, '/');
+    if (!b64) throw new Error('This link is missing its key. Use the full link you were sent.');
+    const raw = Uint8Array.from(atob(b64 + '='.repeat((4 - b64.length % 4) % 4)), c => c.charCodeAt(0));
+    const key = await crypto.subtle.importKey('raw', raw, 'AES-GCM', false, ['decrypt']);
+    const buf = new Uint8Array(await (await fetch('d.bin', {cache: 'no-store'})).arrayBuffer());
+    const plain = new Uint8Array(await crypto.subtle.decrypt({name: 'AES-GCM', iv: buf.slice(0, 12)}, key, buf.slice(12)));
+    const n = new DataView(plain.buffer).getUint32(0);
+    const meta = JSON.parse(new TextDecoder().decode(plain.slice(4, 4 + n)));
+    const url = URL.createObjectURL(new Blob([plain.slice(4 + n)], {type: 'application/pdf'}));
+    document.title = meta.title;
+    document.getElementById('t').textContent = meta.title;
+    const dl = document.getElementById('dl'); dl.href = url; dl.download = meta.file; dl.hidden = false;
+    const op = document.getElementById('open'); op.href = url; op.hidden = false;
+    const f = document.getElementById('f'); f.src = url; f.hidden = false; msg.remove();
+  } catch (e) {
+    msg.textContent = e.name === 'OperationError' ? 'This link has the wrong key.' : (e.message || 'This document could not be opened.');
+  }
+})();
+</script>
+</body></html>
