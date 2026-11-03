@@ -253,5 +253,63 @@ ${signs}
 </div></body></html>`;
   }
 
-  global.WODoc = { renderDoc, totals, hoursOf, lineAmount, money, TYPE_LABEL, STAGE_LABEL };
+  // ---------- invoices ----------
+
+  function invoiceTotals(inv) {
+    const lines = (inv.lines || []).filter(l => l.desc || Number(l.qty) || Number(l.rate));
+    const subtotal = lines.reduce((a, l) => a + lineAmount(l), 0);
+    const taxable = lines.filter(l => l.taxable).reduce((a, l) => a + lineAmount(l), 0);
+    const tax = Math.round(taxable * (Number(inv.taxRate) || 0)) / 100;
+    const total = Math.round((subtotal + tax) * 100) / 100;
+    const paid = (inv.payments || []).reduce((a, p) => a + (Number(p.amount) || 0), 0);
+    return { subtotal, tax, total, paid, balance: Math.round((total - paid) * 100) / 100 };
+  }
+
+  const INV_CSS = `
+.stamp{display:inline-block;border:2px solid var(--accent);color:var(--accent);font-weight:600;letter-spacing:.16em;padding:2px 10px;font-size:10pt;margin-top:6px}
+.stamp.void{border-color:var(--ink-2);color:var(--ink-2)}
+.paybox{border:1px solid var(--rule);background:var(--fill);padding:8px 10px;margin-top:10px;break-inside:avoid}
+`;
+
+  function renderInvoice(o, inv) {
+    const c = o.contractor || {}, cl = o.client || {};
+    const t = invoiceTotals(inv);
+    const lines = (inv.lines || []).filter(l => l.desc || Number(l.qty) || Number(l.rate));
+    const paid = t.total > 0 && t.balance <= 0.004;
+    const addr = p => [p.org && p.name ? p.name : "", p.address, [p.email, p.phone].filter(Boolean).join(" · ")].filter(Boolean).map(esc).join("<br>");
+    const period = inv.periodFrom || inv.periodTo ? `${fmtDate(inv.periodFrom)}${inv.periodTo ? " to " + fmtDate(inv.periodTo) : ""}` : "";
+    const facts = [["Invoice date", fmtDate(inv.date)], ["Due", fmtDate(inv.due) || "On receipt"], ["Work order", esc(o.number || "")], ["Period", period || "Not set"]];
+    const pays = (inv.payments || []).map(p => `<tr><td>Payment received ${fmtDate(p.date)}${p.method ? ", " + esc(p.method) : ""}</td><td class="n">\u2212${money(p.amount)}</td></tr>`).join("");
+    const title = `${inv.number || "Draft invoice"}${cl.org || cl.name ? " · " + (cl.org || cl.name) : ""}`;
+    return `<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow"><title>${esc(title)}</title><style>${CSS}${INV_CSS}</style></head><body><div class="sheet">
+<header class="doc">
+  <div class="from"><b>${esc(c.business || c.name || "Contractor")}</b>${addr({ ...c, org: c.business })}</div>
+  <div class="titleblock"><div class="kind">Invoice</div><h1>${esc(inv.number || "Draft")}</h1>
+    <div class="idrow">For work order <b>${esc(o.number || "")}</b>${o.title ? " · " + esc(o.title) : ""}</div>
+    ${inv.void ? '<div class="stamp void">CANCELLED</div>' : paid ? '<div class="stamp">PAID</div>' : ""}</div>
+</header>
+<div class="grid2">
+  <div><div class="lbl">Bill to</div><b>${esc(cl.org || cl.name) || '<span class="empty">Client</span>'}</b><br>${addr(cl)}</div>
+  <div><div class="lbl">Balance due</div><b style="font-size:15pt">${money(t.balance)}</b>${inv.due && !paid ? `<br><span class="note">by ${fmtDate(inv.due)}</span>` : ""}</div>
+</div>
+<div class="facts">${facts.map(([k, v]) => `<div><div class="lbl">${esc(k)}</div>${v}</div>`).join("")}</div>
+<h2>Charges</h2>
+<table><thead><tr><th>Description</th><th class="n">Qty</th><th>Unit</th><th class="n">Rate</th><th class="n">Amount</th></tr></thead><tbody>${
+  lines.map(l => `<tr><td>${esc(l.desc)}${l.taxable ? ' <span class="note">(taxable)</span>' : ""}</td><td class="n">${num(l.qty)}</td><td>${esc(l.unit)}</td><td class="n">${money(l.rate)}</td><td class="n">${money(lineAmount(l))}</td></tr>`).join("")
+}</tbody></table>
+<table class="tot"><tbody>
+  <tr><td>Subtotal</td><td class="n">${money(t.subtotal)}</td></tr>
+  ${t.tax ? `<tr><td>Sales tax (${num(inv.taxRate)}% of taxable items)</td><td class="n">${money(t.tax)}</td></tr>` : ""}
+  <tr class="grand"><td>Total</td><td class="n">${money(t.total)}</td></tr>
+  ${pays}
+  <tr class="grand"><td>Balance due</td><td class="n">${money(t.balance)}</td></tr>
+</tbody></table>
+${inv.payTo || (o.billing && o.billing.methods) ? `<div class="paybox"><b>How to pay.</b> ${esc(inv.payTo || ("Accepted methods: " + o.billing.methods + "."))} Please put ${esc(inv.number || "the invoice number")} in the payment note.</div>` : ""}
+${inv.notes ? `<h2>Notes</h2>${paras(inv.notes)}` : ""}
+<footer class="doc"><span class="mono">${esc(inv.number || "DRAFT")}</span><span>${esc(c.business || c.name || "")}</span></footer>
+</div></body></html>`;
+  }
+
+  global.WODoc = { renderDoc, renderInvoice, invoiceTotals, totals, hoursOf, lineAmount, money, fmtDate, TYPE_LABEL, STAGE_LABEL };
 })(typeof window !== "undefined" ? window : globalThis);

@@ -2,7 +2,8 @@
  *
  * Everything that creates or keeps an order goes through the Worker with the
  * access key: numbers, saves (each save is also copied to Google Drive), the
- * orders list, and sending for signature. The page holds no data and no
+ * orders list, sending for signature, the job timeline (messages, links,
+ * files, paper signatures, invoices) and the client's portal link. The page holds no data and no
  * secret in the repo. The key and the contractor details live in this
  * browser's localStorage only.
  */
@@ -24,6 +25,7 @@
   let key = LS.get("wo-key", "");
   let order = null;
   let dirty = false, saving = false, saveTimer = null, renderTimer = null;
+  let health = {}, clients = [], timeline = [], panel = "doc", tlTimer = null;
 
   // ---------- API ----------
   async function api(method, path, body) {
@@ -35,6 +37,25 @@
     if (r.status === 401) { lock("The key was not accepted."); throw new Error("unauthorized"); }
     if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
     return d;
+  }
+
+  async function apiRaw(method, path, blob, type) {
+    const r = await fetch(API + path, { method, headers: { Authorization: `Bearer ${key}`, "Content-Type": type || "application/octet-stream" }, body: blob });
+    const d = await r.json().catch(() => ({}));
+    if (r.status === 401) { lock("The key was not accepted."); throw new Error("unauthorized"); }
+    if (!r.ok) throw new Error(d.error || `HTTP ${r.status}`);
+    return d;
+  }
+  // Downloads need the key, so fetch them and hand the browser a blob.
+  async function openBlob(path, name) {
+    const r = await fetch(API + path, { headers: { Authorization: `Bearer ${key}` } });
+    if (!r.ok) throw new Error(`HTTP ${r.status}`);
+    const type = r.headers.get("Content-Type") || "";
+    const url = URL.createObjectURL(await r.blob());
+    if (/text\/html/.test(type)) { window.open(url, "_blank", "noopener"); return "html"; }
+    const a = document.createElement("a"); a.href = url; a.download = name || "file"; document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 60000);
+    return "file";
   }
 
   // ---------- lock ----------
@@ -102,6 +123,7 @@
     order.billing = { ...order.billing, rate: s.rate || "", taxRate: s.taxRate || "", methods: s.methods || "" };
     order.lines = order.lines.map(l => ({ ...l, rate: l.unit === "hour" && !l.rate ? (s.rate || "") : l.rate }));
     delete order.terms;
+    order._baseStatus = "draft";
     LS.set("wo-current", number);
     buildEditor(); markDirty();
   }
@@ -130,6 +152,8 @@
       const rec = await api("GET", `/orders/${n}`);
       order = rec.order;
       if (local && local.savedAt > (rec.updated || "")) { order = local.order; dirty = true; }
+      order.status = rec.status || order.status;
+      order._baseStatus = rec.status || order.status;
       order._drive = rec.drive && rec.drive.folder ? `https://drive.google.com/drive/folders/${rec.drive.folder}` : "";
       order._backedUp = rec.backedUp || "";
     } catch (e) {
@@ -137,8 +161,10 @@
       order = local.order; dirty = true;
     }
     LS.set("wo-current", n);
+    timeline = [];
     buildEditor();
     if (dirty) scheduleSave();
+    loadTimeline();
   }
 
   // ---------- save + backup ----------
@@ -152,7 +178,7 @@
   function scheduleRender() { clearTimeout(renderTimer); renderTimer = setTimeout(renderPreview, 150); }
   function compiled() {
     const o = clone(order);
-    delete o._drive; delete o._backedUp;
+    Object.keys(o).filter(k => k[0] === "_").forEach(k => delete o[k]);
     o.terms = (o.termIds || []).filter(id => TERMS[id]).map(id => TERMS[id].text)
       .concat(String(o.customTerms || "").split("\n").map(x => x.trim()).filter(Boolean));
     o.totals = D.totals(o);
@@ -164,8 +190,12 @@
     saving = true; setSync("Saving…");
     const o = compiled();
     try {
-      const r = await api("PUT", `/orders/${order.number}`, { order: o, html: D.renderDoc(o) });
+      const r = await api("PUT", `/orders/${order.number}`, { order: o, html: D.renderDoc(o), baseStatus: order._baseStatus });
       dirty = false; LS.del(`wo-draft:${order.number}`);
+      if (r.clientId) { if (!clients.some(c => c.id === r.clientId)) refreshClients(); order.clientId = r.clientId; }
+      if (r.status && r.status !== order.status) { order.status = r.status; const sel = document.querySelector('[data-p="status"]'); if (sel) sel.value = r.status; renderPreview(); }
+      if (r.status) order._baseStatus = r.status;
+      if (panel === "tl") loadTimeline();
       if (r.backup && r.backup.ok) {
         order._drive = r.backup.folder; order._backedUp = r.backup.at;
         setSync(`Saved and backed up to Drive ${new Date(r.backup.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}`, r.backup.folder);
@@ -192,12 +222,18 @@
     $("#statusChip").className = "chip" + (["signed", "authorized", "accepted", "paid"].includes(order.status) ? " ok" : order.status === "sent" ? " warn" : "");
     $("#pTotal").textContent = `${D.STAGE_LABEL[order.stage]} · ${D.money(o.totals.total)}`;
   }
-  function printPdf() {
+  async function printPdf() {
     if (!order) return;
     const f = $("#preview");
-    const w = f.contentWindow;
-    if (!w) return;
-    w.focus(); w.print();
+    try {
+      if (dirty) { await save(); }
+      setSync("Making the PDF…");
+      const kind = await openBlob(`/orders/${order.number}/workorder.pdf`, `${order.number} work order.pdf`);
+      setSync(kind === "file" ? "PDF downloaded." : "The PDF service is busy, so the printable page opened.");
+    } catch (e) {
+      const w = f.contentWindow;
+      if (w) { w.focus(); w.print(); }
+    }
   }
 
   // ---------- editor ----------
@@ -230,9 +266,12 @@
       `<div class="seg" id="stageSeg"><button data-stage="authorization" class="${done ? "" : "on"}">1 · Authorize</button><button data-stage="completion" class="${done ? "on" : ""}">2 · Complete</button></div>
        <p class="hint">${done ? "Record the work done. The client signs to accept it." : "The client signs to authorize the work before it starts."}</p>`,
       sec("Basics", `${field("title", "Title")}
-        <div class="row">${select("type", "Work type", Object.entries(D.TYPE_LABEL))}${select("status", "Status", ["draft", "sent", "authorized", "in progress", "completed", "accepted", "paid", "void"].map(x => [x, x[0].toUpperCase() + x.slice(1)]))}</div>
+        <div class="row">${select("type", "Work type", Object.entries(D.TYPE_LABEL))}${select("status", "Status", ["draft", "sent", "authorized", "in progress", "completed", "accepted", "paid", "declined", "void"].map(x => [x, x[0].toUpperCase() + x.slice(1)]))}</div>
         <div class="row3">${field("date", "Order date", "date")}${select("priority", "Priority", [["low", "Low"], ["normal", "Normal"], ["high", "High"], ["urgent", "Urgent"]])}${field("ticket", "Ref / PO no.")}</div>`, true),
-      sec("Client", `<div class="row">${field("client.name", "Contact name")}${field("client.org", "Company (optional)")}</div>
+      sec("Client", `<label class="f"><span>Client record</span><select id="clientPick"><option value="">New client (made when you save)</option>${
+          clients.map(c => `<option value="${esc(c.id)}"${order.clientId === c.id ? " selected" : ""}>${esc(c.name || c.email || c.id)}${c.email ? " · " + esc(c.email) : ""}</option>`).join("")}</select></label>
+        <p class="hint">One client record holds the portal link for all of that client's orders.</p>
+        <div class="row">${field("client.name", "Contact name")}${field("client.org", "Company (optional)")}</div>
         <div class="row">${field("client.email", "Email", "email")}${field("client.phone", "Phone", "tel")}</div>
         ${field("client.address", "Mailing address")}`, true),
       sec("Location and schedule", `${field("site.address", "Service location", "text", 'placeholder="Same as client address"')}
@@ -276,6 +315,16 @@
       if (["billing.mode", "type"].includes(el.dataset.p)) { buildEditor(); }
       markDirty(); if (el.dataset.p.startsWith("billing")) renderTotals();
     }));
+    const pick = $("#clientPick");
+    if (pick) pick.addEventListener("change", async () => {
+      if (!pick.value) { delete order.clientId; markDirty(); return; }
+      try {
+        const c = await api("GET", `/clients/${pick.value}`);
+        order.clientId = c.id;
+        order.client = { name: c.name || "", org: c.org || "", email: c.email || "", phone: c.phone || "", address: c.address || "" };
+        buildEditor(); markDirty();
+      } catch (e) { toast(e.message); }
+    });
     ed.querySelectorAll("[data-list]").forEach(el => el.addEventListener("input", () => {
       set(el.dataset.list, el.value.split("\n")); markDirty();
     }));
@@ -363,12 +412,318 @@
         client: { name: name || order.client.name, email }, contractor: { name: order.contractor.name, email: me },
         message: $("#sMsg").value, test: $("#sTest").checked,
       });
-      order.status = "sent";
-      order.signing = order.signing || {}; order.signing[order.stage] = { id: r.submission, sent: new Date().toISOString() };
-      markDirty(); renderPreview();
+      if (r.status) { order.status = r.status; order._baseStatus = r.status; }
+      renderPreview(); loadTimeline();
       $("#dSend").close(); toast(`${r.test ? "Test sent" : "Sent"} to ${email}.`);
     } catch (e) { $("#sErr").textContent = e.message; }
     finally { $("#bSendGo").disabled = false; }
+  }
+
+  // ---------- timeline (right panel) ----------
+  const KIND = { status: "Status", message: "Message", note: "Internal note", file: "File", link: "Link", invoice: "Invoice",
+    payment: "Payment", signed: "Signed", sent: "Signature request", workorder: "Work order" };
+  const fmtWhen = ts => new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
+  const isoDay = ms => new Date(ms).toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
+
+  function showPanel(p) {
+    panel = p;
+    document.querySelectorAll("#panelSeg button").forEach(b => b.classList.toggle("on", b.dataset.panel === p));
+    $("#preview").hidden = p !== "doc";
+    $("#tl").hidden = p !== "tl";
+    if (p === "tl") { loadTimeline(); markSeen(); }
+  }
+  const seenKey = () => `wo-seen:${order.number}`;
+  function markSeen() { if (order) LS.set(seenKey(), Date.now()); renderBadge(); }
+  function renderBadge() {
+    if (!order) { $("#tlBadge").textContent = ""; return; }
+    const seen = LS.get(seenKey(), 0);
+    const n = timeline.filter(i => i.actor === "client" && !i.deleted && i.ts > seen).length;
+    $("#tlBadge").textContent = n && panel !== "tl" ? String(n) : "";
+  }
+
+  async function loadTimeline() {
+    if (!order) return;
+    const n = order.number;
+    try {
+      const r = await api("GET", `/orders/${n}/timeline`);
+      if (!order || order.number !== n) return;
+      timeline = r.items || [];
+    } catch (_) { /* keep the last copy */ }
+    renderBadge();
+    if (panel === "tl") { await renderTimeline(); markSeen(); }
+  }
+
+  async function portalBox() {
+    if (!order.clientId) return `<div class="tlbox"><h3>Client portal</h3><p class="hint" style="margin:0">Save the order once, then make the client's private link here.</p></div>`;
+    let c = null;
+    try { c = await api("GET", `/clients/${order.clientId}`); } catch (_) { /* shown as no link */ }
+    const url = c && c.portalUrl;
+    const notes = [];
+    if (order.status === "draft") notes.push("The client sees this order when its status is past Draft.");
+    if (url && !(c && c.email)) notes.push("There is no client email on file, so text the link.");
+    if (url && c && c.email && !health.gmail) notes.push("Email updates to the client start when Gmail is connected.");
+    return `<div class="tlbox"><h3>Client portal${c && (c.org || c.name) ? " · " + esc(c.org || c.name) : ""}</h3>
+      ${url ? `<div class="tlrow"><span class="portal-url">${esc(url)}</span><button class="btn ghost small" id="pCopy" data-url="${esc(url)}">Copy</button><a class="btn ghost small" href="${esc(url)}" target="_blank" rel="noopener noreferrer">Open</a></div>
+        <div class="tlrow" style="margin-top:8px"><button class="btn ghost small" id="pNew">Make a new link</button><span class="hint" style="margin:0">A new link stops the old one.</span></div>`
+        : `<div class="tlrow"><button class="btn small" id="pNew">Make the portal link</button></div>`}
+      ${notes.map(t => `<p class="hint" style="margin:8px 0 0">${esc(t)}</p>`).join("")}</div>`;
+  }
+
+  function invoiceRows() {
+    const invs = timeline.filter(i => i.kind === "invoice" && !i.deleted);
+    if (!invs.length) return `<p class="hint" style="margin:10px 0 0">No invoices yet.</p>`;
+    return `<table class="inv" style="margin-top:10px"><thead><tr><th>No.</th><th>Status</th><th class="n">Total</th><th class="n">Balance</th><th></th></tr></thead><tbody>${invs.map(i => {
+      const d = i.data || {}, t = d.totals || {};
+      const acts = [`<button class="vis" data-inv-open="${esc(d.number)}">Open</button>`];
+      if (!["paid", "void"].includes(d.status)) acts.push(`<button class="vis" data-inv-edit="${esc(d.number)}">Edit</button>`);
+      if (d.status === "draft") acts.push(`<button class="vis client" data-inv-send="${esc(d.number)}">Send</button>`);
+      if (d.status === "sent") acts.push(`<button class="vis client" data-inv-pay="${esc(d.number)}">Payment</button>`);
+      if (!["paid", "void"].includes(d.status)) acts.push(`<button class="vis" data-inv-void="${esc(d.number)}">Cancel</button>`);
+      return `<tr><td class="mono">${esc(d.number)}</td><td>${esc(d.status)}${d.due && d.status === "sent" ? ` · due ${esc(d.due)}` : ""}</td><td class="n">${D.money(t.total)}</td><td class="n">${D.money(t.balance)}</td><td style="text-align:right">${acts.join(" ")}</td></tr>`;
+    }).join("")}</tbody></table>`;
+  }
+
+  async function renderTimeline() {
+    if (!order) { $("#tl").innerHTML = ""; return; }
+    const n = order.number;
+    const portal = await portalBox();
+    if (!order || order.number !== n) return;
+    const items = timeline.map(i => {
+      const d = i.data || {};
+      const fixed = ["status", "workorder", "invoice", "sent"].includes(i.kind);
+      return `<li class="${i.deleted ? "del" : ""} ${i.actor === "client" ? "client" : ""}">
+        <div class="iwhen">${fmtWhen(i.ts)}</div>
+        <div><div class="ikind">${esc(KIND[i.kind] || i.kind)}${i.actor === "client" ? " · from client" : ""}</div>
+          ${i.kind === "message" ? "" : `<div class="ititle">${esc(i.title)}</div>`}${i.body ? `<div class="ibody">${esc(i.body)}</div>` : ""}
+          ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">${esc(d.type || "Open link")}</a>` : ""}
+          ${d.driveId ? `<button class="vis" data-dl="${esc(i.id)}" data-name="${esc(d.name || i.title)}">Download</button>` : ""}</div>
+        <div class="iacts">${fixed ? `<span class="vis ${i.visibility}">${i.visibility === "client" ? "Client sees" : "Internal"}</span>`
+          : `<button class="vis ${i.visibility}" data-vis="${esc(i.id)}" title="Change who sees this">${i.visibility === "client" ? "Client sees" : "Internal"}</button>`}
+          ${["message", "note", "link", "file", "signed", "payment"].includes(i.kind) ? `<button class="vis" data-del="${esc(i.id)}">${i.deleted ? "Restore" : "Remove"}</button>` : ""}</div></li>`;
+    }).join("");
+    $("#tl").innerHTML = `${portal}
+      <div class="tlbox"><h3>Post to the timeline</h3>
+        <textarea id="tMsg" rows="3" placeholder="A message to the client, or an internal note"></textarea>
+        <div class="tlrow" style="margin-top:8px">
+          <label class="check"><input type="radio" name="tKind" value="message" checked> To the client</label>
+          <label class="check"><input type="radio" name="tKind" value="note"> Internal note</label>
+          <label class="check"><input type="checkbox" id="tNotify" checked> Email the client</label>
+          <span class="spacer"></span><button class="btn small" id="tPost">Post</button></div></div>
+      <div class="tlbox"><h3>Add a link or a file</h3>
+        <div class="tlrow"><input type="text" id="lTitle" placeholder="Title, for example: Hours and progress"><input type="url" id="lUrl" placeholder="https://"></div>
+        <div class="tlrow" style="margin-top:8px"><label class="check"><input type="checkbox" id="lVis" checked> Client can see</label><span class="spacer"></span><button class="btn ghost small" id="lAdd">Add link</button></div>
+        <div class="tlrow" style="margin-top:10px"><input type="file" id="fIn"><label class="check"><input type="checkbox" id="fVis" checked> Client can see</label><button class="btn ghost small" id="fUp">Upload</button></div>
+        <p class="hint" style="margin:8px 0 0">A Google file opens for the client only if it is shared with them in Google.</p></div>
+      <div class="tlbox"><h3>Signatures and invoices</h3>
+        <div class="tlrow"><button class="btn ghost small" id="bPaper">Signed on paper</button><button class="btn ghost small" id="bInvNew">New invoice</button></div>
+        ${invoiceRows()}</div>
+      <p class="hint" id="tErr" role="alert"></p>
+      <h3 style="margin:16px 0 4px">Timeline</h3>
+      ${items ? `<ol class="items">${items}</ol>` : `<p class="hint">Nothing here yet.</p>`}`;
+    bindTimeline();
+  }
+
+  function tErr(t) { const e = $("#tErr"); if (e) e.textContent = t || ""; }
+  async function ensureSaved() { if (dirty) await save(); if (dirty) throw new Error("Save the order first."); }
+
+  function bindTimeline() {
+    const n = order.number;
+    const on = (sel, fn) => { const el = $(sel); if (el) el.onclick = fn; };
+    on("#pCopy", async e => { try { await navigator.clipboard.writeText(e.target.dataset.url); tErr("Link copied."); } catch (_) { tErr("Copy did not work. Select the link and copy it."); } });
+    on("#pNew", async e => {
+      if (e.target.textContent.includes("new") && !confirm("The old link stops working. Make a new one?")) return;
+      try { await ensureSaved(); await api("POST", `/clients/${order.clientId}/portal`); await renderTimeline(); } catch (x) { tErr(x.message); }
+    });
+    on("#tPost", async () => {
+      const body = $("#tMsg").value.trim(); if (!body) return;
+      const kind = document.querySelector('input[name="tKind"]:checked').value;
+      try { await ensureSaved(); await api("POST", `/orders/${n}/items`, { kind, body, notify: $("#tNotify").checked }); await loadTimeline(); tErr(kind === "note" ? "Note saved." : "Posted. The client sees it in the portal."); }
+      catch (x) { tErr(x.message); }
+    });
+    on("#lAdd", async () => {
+      const url = $("#lUrl").value.trim(); if (!url) { tErr("Paste the link first."); return; }
+      try { await ensureSaved(); await api("POST", `/orders/${n}/items`, { kind: "link", url, title: $("#lTitle").value.trim(), visibility: $("#lVis").checked ? "client" : "internal" }); await loadTimeline(); tErr("Link added."); }
+      catch (x) { tErr(x.message); }
+    });
+    on("#fUp", async () => {
+      const f = $("#fIn").files[0]; if (!f) { tErr("Choose a file first."); return; }
+      if (f.size > 25 * 1048576) { tErr("Files can be at most 25 MB."); return; }
+      tErr(`Uploading ${f.name}…`);
+      try { await ensureSaved(); await apiRaw("POST", `/orders/${n}/files?name=${encodeURIComponent(f.name)}&visibility=${$("#fVis").checked ? "client" : "internal"}`, f, f.type); await loadTimeline(); tErr("File uploaded to the order's Drive folder."); }
+      catch (x) { tErr(x.message); }
+    });
+    on("#bPaper", openPaper);
+    on("#bInvNew", () => openInvoice(null));
+    const tl = $("#tl");
+    tl.querySelectorAll("[data-vis]").forEach(b => b.onclick = async () => {
+      const it = timeline.find(i => i.id === b.dataset.vis);
+      try { await api("PATCH", `/orders/${n}/items/${it.id}`, { visibility: it.visibility === "client" ? "internal" : "client" }); await loadTimeline(); } catch (x) { tErr(x.message); }
+    });
+    tl.querySelectorAll("[data-del]").forEach(b => b.onclick = async () => {
+      const it = timeline.find(i => i.id === b.dataset.del);
+      try { await api("PATCH", `/orders/${n}/items/${it.id}`, { deleted: !it.deleted }); await loadTimeline(); } catch (x) { tErr(x.message); }
+    });
+    tl.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => openBlob(`/orders/${n}/items/${b.dataset.dl}/download`, b.dataset.name).catch(x => tErr(x.message)));
+    const inv = no => timeline.find(i => i.kind === "invoice" && i.data && i.data.number === no);
+    tl.querySelectorAll("[data-inv-open]").forEach(b => b.onclick = () => openBlob(`/orders/${n}/items/${b.dataset.invOpen}/download`, `${b.dataset.invOpen}.pdf`).catch(x => tErr(x.message)));
+    tl.querySelectorAll("[data-inv-edit]").forEach(b => b.onclick = () => openInvoice(inv(b.dataset.invEdit)));
+    tl.querySelectorAll("[data-inv-pay]").forEach(b => b.onclick = () => openPay(inv(b.dataset.invPay)));
+    tl.querySelectorAll("[data-inv-send]").forEach(b => b.onclick = async () => {
+      try { await api("POST", `/orders/${n}/invoices/${b.dataset.invSend}/send`, {}); await loadTimeline(); tErr(`Invoice ${b.dataset.invSend} is in the client's portal.`); } catch (x) { tErr(x.message); }
+    });
+    tl.querySelectorAll("[data-inv-void]").forEach(b => b.onclick = async () => {
+      if (!confirm(`Cancel invoice ${b.dataset.invVoid}? It stays on record, marked cancelled.`)) return;
+      const d = clone(inv(b.dataset.invVoid).data); d.void = true;
+      try { await api("POST", `/orders/${n}/invoices/${d.number}/void`, { html: D.renderInvoice(compiled(), d) }); await loadTimeline(); } catch (x) { tErr(x.message); }
+    });
+  }
+
+  // ---------- signed on paper ----------
+  async function shrinkImage(file) {
+    // Re-encoding also removes the photo's location data (EXIF).
+    if (!/^image\//.test(file.type) || file.type === "image/gif") return { blob: file, type: file.type || "application/octet-stream" };
+    try {
+      const url = URL.createObjectURL(file);
+      const img = await new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = url; });
+      const k = Math.min(1, 2400 / Math.max(img.naturalWidth, img.naturalHeight));
+      const c = document.createElement("canvas");
+      c.width = Math.round(img.naturalWidth * k); c.height = Math.round(img.naturalHeight * k);
+      c.getContext("2d").drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(url);
+      const blob = await new Promise(res => c.toBlob(res, "image/jpeg", 0.85));
+      return blob ? { blob, type: "image/jpeg" } : { blob: file, type: file.type };
+    } catch (_) { return { blob: file, type: file.type || "application/octet-stream" }; }
+  }
+  function openPaper() {
+    $("#paperBody").innerHTML = `<p>Use this when the client signed a printed copy. The photo or scan goes to the order's Drive folder and the timeline, and the order skips the e-signature step. A pending e-signature request for the same stage is cancelled.</p>
+      <div class="row"><label class="f"><span>Which signature</span><select id="ppStage"><option value="authorization"${order.stage !== "completion" ? " selected" : ""}>Authorization (before the work)</option><option value="completion"${order.stage === "completion" ? " selected" : ""}>Completion (work accepted)</option></select></label>
+        <label class="f"><span>Signed by</span><input id="ppSigner" type="text" value="${esc(order.client && order.client.name || "")}"></label></div>
+      <div class="row"><label class="f"><span>Date signed</span><input id="ppDate" type="date" value="${today()}"></label>
+        <label class="f"><span>Photo or scan</span><input id="ppFile" type="file" accept="image/*,application/pdf"></label></div>
+      <p class="hint">Photos are resized and their location data is removed before upload.</p>
+      <img id="ppThumb" class="thumb" alt="Preview of the signed copy" hidden><p class="hint" id="ppErr" role="alert"></p>`;
+    $("#ppFile").onchange = () => {
+      const f = $("#ppFile").files[0], t = $("#ppThumb");
+      if (f && /^image\//.test(f.type)) { t.src = URL.createObjectURL(f); t.hidden = false; } else t.hidden = true;
+    };
+    $("#dPaper").showModal();
+  }
+  async function doPaper() {
+    const f = $("#ppFile").files[0];
+    if (!f) { $("#ppErr").textContent = "Choose the photo or scan of the signed copy."; return; }
+    $("#bPaperGo").disabled = true; $("#ppErr").textContent = "Uploading…";
+    try {
+      await ensureSaved();
+      const { blob, type } = await shrinkImage(f);
+      const stage = $("#ppStage").value;
+      const q = new URLSearchParams({ stage, signer: $("#ppSigner").value.trim(), date: $("#ppDate").value });
+      const r = await apiRaw("POST", `/orders/${order.number}/paper-sign?${q}`, blob, type);
+      if (r.status) { order.status = r.status; order._baseStatus = r.status; const sel = document.querySelector('[data-p="status"]'); if (sel) sel.value = r.status; }
+      $("#dPaper").close(); renderPreview(); await loadTimeline();
+      toast(`Marked signed on paper${r.cancelledEsign ? ". The e-signature request was cancelled" : ""}.`);
+    } catch (e) { $("#ppErr").textContent = e.message; }
+    finally { $("#bPaperGo").disabled = false; }
+  }
+
+  // ---------- invoices ----------
+  let inv = null, payItem = null;
+  function openInvoice(existing) {
+    const b = order.billing || {};
+    inv = existing ? clone(existing.data) : {
+      number: "", date: today(), due: isoDay(Date.now() + 14 * 864e5), periodFrom: "", periodTo: "", taxRate: b.taxRate || "",
+      lines: (order.lines || []).filter(l => l.desc || Number(l.qty)).map(l => ({ desc: l.desc, qty: l.qty, unit: l.unit, rate: l.rate, taxable: !!l.taxable })),
+      notes: "", payTo: b.methods ? `Accepted methods: ${b.methods}.` : "",
+    };
+    delete inv.html;
+    $("#invTitle").textContent = inv.number ? `Invoice ${inv.number}` : "New invoice";
+    $("#invErr").textContent = "";
+    $("#bInvSend").hidden = !!(existing && existing.data.sent);
+    renderInvoiceForm();
+    $("#dInvoice").showModal();
+  }
+  function renderInvoiceForm() {
+    const f = (k, l, t = "text", a = "") => `<label class="f"><span>${l}</span><input type="${t}" data-inv="${k}" value="${esc(inv[k] || "")}" ${a}></label>`;
+    $("#invBody").innerHTML = `<div class="row3">${f("date", "Invoice date", "date")}${f("due", "Due date", "date")}${f("taxRate", "Tax % (taxable lines)", "number", 'step="0.001" min="0"')}</div>
+      <div class="row">${f("periodFrom", "Work from (optional)", "date")}${f("periodTo", "Work to (optional)", "date")}</div>
+      <div class="tlrow" style="margin:0 0 10px"><button class="btn ghost small" id="invHours">Add hours from the time log</button><span class="hint" style="margin:0">Adds the time entries inside the dates above.</span></div>
+      <div class="rows ilines" id="invLines"></div><button class="btn ghost small" id="invAddLine">Add line</button>
+      <div class="tot" id="invTot"></div>
+      <label class="f" style="margin-top:12px"><span>How to pay</span><textarea data-inv="payTo" rows="2">${esc(inv.payTo || "")}</textarea></label>
+      <label class="f"><span>Notes</span><textarea data-inv="notes" rows="2">${esc(inv.notes || "")}</textarea></label>`;
+    $("#invBody").querySelectorAll("[data-inv]").forEach(el => el.addEventListener("input", () => { inv[el.dataset.inv] = el.value; invTotals(); }));
+    $("#invAddLine").onclick = () => { inv.lines.push({ desc: "", qty: 1, unit: "hour", rate: (order.billing && order.billing.rate) || "", taxable: false }); invLines(); };
+    $("#invHours").onclick = () => {
+      const from = inv.periodFrom || "0000-00-00", to = inv.periodTo || "9999-12-31";
+      const te = ((order.work && order.work.time) || []).filter(t => t.date && t.date >= from && t.date <= to);
+      const hrs = te.reduce((a, t) => a + D.hoursOf(t), 0);
+      if (!hrs) { $("#invErr").textContent = "No time entries in those dates. Add a line by hand."; return; }
+      const short = d => d ? new Date(d + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" }) : "";
+      const label = inv.periodFrom || inv.periodTo ? `Labor, ${short(inv.periodFrom) || "start"} to ${short(inv.periodTo) || "now"}` : "Labor";
+      inv.lines.push({ desc: `${label} (${te.length} ${te.length === 1 ? "session" : "sessions"})`, qty: Math.round(hrs * 100) / 100, unit: "hour", rate: (order.billing && order.billing.rate) || "", taxable: false });
+      invLines(); $("#invErr").textContent = "";
+    };
+    invLines();
+  }
+  function invLines() {
+    const box = $("#invLines");
+    box.innerHTML = inv.lines.map((l, i) => `<div class="rowitem" data-i="${i}">${inp("desc", l.desc, "Description")}${inp("qty", l.qty, "Qty", "number", 'step="0.25" min="0"')}${inp("unit", l.unit, "Unit")}${inp("rate", l.rate, "Rate", "number", 'step="0.01" min="0"')}
+      <button class="icon-btn" data-del="${i}" aria-label="Remove">×</button>
+      <div class="sub"><label><input type="checkbox" data-k="taxable"${l.taxable ? " checked" : ""}> Taxable</label><span class="mono">${D.money(D.lineAmount(l))}</span></div></div>`).join("");
+    box.querySelectorAll("[data-k]").forEach(el => el.addEventListener(el.type === "checkbox" ? "change" : "input", () => {
+      const l = inv.lines[+el.closest("[data-i]").dataset.i];
+      l[el.dataset.k] = el.type === "checkbox" ? el.checked : el.value;
+      const m = el.closest("[data-i]").querySelector(".sub .mono"); if (m) m.textContent = D.money(D.lineAmount(l));
+      invTotals();
+    }));
+    box.querySelectorAll("[data-del]").forEach(b => b.onclick = () => { inv.lines.splice(+b.dataset.del, 1); invLines(); });
+    invTotals();
+  }
+  function invTotals() {
+    const t = D.invoiceTotals(inv);
+    $("#invTot").innerHTML = `<span>Subtotal</span><b>${D.money(t.subtotal)}</b>${t.tax ? `<span>Tax</span><b>${D.money(t.tax)}</b>` : ""}<span>Total</span><b>${D.money(t.total)}</b>${t.paid ? `<span>Paid</span><b>${D.money(t.paid)}</b><span>Balance</span><b>${D.money(t.balance)}</b>` : ""}`;
+  }
+  async function saveInvoice(send) {
+    if (!inv.lines.some(l => Number(l.qty) && Number(l.rate))) { $("#invErr").textContent = "Add at least one line with a quantity and a rate."; return; }
+    $("#invErr").textContent = "Saving…"; $("#bInvSave").disabled = $("#bInvSend").disabled = true;
+    try {
+      await ensureSaved();
+      const o = compiled();
+      let r = await api("POST", `/orders/${order.number}/invoices`, { invoice: inv, html: D.renderInvoice(o, inv) });
+      if (!inv.number) {
+        inv.number = r.invoice.data.number; inv.payments = r.invoice.data.payments || [];
+        r = await api("POST", `/orders/${order.number}/invoices`, { invoice: inv, html: D.renderInvoice(o, inv) });
+      }
+      if (send) await api("POST", `/orders/${order.number}/invoices/${inv.number}/send`, {});
+      $("#dInvoice").close(); await loadTimeline();
+      toast(send ? `Invoice ${inv.number} is in the client's portal.` : `Invoice ${inv.number} saved as a draft.`);
+    } catch (e) { $("#invErr").textContent = e.message; }
+    finally { $("#bInvSave").disabled = $("#bInvSend").disabled = false; }
+  }
+  function openPay(item) {
+    payItem = item;
+    const d = item.data, bal = d.totals ? d.totals.balance : 0;
+    const methods = String((order.billing && order.billing.methods) || "").split(/,|\bor\b/).map(x => x.trim()).filter(Boolean);
+    $("#payTitle").textContent = `Payment for ${d.number}`;
+    $("#payBody").innerHTML = `<div class="row"><label class="f"><span>Amount</span><input id="payAmt" type="number" step="0.01" min="0" value="${bal > 0 ? bal.toFixed(2) : ""}"></label>
+        <label class="f"><span>Date received</span><input id="payDate" type="date" value="${today()}"></label></div>
+      <label class="f"><span>Method</span><input id="payMethod" type="text" list="payMethods" value="${esc(methods[0] || "")}"><datalist id="payMethods">${methods.map(m => `<option value="${esc(m)}">`).join("")}</datalist></label>
+      <label class="f"><span>Note (optional)</span><input id="payNote" type="text"></label><p class="hint" id="payErr" role="alert"></p>`;
+    $("#dPay").showModal();
+  }
+  async function doPay() {
+    const amount = Number($("#payAmt").value);
+    if (!(amount > 0)) { $("#payErr").textContent = "Enter the amount received."; return; }
+    const d = clone(payItem.data);
+    const p = { amount, date: $("#payDate").value, method: $("#payMethod").value.trim(), note: $("#payNote").value.trim() };
+    d.payments = [...(d.payments || []), p];
+    $("#bPayGo").disabled = true;
+    try {
+      const r = await api("POST", `/orders/${order.number}/invoices/${d.number}/payments`, { ...p, html: D.renderInvoice(compiled(), d) });
+      if (r.status && r.status !== order.status) { order.status = r.status; order._baseStatus = r.status; const sel = document.querySelector('[data-p="status"]'); if (sel) sel.value = r.status; renderPreview(); }
+      $("#dPay").close(); await loadTimeline();
+      toast(`Recorded ${D.money(amount)} for ${d.number}.`);
+    } catch (e) { $("#payErr").textContent = e.message; }
+    finally { $("#bPayGo").disabled = false; }
   }
 
   // ---------- misc ----------
@@ -381,6 +736,12 @@
   $("#bPdf").onclick = printPdf;
   $("#bSend").onclick = openSend;
   $("#bSendGo").onclick = doSend;
+  $("#bPaperGo").onclick = doPaper;
+  $("#bInvSave").onclick = () => saveInvoice(false);
+  $("#bInvSend").onclick = () => saveInvoice(true);
+  $("#bPayGo").onclick = doPay;
+  document.querySelectorAll("#panelSeg button").forEach(b => b.onclick = () => showPanel(b.dataset.panel));
+  setInterval(() => { if (order && key && document.visibilityState === "visible") loadTimeline(); }, 60000);
   $("#bBackupAll").onclick = async () => {
     $("#bBackupAll").disabled = true;
     try { const r = await api("POST", "/backup-all"); const bad = r.results.filter(x => !x.ok); toast(bad.length ? `${bad.length} backups failed: ${bad[0].error}` : `All ${r.results.length} orders backed up.`); openOrders(); }
@@ -388,10 +749,21 @@
   };
   document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key === "s") { e.preventDefault(); dirty = true; save(); } });
 
+  async function refreshClients() {
+    try {
+      clients = (await api("GET", "/clients")).clients || [];
+      const pick = $("#clientPick");
+      if (pick) pick.innerHTML = `<option value="">New client (made when you save)</option>` + clients.map(c =>
+        `<option value="${esc(c.id)}"${order && order.clientId === c.id ? " selected" : ""}>${esc(c.name || c.email || c.id)}${c.email ? " · " + esc(c.email) : ""}</option>`).join("");
+    } catch (_) { /* the picker keeps its last list */ }
+  }
+
   let started = false;
   function start() {
     if (started) return; started = true;
     renderTemplates();
+    api("GET", "/health").then(h => { health = h; }).catch(() => {});
+    refreshClients();
     const cur = LS.get("wo-current", "");
     if (cur) loadOrder(cur); else buildEditor();
   }

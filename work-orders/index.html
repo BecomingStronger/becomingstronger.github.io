@@ -101,6 +101,37 @@ textarea{min-height:76px;resize:vertical}
 .seg button{border:0;background:none;padding:7px 14px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--on-surface-v)}
 .seg button.on{background:var(--primary);color:var(--on-primary)}
 
+/* right panel: document / timeline */
+.seg.small{margin:0}
+.seg.small button{padding:4px 12px;font-size:.8rem}
+#tlBadge:not(:empty){display:inline-block;min-width:18px;padding:0 5px;margin-left:4px;background:var(--terra);color:#fff;font-size:.7rem;line-height:18px}
+.tlpanel{flex:1;overflow:auto;padding:16px 20px 60px;background:var(--surface)}
+.tlpanel[hidden]{display:none}
+.tlbox{border:1px solid var(--outline-v);background:var(--c-low);padding:12px;margin:0 0 14px}
+.tlbox h3{font-size:.95rem;margin:0 0 8px}
+.tlrow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.tlrow input[type=text],.tlrow input[type=url]{flex:1;min-width:160px}
+.portal-url{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.8rem;word-break:break-all;background:var(--surface);border:1px solid var(--outline-v);padding:6px 8px;flex:1}
+.check{display:inline-flex;gap:6px;align-items:center;font-size:.85rem;color:var(--on-surface-v);cursor:pointer}
+ol.items{list-style:none;margin:0;padding:0}
+ol.items li{border-top:1px solid var(--outline-v);padding:10px 0;display:grid;grid-template-columns:104px 1fr auto;gap:10px;align-items:start}
+ol.items li.del{opacity:.45}
+ol.items li.client .ibody{border-left:3px solid var(--primary);padding-left:8px}
+.iwhen{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.75rem;color:var(--on-surface-v)}
+.ikind{font-size:.7rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--on-surface-v)}
+.ititle{font-weight:600;font-size:.9rem}
+.ibody{white-space:pre-wrap;font-size:.88rem;overflow-wrap:anywhere}
+.iacts{display:flex;flex-direction:column;gap:4px;align-items:flex-end}
+.vis{font-size:.7rem;font-weight:600;padding:2px 6px;border:1px solid var(--outline-v);cursor:pointer;background:none;color:var(--on-surface-v)}
+.vis.client{border-color:var(--primary);color:var(--primary)}
+table.inv{width:100%;border-collapse:collapse;font-size:.86rem}
+table.inv td,table.inv th{padding:6px 4px;border-bottom:1px solid var(--outline-v);text-align:left}
+table.inv .n{text-align:right;font-family:ui-monospace,"SF Mono",Menlo,monospace}
+.ilines .rowitem{grid-template-columns:1fr 64px 70px 80px 30px}
+.ilines .rowitem>.icon-btn{grid-column:5;grid-row:1}
+.ilines .sub{grid-column:1/-1;display:flex;gap:14px;font-size:.82rem;color:var(--on-surface-v);align-items:center}
+.thumb{max-width:100%;max-height:220px;border:1px solid var(--outline-v);margin-top:8px;display:block}
+
 /* dialogs */
 dialog{border:1px solid var(--outline);background:var(--surface);color:var(--on-surface);padding:0;max-width:min(680px,94vw);width:100%}
 dialog::backdrop{background:rgba(0,0,0,.45)}
@@ -159,8 +190,11 @@ table.list tr.click:hover{background:var(--c-low)}
 <div class="layout">
   <main class="editor" id="editor"></main>
   <section class="preview">
-    <div class="ptools"><span>Live document</span><span class="spacer"></span><span id="pTotal" class="mono"></span></div>
+    <div class="ptools">
+      <div class="seg small" id="panelSeg"><button data-panel="doc" class="on">Document</button><button data-panel="tl">Timeline <span id="tlBadge"></span></button></div>
+      <span class="spacer"></span><span id="pTotal" class="mono"></span></div>
     <iframe id="preview" title="Work order preview"></iframe>
+    <div id="tl" class="tlpanel" hidden></div>
   </section>
 </div>
 
@@ -185,6 +219,24 @@ table.list tr.click:hover{background:var(--c-low)}
   <div class="dlg-h"><h2>Send for signature</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
   <div class="dlg-b" id="sendBody"></div>
   <div class="dlg-f"><button class="btn ghost small" data-close>Cancel</button><button class="btn small" id="bSendGo">Send</button></div>
+</dialog>
+
+<dialog id="dPaper">
+  <div class="dlg-h"><h2>Signed on paper</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b" id="paperBody"></div>
+  <div class="dlg-f"><button class="btn ghost small" data-close>Cancel</button><button class="btn small" id="bPaperGo">Upload and mark signed</button></div>
+</dialog>
+
+<dialog id="dInvoice">
+  <div class="dlg-h"><h2 id="invTitle">New invoice</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b" id="invBody"></div>
+  <div class="dlg-f"><span class="hint" id="invErr" style="margin:0 auto 0 0"></span><button class="btn ghost small" id="bInvSave">Save draft</button><button class="btn small" id="bInvSend">Save and send to client</button></div>
+</dialog>
+
+<dialog id="dPay">
+  <div class="dlg-h"><h2 id="payTitle">Record a payment</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b" id="payBody"></div>
+  <div class="dlg-f"><button class="btn ghost small" data-close>Cancel</button><button class="btn small" id="bPayGo">Record payment</button></div>
 </dialog>
 
 <script src="templates.js"></script>
