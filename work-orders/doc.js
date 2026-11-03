@@ -56,11 +56,16 @@
     recurring: "Recurring support", onsite: "On-site service call", data: "Data and scanning project",
   };
 
-  // DocuSeal reads these custom elements as fields when documents[].html is sent.
+  // SignWell text tags: {{type:signer:required:label:prefill:api_id:width:height}}.
+  // Signer 1 = client, signer 2 = contractor (the order of the recipients sent).
+  // SignWell leaves the tag text in the file, so it is printed in white.
+  const SIGNER = { Client: 1, Contractor: 2 };
+  const tag = (type, role, label, api, w, h) =>
+    `<span class="swtag">{{${type}:${SIGNER[role]}:y:${label}::${api}:${w}:${h}}}</span>`;
   const SIGN_TAGS = {
-    sig: (role, name) => `<signature-field name="${esc(name)}" role="${esc(role)}" required="true" style="width:220px;height:44px;display:inline-block"></signature-field>`,
-    date: (role, name) => `<date-field name="${esc(name)}" role="${esc(role)}" required="true" readonly="true" style="width:140px;height:20px;display:inline-block"></date-field>`,
-    text: (role, name) => `<text-field name="${esc(name)}" role="${esc(role)}" required="true" style="width:220px;height:20px;display:inline-block"></text-field>`,
+    sig: (role, name) => tag("signature", role, name, `${role.toLowerCase()}_signature`, 220, 40),
+    date: (role, name) => tag("date", role, name, `${role.toLowerCase()}_date`, 120, 18),
+    text: (role, name) => tag("text", role, name, `${role.toLowerCase()}_name`, 200, 18),
   };
 
   function sigBlock(o, opts, who, role, label) {
@@ -131,6 +136,7 @@ tr{break-inside:avoid}
 .consent{font-size:8pt;color:var(--ink-2);margin-top:12px;border:1px solid var(--rule);background:var(--fill);padding:6px 9px;break-inside:avoid}
 footer.doc{margin-top:18px;font-size:7.6pt;color:var(--ink-2);display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:5px}
 .empty{color:#9aa0ab;font-style:italic}
+.swtag{color:#fff;font-size:7pt;line-height:1;white-space:nowrap}
 `;
 
   function renderDoc(o, opts) {

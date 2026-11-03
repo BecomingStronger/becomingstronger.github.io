@@ -345,6 +345,7 @@
       <div class="row"><label class="f"><span>Client name</span><input id="sName" type="text" value="${esc(c.name)}"></label><label class="f"><span>Client email</span><input id="sEmail" type="email" value="${esc(c.email)}"></label></div>
       <label class="f"><span>Your email (countersign)</span><input id="sMe" type="email" value="${esc(order.contractor.email)}"></label>
       <label class="f"><span>Message</span><textarea id="sMsg" rows="4">Hi ${esc((c.name || "").split(" ")[0] || "there")},\n\nHere is work order ${esc(order.number)}${order.title ? ` (${esc(order.title)})` : ""} for your ${order.stage === "completion" ? "sign-off on the completed work" : "approval"}. Please review and sign at the link below.\n\nThanks,\n${esc(order.contractor.name || "")}</textarea></label>
+      <label class="f" style="display:flex;gap:8px;align-items:center"><input type="checkbox" id="sTest"> <span style="margin:0">Test send (free, watermarked, not legally binding)</span></label>
       <p class="hint" id="sErr"></p>`;
     $("#dSend").showModal();
   }
@@ -360,12 +361,12 @@
       const r = await api("POST", `/orders/${order.number}/send`, {
         stage: order.stage, html: D.renderDoc(o, { signing: true }),
         client: { name: name || order.client.name, email }, contractor: { name: order.contractor.name, email: me },
-        message: $("#sMsg").value,
+        message: $("#sMsg").value, test: $("#sTest").checked,
       });
       order.status = "sent";
       order.signing = order.signing || {}; order.signing[order.stage] = { id: r.submission, sent: new Date().toISOString() };
       markDirty(); renderPreview();
-      $("#dSend").close(); toast(`Sent to ${email}.`);
+      $("#dSend").close(); toast(`${r.test ? "Test sent" : "Sent"} to ${email}.`);
     } catch (e) { $("#sErr").textContent = e.message; }
     finally { $("#bSendGo").disabled = false; }
   }
