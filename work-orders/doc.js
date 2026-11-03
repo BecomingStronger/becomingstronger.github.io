@@ -60,12 +60,13 @@
   // Signer 1 = client, signer 2 = contractor (the order of the recipients sent).
   // SignWell leaves the tag text in the file, so it is printed in white.
   const SIGNER = { Client: 1, Contractor: 2 };
-  const tag = (type, role, label, api, w, h) =>
-    `<span class="swtag">{{${type}:${SIGNER[role]}:y:${label}::${api}:${w}:${h}}}</span>`;
+  // Tags stay short (no label on signatures) so each one fits on one line of its
+  // cell; a tag that wraps is not read. Dates lock to the signing date.
+  const R = role => SIGNER[role];
   const SIGN_TAGS = {
-    sig: (role, name) => tag("signature", role, name, `${role.toLowerCase()}_signature`, 220, 40),
-    date: (role, name) => tag("date", role, name, `${role.toLowerCase()}_date`, 120, 18),
-    text: (role, name) => tag("text", role, name, `${role.toLowerCase()}_name`, 200, 18),
+    sig: role => `<span class="swtag">{{s:${R(role)}:y:::${role.toLowerCase()}_sig:220:40}}</span>`,
+    date: role => `<span class="swtag">{{d:${R(role)}:y:Date::${role.toLowerCase()}_date:110:18:y:mm/dd/yyyy}}</span>`,
+    text: role => `<span class="swtag">{{text:${R(role)}:y:Name::${role.toLowerCase()}_name:200:18}}</span>`,
   };
 
   function sigBlock(o, opts, who, role, label) {
@@ -129,14 +130,14 @@ tr{break-inside:avoid}
 .signs{display:grid;grid-template-columns:1fr 1fr;gap:26px;margin-top:14px;break-inside:avoid}
 .sigbox{break-inside:avoid}
 .siglabel{font-weight:600;font-size:9pt;margin-bottom:22px}
-.sigline{border-bottom:1px solid var(--ink);min-height:46px;display:flex;align-items:flex-end}
+.sigline{border-bottom:1px solid var(--ink);min-height:46px;display:flex;align-items:flex-start}
 .sigmeta,.sigrow span{font-size:7.4pt;color:var(--ink-2);letter-spacing:.06em;text-transform:uppercase}
 .sigrow{display:grid;grid-template-columns:1.4fr 1fr;gap:14px;margin-top:10px}
 .sigfill{border-bottom:1px solid var(--ink);min-height:20px;font-size:9.2pt}
 .consent{font-size:8pt;color:var(--ink-2);margin-top:12px;border:1px solid var(--rule);background:var(--fill);padding:6px 9px;break-inside:avoid}
 footer.doc{margin-top:18px;font-size:7.6pt;color:var(--ink-2);display:flex;justify-content:space-between;border-top:1px solid var(--rule);padding-top:5px}
 .empty{color:#9aa0ab;font-style:italic}
-.swtag{color:#fff;font-size:7pt;line-height:1;white-space:nowrap}
+.swtag,.sigrow .swtag,.sigmeta .swtag{color:#fff;font-size:4pt;line-height:1;white-space:nowrap;text-transform:none;letter-spacing:0}
 `;
 
   function renderDoc(o, opts) {
