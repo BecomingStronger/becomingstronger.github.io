@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Work orders · Becoming Stronger</title>
+<meta name="theme-color" id="meta-theme" content="#fcfdf7">
+<link rel="icon" type="image/svg+xml" href="../favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Raleway:wght@500;600;700&display=swap" rel="stylesheet">
+<script>
+(function(){var t=null;try{t=localStorage.getItem('bs-theme')}catch(e){}
+if(t!=='dark'&&t!=='light')t=window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light';
+document.documentElement.setAttribute('data-theme',t);})();
+</script>
+<style>
+/* Tokens copied from the site's index.html (MD3 green, flat, square). */
+:root{
+  --primary:#0e6d35;--on-primary:#fff;--primary-c:#9ff6af;--on-primary-c:#00210b;
+  --surface:#fcfdf7;--on-surface:#191c19;--on-surface-v:#414941;
+  --c-low:#f3f4ef;--c:#edeee9;--c-high:#e7e9e3;--outline:#717970;--outline-v:#c1c9be;
+  --terra:#964900;--terra-c:#ffdcc6;--gold-c:#ffe171;--on-gold-c:#221b00;
+}
+html[data-theme="dark"]{color-scheme:dark;
+  --primary:#83d995;--on-primary:#003917;--primary-c:#005225;--on-primary-c:#9ff6af;
+  --surface:#111411;--on-surface:#e2e3de;--on-surface-v:#c1c9be;
+  --c-low:#191c19;--c:#1e201d;--c-high:#282b27;--outline:#8b9389;--outline-v:#414941;
+  --terra:#ffb786;--terra-c:#723600;--gold-c:#554600;--on-gold-c:#ffe171;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--surface);color:var(--on-surface);
+  font:15px/1.5 -apple-system,BlinkMacSystemFont,"SF Pro Text",system-ui,"Segoe UI",Roboto,sans-serif;-webkit-font-smoothing:antialiased}
+h1,h2,h3{font-family:"Raleway",sans-serif;font-weight:600;letter-spacing:-.01em;margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+.btn{display:inline-flex;align-items:center;gap:.4em;font-weight:600;font-size:.9rem;padding:9px 16px;
+  border:1px solid var(--primary);background:var(--primary);color:var(--on-primary);cursor:pointer;white-space:nowrap}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:transparent;color:var(--primary);border-color:var(--outline)}
+.btn.ghost:hover{background:var(--primary-c);color:var(--on-primary-c);border-color:var(--primary);filter:none}
+.btn.small{padding:5px 10px;font-size:.82rem}
+.btn:disabled{opacity:.45;cursor:not-allowed;filter:none}
+.icon-btn{background:none;border:1px solid var(--outline-v);width:30px;height:30px;cursor:pointer;color:var(--on-surface-v);flex:none}
+.icon-btn:hover{border-color:var(--terra);color:var(--terra)}
+
+/* top bar */
+header.bar{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  padding:10px 20px;border-bottom:1px solid var(--outline-v);background:var(--surface)}
+.brand{display:flex;align-items:center;gap:10px;font-family:"Raleway",sans-serif;font-weight:600;font-size:1.05rem;color:var(--on-surface);text-decoration:none;margin-right:6px}
+.wo-id{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.9rem;padding:4px 8px;background:var(--c-high)}
+.chip{font-size:.75rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border:1px solid var(--outline-v);color:var(--on-surface-v)}
+.chip.ok{border-color:var(--primary);color:var(--primary)}
+.chip.warn{border-color:var(--terra);color:var(--terra)}
+.spacer{flex:1}
+#syncState{font-size:.82rem;color:var(--on-surface-v)}
+#syncState a{color:var(--primary)}
+
+/* layout */
+.layout{display:grid;grid-template-columns:minmax(380px,520px) 1fr;height:calc(100vh - 57px)}
+.editor{overflow:auto;border-right:1px solid var(--outline-v);padding:8px 20px 80px}
+.preview{background:var(--c);overflow:hidden;display:flex;flex-direction:column}
+.preview iframe{flex:1;width:100%;border:0;background:#fff}
+.ptools{display:flex;gap:8px;align-items:center;padding:8px 14px;border-bottom:1px solid var(--outline-v);font-size:.85rem;color:var(--on-surface-v)}
+@media (max-width:900px){.layout{grid-template-columns:1fr;height:auto}.editor{border-right:0}.preview{height:85vh}}
+
+/* form */
+details.sec{border-bottom:1px solid var(--outline-v)}
+details.sec>summary{cursor:pointer;list-style:none;padding:14px 0;font-family:"Raleway",sans-serif;font-weight:600;font-size:1rem;display:flex;justify-content:space-between}
+details.sec>summary::after{content:"+";color:var(--on-surface-v)}
+details.sec[open]>summary::after{content:"\2212"}
+details.sec>summary::-webkit-details-marker{display:none}
+.sec-body{padding:0 0 18px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+label.f{display:block;margin:0 0 10px}
+label.f>span{display:block;font-size:.76rem;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--on-surface-v);margin-bottom:3px}
+input[type=text],input[type=email],input[type=tel],input[type=number],input[type=date],input[type=datetime-local],input[type=time],input[type=password],select,textarea{
+  width:100%;padding:8px 10px;border:1px solid var(--outline-v);background:var(--c-low);border-radius:0}
+input:focus,select:focus,textarea:focus{outline:2px solid var(--primary);outline-offset:-1px;border-color:var(--primary)}
+textarea{min-height:76px;resize:vertical}
+.hint{font-size:.8rem;color:var(--on-surface-v);margin:-4px 0 10px}
+.rows{display:flex;flex-direction:column;gap:8px;margin-bottom:8px}
+.rowitem{display:grid;gap:6px;align-items:start;padding:8px;background:var(--c-low);border:1px solid var(--outline-v)}
+.rowitem input{padding:6px 8px;background:var(--surface)}
+.line{grid-template-columns:1fr 64px 76px 86px 30px}
+.line>.icon-btn{grid-column:5;grid-row:1}
+.line .sub{grid-column:1/-1;display:flex;gap:14px;font-size:.82rem;color:var(--on-surface-v);align-items:center}
+.asset{grid-template-columns:1fr 1fr 30px}
+.time{grid-template-columns:1.25fr 1fr 1fr 30px}
+.time>.icon-btn{grid-column:4;grid-row:1}
+.time .note{grid-column:2/4!important}
+.tot{font-size:.9rem;display:grid;grid-template-columns:1fr auto;gap:2px 16px;margin:8px 0 0;padding:8px 10px;background:var(--c-high)}
+.tot b{font-family:ui-monospace,"SF Mono",Menlo,monospace;text-align:right}
+.terms label{display:flex;gap:8px;align-items:flex-start;font-size:.88rem;margin:0 0 7px;cursor:pointer}
+.terms label input{margin-top:4px}
+.terms small{display:block;color:var(--on-surface-v);font-size:.8rem}
+.seg{display:flex;border:1px solid var(--outline);width:max-content;margin-bottom:10px}
+.seg button{border:0;background:none;padding:7px 14px;cursor:pointer;font-weight:600;font-size:.85rem;color:var(--on-surface-v)}
+.seg button.on{background:var(--primary);color:var(--on-primary)}
+
+/* dialogs */
+dialog{border:1px solid var(--outline);background:var(--surface);color:var(--on-surface);padding:0;max-width:min(680px,94vw);width:100%}
+dialog::backdrop{background:rgba(0,0,0,.45)}
+.dlg-h{display:flex;justify-content:space-between;align-items:center;padding:16px 20px;border-bottom:1px solid var(--outline-v)}
+.dlg-b{padding:16px 20px;max-height:70vh;overflow:auto}
+.dlg-f{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px;border-top:1px solid var(--outline-v)}
+.tpls{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tpl{text-align:left;border:1px solid var(--outline-v);background:var(--c-low);padding:12px;cursor:pointer}
+.tpl:hover{border-color:var(--primary)}
+.tpl b{display:block;font-family:"Raleway",sans-serif;margin-bottom:2px}
+.tpl span{font-size:.84rem;color:var(--on-surface-v)}
+table.list{width:100%;border-collapse:collapse;font-size:.88rem}
+table.list td,table.list th{padding:7px 6px;border-bottom:1px solid var(--outline-v);text-align:left}
+table.list tr.click{cursor:pointer}
+table.list tr.click:hover{background:var(--c-low)}
+.mono{font-family:ui-monospace,"SF Mono",Menlo,monospace}
+
+/* lock */
+#lock{position:fixed;inset:0;z-index:50;background:var(--surface);display:flex;align-items:center;justify-content:center;padding:24px}
+#lock form{width:min(380px,100%)}
+#lock h1{font-size:1.5rem;margin:14px 0 6px}
+#lock p{color:var(--on-surface-v);margin:0 0 18px}
+#lockErr{color:var(--terra);font-size:.88rem;min-height:1.3em;margin-top:8px}
+.locked header.bar,.locked .layout{visibility:hidden}
+@media print{body>*{display:none!important}}
+</style>
+</head>
+<body class="locked">
+
+<div id="lock">
+  <form id="lockForm" autocomplete="off">
+    <svg width="40" height="35" viewBox="0 0 280 243" aria-hidden="true"><path fill="#1C3A25" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/><path fill="#2E5A3B" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/><path fill="#437A50" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/></svg>
+    <h1>Work orders</h1>
+    <p>Private tool. Enter the access key.</p>
+    <label class="f"><span>Access key</span><input id="keyIn" type="password" required autocomplete="current-password"></label>
+    <button class="btn" type="submit">Unlock</button>
+    <div id="lockErr" role="alert"></div>
+  </form>
+</div>
+
+<header class="bar">
+  <a class="brand" href="../" title="Becoming Stronger">
+    <svg width="28" height="24" viewBox="0 0 280 243" aria-hidden="true"><path fill="#1C3A25" d="M55.06 182.44 80.69 182.56 151.22 59.84 252.22 228.15 264.77 205.26 151.56 13.25Z"/><path fill="#2E5A3B" d="M15.63 206.06 27.5 228.44 252.3 228.28 151.23 59.86 138.55 81.93 211.73 205.93Z"/><path fill="#437A50" d="M124.06 12.99 15.64 206.03 211.76 205.97 197.88 182.51 54.95 182.53 151.67 13.25Z"/></svg>
+    Work orders</a>
+  <span class="wo-id" id="woId">No order</span>
+  <span class="chip" id="statusChip">draft</span>
+  <span id="syncState"></span>
+  <span class="spacer"></span>
+  <button class="btn ghost small" id="bOrders">Orders</button>
+  <button class="btn ghost small" id="bNew">New</button>
+  <button class="btn ghost small" id="bSettings">Settings</button>
+  <button class="btn ghost small" id="bPdf">PDF</button>
+  <button class="btn small" id="bSend" title="Email the order to the client for an electronic signature">Send for signature</button>
+</header>
+
+<div class="layout">
+  <main class="editor" id="editor"></main>
+  <section class="preview">
+    <div class="ptools"><span>Live document</span><span class="spacer"></span><span id="pTotal" class="mono"></span></div>
+    <iframe id="preview" title="Work order preview"></iframe>
+  </section>
+</div>
+
+<dialog id="dNew">
+  <div class="dlg-h"><h2>New work order</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b"><div class="tpls" id="tplGrid"></div></div>
+</dialog>
+
+<dialog id="dOrders">
+  <div class="dlg-h"><h2>Orders</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b"><table class="list"><thead><tr><th>No.</th><th>Client</th><th>Title</th><th>Status</th><th>Total</th><th>Drive</th></tr></thead><tbody id="ordersBody"></tbody></table></div>
+  <div class="dlg-f"><button class="btn ghost small" id="bBackupAll">Back up all to Drive again</button></div>
+</dialog>
+
+<dialog id="dSettings">
+  <div class="dlg-h"><h2>Settings</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b" id="settingsBody"></div>
+  <div class="dlg-f"><button class="btn ghost small" id="bForget">Lock and forget key on this device</button><button class="btn small" data-close>Done</button></div>
+</dialog>
+
+<dialog id="dSend">
+  <div class="dlg-h"><h2>Send for signature</h2><button class="icon-btn" data-close aria-label="Close">×</button></div>
+  <div class="dlg-b" id="sendBody"></div>
+  <div class="dlg-f"><button class="btn ghost small" data-close>Cancel</button><button class="btn small" id="bSendGo">Send</button></div>
+</dialog>
+
+<script src="templates.js"></script>
+<script src="doc.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
