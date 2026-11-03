@@ -124,27 +124,18 @@
     order.lines = order.lines.map(l => ({ ...l, rate: l.unit === "hour" && !l.rate ? (s.rate || "") : l.rate }));
     delete order.terms;
     order._baseStatus = "draft";
-    LS.set("wo-current", number);
+    if (pendingClient) {
+      const c = pendingClient; pendingClient = null;
+      order.clientId = c.id;
+      order.client = { name: c.name || "", org: c.org || "", email: c.email || "", phone: c.phone || "", address: c.address || "" };
+    }
+    timeline = [];
+    setView("order");
+    history.pushState(null, "", `#/order/${number}`);
     buildEditor(); markDirty();
   }
 
-  // ---------- orders list ----------
-  async function openOrders() {
-    $("#ordersBody").innerHTML = `<tr><td colspan="6">Loading…</td></tr>`;
-    $("#dOrders").showModal();
-    try {
-      const { orders } = await api("GET", "/orders");
-      $("#ordersBody").innerHTML = orders.length ? orders.map(o => `<tr class="click" data-n="${esc(o.number)}">
-        <td class="mono">${esc(o.number)}</td><td>${esc(o.client)}</td><td>${esc(o.title)}</td><td>${esc(o.status)}</td>
-        <td class="mono">${o.total != null ? D.money(o.total) : ""}</td>
-        <td>${o.drive ? `<a href="${esc(o.drive)}" target="_blank" rel="noopener">Folder</a>` : "Not yet"}</td></tr>`).join("")
-        : `<tr><td colspan="6">No orders yet.</td></tr>`;
-      $("#ordersBody").querySelectorAll("tr.click").forEach(tr => tr.addEventListener("click", e => {
-        if (e.target.closest("a")) return;
-        loadOrder(tr.dataset.n); $("#dOrders").close();
-      }));
-    } catch (e) { $("#ordersBody").innerHTML = `<tr><td colspan="6">${esc(e.message)}</td></tr>`; }
-  }
+  // ---------- orders ----------
   async function loadOrder(n) {
     if (dirty) await save();
     const local = LS.get(`wo-draft:${n}`, null);
@@ -157,10 +148,14 @@
       order._drive = rec.drive && rec.drive.folder ? `https://drive.google.com/drive/folders/${rec.drive.folder}` : "";
       order._backedUp = rec.backedUp || "";
     } catch (e) {
-      if (!local) { toast(e.message); return; }
+      if (!local) {
+        order = null;
+        $("#editor").innerHTML = `<div style="padding:40px 0"><h2>${esc(n)} was not found</h2><p class="hint" style="margin-top:8px">${esc(e.message)}</p><a class="btn ghost" href="#/">Back to all orders</a></div>`;
+        return;
+      }
       order = local.order; dirty = true;
     }
-    LS.set("wo-current", n);
+    if (location.hash !== `#/order/${n}`) history.replaceState(null, "", `#/order/${n}`);
     timeline = [];
     buildEditor();
     if (dirty) scheduleSave();
@@ -190,8 +185,10 @@
     saving = true; setSync("Saving…");
     const o = compiled();
     try {
-      const r = await api("PUT", `/orders/${order.number}`, { order: o, html: D.renderDoc(o), baseStatus: order._baseStatus });
+      const edited = !!order._clientEdited;
+      const r = await api("PUT", `/orders/${order.number}`, { order: o, html: D.renderDoc(o), baseStatus: order._baseStatus, clientEdited: edited });
       dirty = false; LS.del(`wo-draft:${order.number}`);
+      if (edited) order._clientEdited = false;
       if (r.clientId) { if (!clients.some(c => c.id === r.clientId)) refreshClients(); order.clientId = r.clientId; }
       if (r.status && r.status !== order.status) { order.status = r.status; const sel = document.querySelector('[data-p="status"]'); if (sel) sel.value = r.status; renderPreview(); }
       if (r.status) order._baseStatus = r.status;
@@ -255,10 +252,9 @@
 
   function buildEditor() {
     if (!order) {
-      $("#editor").innerHTML = `<div style="padding:40px 0"><h2>No order open</h2><p class="hint" style="margin-top:8px">Start a new work order or open one from the list.</p>
-        <button class="btn" id="bNew2">New work order</button> <button class="btn ghost" id="bOrders2">Orders</button></div>`;
+      $("#editor").innerHTML = `<div style="padding:40px 0"><h2>No order open</h2><p class="hint" style="margin-top:8px">Start a new work order or open one from the home page.</p>
+        <button class="btn" id="bNew2">New work order</button> <a class="btn ghost" href="#/">All orders</a></div>`;
       $("#bNew2").onclick = () => $("#dNew").showModal();
-      $("#bOrders2").onclick = openOrders;
       $("#preview").srcdoc = ""; $("#woId").textContent = "No order"; return;
     }
     const done = order.stage === "completion";
@@ -312,6 +308,7 @@
     const ed = $("#editor");
     ed.querySelectorAll("[data-p]").forEach(el => el.addEventListener("input", () => {
       set(el.dataset.p, el.value);
+      if (el.dataset.p.startsWith("client.")) order._clientEdited = true;
       if (["billing.mode", "type"].includes(el.dataset.p)) { buildEditor(); }
       markDirty(); if (el.dataset.p.startsWith("billing")) renderTotals();
     }));
@@ -420,7 +417,7 @@
   }
 
   // ---------- timeline (right panel) ----------
-  const KIND = { status: "Status", message: "Message", note: "Internal note", file: "File", link: "Link", invoice: "Invoice",
+  const KIND = { status: "Status", message: "Message", note: "Private note", file: "File", link: "Link", invoice: "Invoice",
     payment: "Payment", signed: "Signed", sent: "Signature request", workorder: "Work order" };
   const fmtWhen = ts => new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" });
   const isoDay = ms => new Date(ms).toLocaleDateString("en-CA", { timeZone: "America/Chicago" });
@@ -490,25 +487,28 @@
     if (!order || order.number !== n) return;
     const items = timeline.map(i => {
       const d = i.data || {};
-      const fixed = ["status", "workorder", "invoice", "sent"].includes(i.kind);
-      return `<li class="${i.deleted ? "del" : ""} ${i.actor === "client" ? "client" : ""}">
+      const fixed = ["status", "workorder", "invoice", "sent", "note"].includes(i.kind);
+      const priv = i.visibility === "internal";
+      return `<li class="${i.deleted ? "del" : ""} ${i.actor === "client" ? "client" : ""} ${priv ? "private" : ""}" data-item="${esc(i.id)}">
         <div class="iwhen">${fmtWhen(i.ts)}</div>
         <div><div class="ikind">${esc(KIND[i.kind] || i.kind)}${i.actor === "client" ? " · from client" : ""}</div>
           ${i.kind === "message" ? "" : `<div class="ititle">${esc(i.title)}</div>`}${i.body ? `<div class="ibody">${esc(i.body)}</div>` : ""}
           ${d.url ? `<a href="${esc(d.url)}" target="_blank" rel="noopener noreferrer">${esc(d.type || "Open link")}</a>` : ""}
           ${d.driveId ? `<button class="vis" data-dl="${esc(i.id)}" data-name="${esc(d.name || i.title)}">Download</button>` : ""}</div>
-        <div class="iacts">${fixed ? `<span class="vis ${i.visibility}">${i.visibility === "client" ? "Client sees" : "Internal"}</span>`
-          : `<button class="vis ${i.visibility}" data-vis="${esc(i.id)}" title="Change who sees this">${i.visibility === "client" ? "Client sees" : "Internal"}</button>`}
+        <div class="iacts">${fixed ? `<span class="vis ${i.visibility}">${i.visibility === "client" ? "Client sees" : "Only you"}</span>`
+          : `<button class="vis ${i.visibility}" data-vis="${esc(i.id)}" title="Change who sees this">${i.visibility === "client" ? "Client sees" : "Only you"}</button>`}
+          ${i.kind === "note" && !i.deleted ? `<button class="vis" data-edit="${esc(i.id)}">Edit</button>` : ""}
           ${["message", "note", "link", "file", "signed", "payment"].includes(i.kind) ? `<button class="vis" data-del="${esc(i.id)}">${i.deleted ? "Restore" : "Remove"}</button>` : ""}</div></li>`;
     }).join("");
     $("#tl").innerHTML = `${portal}
       <div class="tlbox"><h3>Post to the timeline</h3>
-        <textarea id="tMsg" rows="3" placeholder="A message to the client, or an internal note"></textarea>
+        <textarea id="tMsg" rows="3" placeholder="A message to the client, or a private note for yourself"></textarea>
         <div class="tlrow" style="margin-top:8px">
-          <label class="check"><input type="radio" name="tKind" value="message" checked> To the client</label>
-          <label class="check"><input type="radio" name="tKind" value="note"> Internal note</label>
-          <label class="check"><input type="checkbox" id="tNotify" checked> Email the client</label>
-          <span class="spacer"></span><button class="btn small" id="tPost">Post</button></div></div>
+          <button class="btn ghost small" id="tNote">Save private note</button>
+          <span class="spacer"></span>
+          <label class="check"><input type="checkbox" id="tNotify" checked> Also email the client</label>
+          <button class="btn small" id="tPost">Send to client</button></div>
+        <p class="hint" style="margin:6px 0 0">Private notes stay in your timeline. They never appear in the client's portal or emails.</p></div>
       <div class="tlbox"><h3>Add a link or a file</h3>
         <div class="tlrow"><input type="text" id="lTitle" placeholder="Title, for example: Hours and progress"><input type="url" id="lUrl" placeholder="https://"></div>
         <div class="tlrow" style="margin-top:8px"><label class="check"><input type="checkbox" id="lVis" checked> Client can see</label><span class="spacer"></span><button class="btn ghost small" id="lAdd">Add link</button></div>
@@ -534,12 +534,17 @@
       if (e.target.textContent.includes("new") && !confirm("The old link stops working. Make a new one?")) return;
       try { await ensureSaved(); await api("POST", `/clients/${order.clientId}/portal`); await renderTimeline(); } catch (x) { tErr(x.message); }
     });
-    on("#tPost", async () => {
-      const body = $("#tMsg").value.trim(); if (!body) return;
-      const kind = document.querySelector('input[name="tKind"]:checked').value;
-      try { await ensureSaved(); await api("POST", `/orders/${n}/items`, { kind, body, notify: $("#tNotify").checked }); await loadTimeline(); tErr(kind === "note" ? "Note saved." : "Posted. The client sees it in the portal."); }
-      catch (x) { tErr(x.message); }
-    });
+    const post = kind => async () => {
+      const body = $("#tMsg").value.trim(); if (!body) { tErr("Write something first."); return; }
+      try {
+        await ensureSaved();
+        await api("POST", `/orders/${n}/items`, { kind, body, notify: kind === "message" && $("#tNotify").checked });
+        await loadTimeline();
+        tErr(kind === "note" ? "Private note saved. Only you can see it." : "Sent. The client sees it in the portal.");
+      } catch (x) { tErr(x.message); }
+    };
+    on("#tNote", post("note"));
+    on("#tPost", post("message"));
     on("#lAdd", async () => {
       const url = $("#lUrl").value.trim(); if (!url) { tErr("Paste the link first."); return; }
       try { await ensureSaved(); await api("POST", `/orders/${n}/items`, { kind: "link", url, title: $("#lTitle").value.trim(), visibility: $("#lVis").checked ? "client" : "internal" }); await loadTimeline(); tErr("Link added."); }
@@ -564,6 +569,22 @@
       try { await api("PATCH", `/orders/${n}/items/${it.id}`, { deleted: !it.deleted }); await loadTimeline(); } catch (x) { tErr(x.message); }
     });
     tl.querySelectorAll("[data-dl]").forEach(b => b.onclick = () => openBlob(`/orders/${n}/items/${b.dataset.dl}/download`, b.dataset.name).catch(x => tErr(x.message)));
+    tl.querySelectorAll("[data-edit]").forEach(b => b.onclick = () => {
+      const it = timeline.find(i => i.id === b.dataset.edit);
+      const li = b.closest("li"), box = li.children[1];
+      const old = box.querySelector(".ibody");
+      const ta = document.createElement("textarea");
+      ta.rows = 3; ta.value = it.body; ta.style.width = "100%"; ta.style.marginTop = "4px";
+      const row = document.createElement("div"); row.className = "tlrow"; row.style.marginTop = "6px";
+      row.innerHTML = `<button class="btn small">Save</button><button class="btn ghost small">Cancel</button>`;
+      if (old) old.replaceWith(ta); else box.appendChild(ta);
+      box.appendChild(row); b.disabled = true; ta.focus();
+      row.children[1].onclick = () => renderTimeline();
+      row.children[0].onclick = async () => {
+        try { await api("PATCH", `/orders/${n}/items/${it.id}`, { body: ta.value }); await loadTimeline(); tErr("Note updated."); }
+        catch (x) { tErr(x.message); }
+      };
+    });
     const inv = no => timeline.find(i => i.kind === "invoice" && i.data && i.data.number === no);
     tl.querySelectorAll("[data-inv-open]").forEach(b => b.onclick = () => openBlob(`/orders/${n}/items/${b.dataset.invOpen}/download`, `${b.dataset.invOpen}.pdf`).catch(x => tErr(x.message)));
     tl.querySelectorAll("[data-inv-edit]").forEach(b => b.onclick = () => openInvoice(inv(b.dataset.invEdit)));
@@ -726,11 +747,174 @@
     finally { $("#bPayGo").disabled = false; }
   }
 
+  // ---------- home: all orders and clients ----------
+  let homeData = null, homeFilter = "", homeQuery = "", pendingClient = null, homeTimer = null;
+  const STATUS_TEXT = { draft: "Draft", sent: "Sent", authorized: "Approved", "in progress": "In progress", completed: "Completed",
+    accepted: "Accepted", paid: "Paid", declined: "Declined", void: "Cancelled" };
+  const stChip = s => `<span class="st${["authorized", "accepted", "paid"].includes(s) ? " ok" : ["sent", "declined"].includes(s) ? " warn" : ""}">${esc(STATUS_TEXT[s] || s)}</span>`;
+  const shortWhen = ts => ts ? new Date(ts).toLocaleString([], { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" }) : "";
+  const lastOf = o => o.lastTs || Date.parse(o.updated) || 0;
+  const unread = o => !!(o.lastClient && o.lastClient.ts > LS.get(`wo-seen:${o.number}`, 0));
+  const FILTERS = [
+    ["open", "Open", o => !["draft", "paid", "void", "declined"].includes(o.status)],
+    ["waiting", "Waiting on client", o => o.status === "sent" || !!o.waitingSign || (o.openBalance || 0) > 0],
+    ["drafts", "Drafts", o => o.status === "draft"],
+    ["done", "Paid", o => o.status === "paid"],
+    ["all", "All", () => true],
+  ];
+
+  function setView(v) {
+    document.body.classList.toggle("home", v === "home");
+    clearInterval(homeTimer);
+    if (v === "home") homeTimer = setInterval(() => { if (document.visibilityState === "visible") loadHome(true); }, 60000);
+  }
+  const go = h => { if (location.hash === h) route(); else location.hash = h; };
+
+  async function route() {
+    const h = decodeURIComponent(location.hash || "");
+    let m;
+    if ((m = h.match(/^#\/order\/(WO-\d{4}-\d{4})$/))) {
+      setView("order");
+      if (!order || order.number !== m[1]) await loadOrder(m[1]);
+      return;
+    }
+    if (dirty) await save();
+    setView("home");
+    if ((m = h.match(/^#\/client\/(c_[a-z0-9]+)$/))) { await showClient(m[1]); return; }
+    await loadHome();
+  }
+
+  async function loadHome(quiet) {
+    if (!homeData && !quiet) $("#home").innerHTML = `<p class="hint" style="padding:40px 0">Loading…</p>`;
+    try {
+      homeData = await api("GET", "/summary");
+      clients = homeData.clients.map(c => ({ id: c.id, name: c.name, email: c.email }));
+    } catch (e) {
+      if (!homeData) $("#home").innerHTML = `<p class="hint" style="padding:40px 0">${esc(e.message)}</p>`;
+      return;
+    }
+    if (/^#\/client\//.test(location.hash)) return;
+    if (quiet && document.activeElement && document.activeElement.id === "hSearch") return;
+    renderHome();
+  }
+
+  function orderRows(list, withClient) {
+    if (!list.length) return `<tr class="empty-row"><td colspan="7">No orders here.</td></tr>`;
+    return list.map(o => `<tr class="click" data-open="${esc(o.number)}">
+      <td class="mono">${unread(o) ? '<span class="dot" title="New client message"></span>' : ""}${esc(o.number)}</td>
+      ${withClient ? `<td>${o.clientId ? `<a href="#/client/${esc(o.clientId)}" data-stop>${esc(o.client || "Client")}</a>` : esc(o.client || "")}</td>` : ""}
+      <td>${esc(o.title || "")}<small>${esc(D.TYPE_LABEL[o.type] || "")}</small></td>
+      <td>${stChip(o.status)}</td>
+      <td class="hide-s">${esc(shortWhen(lastOf(o)))}</td>
+      <td class="n">${o.openBalance ? D.money(o.openBalance) : ""}</td>
+      <td class="hide-s">${o.drive ? `<a href="${esc(o.drive)}" target="_blank" rel="noopener" data-stop>Folder</a>` : ""}</td></tr>`).join("");
+  }
+  const orderHead = withClient => `<thead><tr><th>No.</th>${withClient ? "<th>Client</th>" : ""}<th>Title</th><th>Status</th><th class="hide-s">Last activity</th><th class="n">Balance due</th><th class="hide-s">Drive</th></tr></thead>`;
+
+  function renderHome() {
+    const d = homeData; if (!d) return;
+    const q = homeQuery.trim().toLowerCase();
+    const hit = o => !q || [o.number, o.client, o.title, STATUS_TEXT[o.status], D.TYPE_LABEL[o.type]].join(" ").toLowerCase().includes(q);
+    const orders = d.orders.filter(hit);
+    if (!homeFilter) homeFilter = d.orders.some(FILTERS[0][2]) ? "open" : "all";
+    // A search covers every order, whatever filter is selected.
+    const active = q ? "all" : homeFilter;
+    const f = FILTERS.find(x => x[0] === active) || FILTERS[4];
+    const shown = orders.filter(f[2]).sort((a, b) => lastOf(b) - lastOf(a));
+    const attn = [];
+    for (const o of d.orders) {
+      if (unread(o)) attn.push([0, o, `New from the client: ${o.lastClient.text}`]);
+      for (const inv of o.overdue || []) attn.push([1, o, `Invoice ${inv.number} is overdue: ${D.money(inv.balance)} was due ${new Date(inv.due + "T12:00:00").toLocaleDateString([], { month: "short", day: "numeric" })}`]);
+      if (o.status === "declined") attn.push([2, o, "The client declined the work order"]);
+      if (o.waitingSign) attn.push([3, o, `Waiting for the client's signature${o.waitingSign.viewed ? " (they opened it)" : ""}${o.waitingSign.since ? ", sent " + shortWhen(Date.parse(o.waitingSign.since)) : ""}`]);
+    }
+    attn.sort((a, b) => a[0] - b[0]);
+    const cq = d.clients.filter(c => !q || [c.name, c.contact, c.email, c.phone].join(" ").toLowerCase().includes(q));
+    $("#home").innerHTML = `
+      <div class="hhead"><h1>Work orders</h1><span class="spacer"></span>
+        <input type="search" id="hSearch" placeholder="Search orders and clients" value="${esc(homeQuery)}" aria-label="Search orders and clients">
+        <button class="btn" id="hNew">New work order</button></div>
+      ${attn.length ? `<section class="attn"><div class="shead"><h2>Needs attention (${attn.length})</h2></div><ul>${attn.map(([, o, why]) =>
+        `<li><button data-open="${esc(o.number)}"><span class="mono">${esc(o.number)}</span><span><b>${esc(o.client || "No client")}</b> · ${esc(o.title || "")}<br><span class="why">${esc(why)}</span></span></button></li>`).join("")}</ul></section>` : ""}
+      <section><div class="shead"><h2>Orders</h2><div class="seg small" id="hFilter">${FILTERS.map(([id, label, fn]) =>
+        `<button data-f="${id}" class="${id === active ? "on" : ""}">${label} (${orders.filter(fn).length})</button>`).join("")}</div></div>
+        <div class="tscroll"><table class="hlist">${orderHead(true)}<tbody>${q && !shown.length ? `<tr class="empty-row"><td colspan="7">No orders match the search.</td></tr>` : orderRows(shown, true)}</tbody></table></div></section>
+      <section><div class="shead"><h2>Clients (${cq.length})</h2></div>
+        <div class="tscroll"><table class="hlist"><thead><tr><th>Client</th><th class="hide-s">Contact</th><th class="n">Orders</th><th class="n">Balance due</th><th class="hide-s">Portal</th><th class="hide-s">Last activity</th></tr></thead><tbody>${
+          cq.length ? cq.map(c => `<tr class="click" data-client="${esc(c.id)}"><td><b>${esc(c.name || "Client")}</b>${c.contact && c.contact !== c.name ? `<small>${esc(c.contact)}</small>` : ""}</td>
+            <td class="hide-s">${esc([c.email, c.phone].filter(Boolean).join(" · "))}</td>
+            <td class="n">${c.open ? `${c.open} open of ${c.orders}` : c.orders}</td><td class="n">${c.balance ? D.money(c.balance) : ""}</td>
+            <td class="hide-s">${c.portal ? "Link active" : "No link"}</td><td class="hide-s">${esc(shortWhen(c.lastTs))}</td></tr>`).join("")
+          : `<tr class="empty-row"><td colspan="6">${q ? "No clients match the search." : "No clients yet. A client record is made when you save an order."}</td></tr>`}</tbody></table></div></section>`;
+    bindHome();
+  }
+
+  function bindHome() {
+    const h = $("#home");
+    const s = $("#hSearch");
+    if (s) s.oninput = () => { homeQuery = s.value; const pos = s.selectionStart; renderHome(); const n = $("#hSearch"); n.focus(); n.setSelectionRange(pos, pos); };
+    const nb = $("#hNew"); if (nb) nb.onclick = () => { pendingClient = null; $("#dNew").showModal(); };
+    h.querySelectorAll("[data-f]").forEach(b => b.onclick = () => { homeFilter = b.dataset.f; homeQuery = ""; renderHome(); });
+    h.querySelectorAll("[data-open]").forEach(el => el.onclick = e => { if (e.target.closest("[data-stop]")) return; go(`#/order/${el.dataset.open}`); });
+    h.querySelectorAll("[data-client]").forEach(el => el.onclick = () => go(`#/client/${el.dataset.client}`));
+  }
+
+  async function showClient(id) {
+    $("#home").innerHTML = `<p class="hint" style="padding:40px 0">Loading…</p>`;
+    let c;
+    try { c = await api("GET", `/clients/${id}`); }
+    catch (e) { $("#home").innerHTML = `<p class="crumbs"><a href="#/">Home</a></p><p class="hint">${esc(e.message)}</p>`; return; }
+    if (!homeData) { try { homeData = await api("GET", "/summary"); } catch (_) { /* orders list stays empty */ } }
+    const mine = ((homeData && homeData.orders) || []).filter(o => o.clientId === id).sort((a, b) => b.number.localeCompare(a.number));
+    const f = (k, l, t = "text") => `<label class="f"><span>${l}</span><input type="${t}" data-c="${k}" value="${esc(c[k] || "")}"></label>`;
+    const label = c.name || c.org || "this client";
+    $("#home").innerHTML = `
+      <p class="crumbs"><a href="#/">Home</a> / Clients</p>
+      <div class="hhead"><h1>${esc(c.org || c.name || "Client")}</h1>${c.org && c.name ? `<span class="hint" style="margin:0">${esc(c.name)}</span>` : ""}<span class="spacer"></span>
+        <button class="btn" id="cNew">New work order for ${esc(label)}</button></div>
+      <div class="cgrid">
+        <div class="card"><h3>Contact details</h3>
+          <div class="row">${f("name", "Contact name")}${f("org", "Company")}</div>
+          <div class="row">${f("email", "Email", "email")}${f("phone", "Phone", "tel")}</div>
+          ${f("address", "Mailing address")}
+          <label class="f"><span>Private notes (only you)</span><textarea data-c="notes" rows="3">${esc(c.notes || "")}</textarea></label>
+          <div class="tlrow"><button class="btn small" id="cSave">Save details</button><span class="hint" id="cMsg" style="margin:0" role="status"></span></div>
+          <p class="hint" style="margin:8px 0 0">New orders copy these details. Orders you already made keep the details they were made with.</p></div>
+        <div class="card"><h3>Client portal</h3>
+          ${c.portalUrl ? `<div class="tlrow"><span class="portal-url">${esc(c.portalUrl)}</span></div>
+            <div class="tlrow" style="margin-top:8px"><button class="btn ghost small" id="cCopy">Copy link</button><a class="btn ghost small" href="${esc(c.portalUrl)}" target="_blank" rel="noopener noreferrer">Open</a><button class="btn ghost small" id="cNewLink">Make a new link</button><button class="btn ghost small" id="cStop">Stop the link</button></div>`
+            : `<p class="hint" style="margin:0 0 8px">No portal link yet.</p><button class="btn small" id="cNewLink">Make the portal link</button>`}
+          <p class="hint" style="margin:10px 0 0">The portal shows this client's orders that are past Draft.${c.email ? "" : " There is no email on file, so text the link."}</p></div>
+      </div>
+      <section><div class="shead"><h2>Orders (${mine.length})</h2></div>
+        <div class="tscroll"><table class="hlist">${orderHead(false)}<tbody>${orderRows(mine, false)}</tbody></table></div></section>`;
+    const say = t => { const m = $("#cMsg"); if (m) m.textContent = t; };
+    $("#cSave").onclick = async () => {
+      const b = {};
+      $("#home").querySelectorAll("[data-c]").forEach(el => { b[el.dataset.c] = el.value; });
+      try { await api("PUT", `/clients/${id}`, b); say("Saved."); homeData = null; } catch (e) { say(e.message); }
+    };
+    $("#cNew").onclick = () => { pendingClient = c; $("#dNew").showModal(); };
+    const cp = $("#cCopy");
+    if (cp) cp.onclick = async () => { try { await navigator.clipboard.writeText(c.portalUrl); say("Link copied."); } catch (_) { say("Select the link and copy it."); } };
+    $("#cNewLink").onclick = async () => {
+      if (c.portalUrl && !confirm("The old link stops working. Make a new one?")) return;
+      try { await api("POST", `/clients/${id}/portal`); await showClient(id); } catch (e) { say(e.message); }
+    };
+    const st = $("#cStop");
+    if (st) st.onclick = async () => {
+      if (!confirm("Stop this link? The client cannot open the portal until you make a new one.")) return;
+      try { await api("DELETE", `/clients/${id}/portal`); await showClient(id); } catch (e) { say(e.message); }
+    };
+    $("#home").querySelectorAll("[data-open]").forEach(el => el.onclick = e => { if (e.target.closest("[data-stop]")) return; go(`#/order/${el.dataset.open}`); });
+  }
+
   // ---------- misc ----------
   function toast(msg) { setSync(msg); }
   document.querySelectorAll("dialog [data-close]").forEach(b => b.addEventListener("click", () => b.closest("dialog").close()));
   $("#bNew").onclick = () => $("#dNew").showModal();
-  $("#bOrders").onclick = openOrders;
+  $("#bHome").onclick = () => go("#/");
+  window.addEventListener("hashchange", route);
   $("#bSettings").onclick = () => { renderSettings(); $("#dSettings").showModal(); };
   $("#bForget").onclick = () => { $("#dSettings").close(); lock("Locked."); };
   $("#bPdf").onclick = printPdf;
@@ -744,7 +928,7 @@
   setInterval(() => { if (order && key && document.visibilityState === "visible") loadTimeline(); }, 60000);
   $("#bBackupAll").onclick = async () => {
     $("#bBackupAll").disabled = true;
-    try { const r = await api("POST", "/backup-all"); const bad = r.results.filter(x => !x.ok); toast(bad.length ? `${bad.length} backups failed: ${bad[0].error}` : `All ${r.results.length} orders backed up.`); openOrders(); }
+    try { const r = await api("POST", "/backup-all"); const bad = r.results.filter(x => !x.ok); toast(bad.length ? `${bad.length} backups failed: ${bad[0].error}` : `All ${r.results.length} orders backed up.`); }
     catch (e) { toast(e.message); } finally { $("#bBackupAll").disabled = false; }
   };
   document.addEventListener("keydown", e => { if ((e.metaKey || e.ctrlKey) && e.key === "s") { e.preventDefault(); dirty = true; save(); } });
@@ -764,8 +948,8 @@
     renderTemplates();
     api("GET", "/health").then(h => { health = h; }).catch(() => {});
     refreshClients();
-    const cur = LS.get("wo-current", "");
-    if (cur) loadOrder(cur); else buildEditor();
+    LS.del("wo-current");
+    route();
   }
 
   if (key) unlock(key); else lock();
